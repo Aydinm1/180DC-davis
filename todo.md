@@ -10,6 +10,23 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Optimize confirmed navigation bottlenecks: local URL-preserved review filtering/
+  search and parallel independent workspace/member/week-activity reads. 98 unit/docs,
+  five week/activity, seven case, twelve program/session, six assignment and nine guided
+  entries pass without skips, including desktop/390px navigation, rapid typing without
+  dropped input, zero filtering navigation requests, review/back/reload, live revocation,
+  failed reads and complete pagination. Generated types, lint/typecheck, Webpack build
+  and diff checks pass; screenshots inspected and exact fixtures cleaned. An initial
+  rapid-typing synchronization failure was fixed and rerun; the optional program browser
+  check was explicitly enabled on the final run. Local evidence is not a hosted latency
+  benchmark. No shared protected cache, authorization/schema or deployment changes.
+
+- [x] Replace corner loading text with a centered approved logo and subtle indicator.
+  94 unit/docs checks, lint, typecheck, Webpack build and four loading-browser entries
+  pass without skips. Actual component/built-CSS fixtures verify 1280px/390px/short
+  320px layouts, logo loading/aspect ratio, status and reduced motion; screenshots
+  inspected. No auth/data changes, migration or deployment.
+
 - [x] Replace case exercises' grading-filter/unstyled roster with proper progress filters
   and a protected read-only per-participant/per-case response view. Verify finished versus
   saved progress, official/test scope, preserved navigation, privacy and no case writes.

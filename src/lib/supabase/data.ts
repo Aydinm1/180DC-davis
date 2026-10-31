@@ -7,29 +7,13 @@ import type { AdminWorkspaceState, AdminWeek } from '@/lib/program/admin';
 import type { CohortEnrollment, ProgramWeek, Resource, SubmissionAttempt, CohortTeam, MemberTeam } from '@/lib/program/types';
 import { readMemberRows } from './member-rows';
 import { buildWeekDetail } from '@/lib/program/week-detail';
-import { readPages } from './pagination';
+import { readWorkspaceRows } from './workspace-rows';
 
 export const readWorkspace = cache(async (admin = true) => {
   const user = await requireUser(admin);
   const db = await createClient();
-  const [people, roster, cohorts, enrollments, weeks, resources, assignments, submissions, documents] = await Promise.all([
-    readPages((from, to) => db.from('people').select('*').order('id').range(from, to)),
-    readPages((from, to) => db.from('approved_members').select('*').order('id').range(from, to)),
-    readPages((from, to) => db.from('program_cohorts').select('*').order('id').range(from, to)),
-    readPages((from, to) => db.from('cohort_enrollments').select('*').order('id').range(from, to)),
-    readPages((from, to) => db.from('program_weeks').select('*').order('id').range(from, to)),
-    readPages((from, to) => db.from('resources').select('*').order('sort_order').order('created_at').order('id').range(from, to)),
-    readPages((from, to) => db.from('assignments').select('*').order('sort_order').order('id').range(from, to)),
-    readPages((from, to) => db.from('submissions').select('*').order('submitted_at', { ascending: false }).order('id').range(from, to)),
-    readPages((from, to) => db.from('assignment_documents').select('*').eq('is_current', true).eq('state', 'ready').order('id').range(from, to)),
-  ]);
-  const activity = admin ? await readPages((from,to)=>db.rpc('admin_activity').order('person_id').range(from,to)) : {data:[]};
-  const [teamRows, memberships] = await Promise.all([
-    readPages((from,to)=>db.from('cohort_teams').select('*').order('id').range(from,to)),
-    readPages((from,to)=>db.from('team_memberships').select('*').order('enrollment_id').range(from,to)),
-  ]);
-  const completionCredits = await readPages((from,to)=>db.from('assignment_completions').select('*').is('revoked_at',null).order('id').range(from,to));
-  const caseProgress=await readPages((from,to)=>db.rpc('case_progress').order('assignment_id').order('enrollment_id').range(from,to));
+  const { people, roster, cohorts, enrollments, weeks, resources, assignments, submissions, documents,
+    activity, teamRows, memberships, completionCredits, caseProgress } = await readWorkspaceRows(db, admin);
   const teams: CohortTeam[] = teamRows.data.map(t=>({id:t.id,cohortId:t.cohort_id,name:t.name,isTest:t.is_test,version:t.version,locked:t.locked,enrollmentIds:memberships.data.filter(m=>m.team_id===t.id).map(m=>m.enrollment_id)}));
   const state: AdminWorkspaceState = {
     caseProgress:caseProgress.data.map(p=>({assignmentId:p.assignment_id,enrollmentId:p.enrollment_id,answered:p.answered,completedAt:p.completed_at??undefined})),

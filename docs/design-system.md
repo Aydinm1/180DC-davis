@@ -200,6 +200,11 @@ descriptive filenames.
   minimal navigation. Use one vertically centered row for logo, navigation, and profile
   on large screens. Below that breakpoint, keep logo and profile together with navigation
   on a horizontally scrollable second row.
+- **Route loading:** center the approved dark landscape UC Davis logo on the neutral
+  viewport, with one small green pulsing indicator underneath. Keep the logo static;
+  disable animation for reduced motion. Announce “Loading GAP” to assistive technology
+  without visible corner text, helper copy, fake progress or a blocking client overlay.
+  Preserve logo aspect ratio and allow short screens to scroll without clipping.
 - **Primary action:** solid brand green with white text and deep-green hover.
 - **Secondary action:** white/neutral surface with charcoal border and text.
 - **Interaction feedback:** enabled buttons, links, disclosures, selects and choice/file

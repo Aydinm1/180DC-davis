@@ -125,6 +125,19 @@ Preview navigation retains its cohort query; normal member reads remain enrollme
 
 ## Data access and mutations
 
+Independent workspace datasets are fetched concurrently after authorization through
+`readWorkspaceRows`, preserving deterministic pagination and fail-closed errors.
+Member reads retain enrollment/cohort scoping and run independent requests in parallel
+at each dependency boundary; no service key or cross-request cache is added. Week edit
+references and activity configurations also load concurrently after the week is known.
+The admin review overview already contains its cohorts/weeks/queues. Its week, assignment,
+audience, status and search controls use Next-integrated native history replacement to
+filter that snapshot locally, not a Server Component navigation for each click/keystroke.
+A small synchronous query subscription preserves controlled input during rapid typing;
+browser history and Next search-parameter consumers stay in sync without a data cache.
+Links, reloads and mutations still fetch/authorize normally; successful saves still refresh
+the snapshot. URL context, direct links, review-next and back navigation remain intact.
+
 The admin week editor uses local section and selected-assignment state; inactive panels
 remain mounted behind native `hidden` wrappers, retaining independent editor state and
 upload tasks while removing controls from layout/keyboard navigation. Section switches

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useLocalSearchParams, replaceLocalQuery } from '@/lib/navigation/local-query';
 import { Badge } from '@/components/ui/badge';
 import { StateMessage } from '@/components/ui/state-message';
 import { caseFilters, caseParticipants, caseStatus, filterCaseParticipants } from '@/lib/cases/progress';
@@ -10,7 +10,7 @@ import type { AdminSubmissionRow } from '@/lib/program/admin';
 import { useAdminWorkspace } from './admin-workspace';
 
 export function AdminCaseProgress({ assignmentId, rows, query }: { assignmentId: string; rows: readonly AdminSubmissionRow[]; query: string }) {
-  const workspace = useAdminWorkspace(), params = useSearchParams(), router = useRouter();
+  const workspace = useAdminWorkspace(), params = useLocalSearchParams();
   const status = caseStatus(params.get('caseStatus'), params.get('status')), search = params.get('q') ?? '';
   const participants = caseParticipants(rows, workspace.caseProgress);
   const visible = filterCaseParticipants(participants, status, search);
@@ -18,7 +18,7 @@ export function AdminCaseProgress({ assignmentId, rows, query }: { assignmentId:
   function update(values: Record<string, string>) {
     const next = new URLSearchParams(context);
     Object.entries(values).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key));
-    router.replace('/admin?' + next + '#submissions', { scroll: false });
+    replaceLocalQuery(next, '#submissions');
   }
   return <section id="submissions" aria-label="Case exercise progress" className="border-t border-border">
     <div className="bg-surface-subtle/60 px-5 py-5 sm:px-7">

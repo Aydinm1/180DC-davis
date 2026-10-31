@@ -5,6 +5,13 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Made review-queue filters, assignment drill-down and search update locally without
+  refetching the admin page. Parallelized independent admin/member data reads and week
+  activity setup reads, retaining live authorization, pagination and private-data scope.
+
+- Replaced the corner “Loading GAP” text with a centered UC Davis logo and restrained
+  green loading indicator, with screen-reader status and reduced-motion support.
+
 - Added admin case-progress filters with accurate Complete/In progress/Not started counts,
   searchable participant rows and read-only per-case responses/reference comparison.
   Exercises remain separate from graded submissions; no scores or completion changes.

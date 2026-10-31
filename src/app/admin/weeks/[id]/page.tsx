@@ -11,8 +11,12 @@ export default async function AdminWeekPage({ params }: { params: Promise<{ id: 
   const { id } = await params;
   const { state } = await readWorkspace(true);
   const week = state.weeks.find(w => w.id === id);
-  const references = await readGradingReferences(week ? assignmentsForWeek(week).map(a => a.id) : []);
-  const guided=Object.fromEntries(await Promise.all((week?assignmentsForWeek(week):[]).map(async a=>[a.id,await readGuidedProject(a.id)])));
-  const cases=Object.fromEntries(await Promise.all((week?assignmentsForWeek(week):[]).map(async a=>[a.id,await readCaseExercise(a.id,true)])));
+  const assignments = week ? assignmentsForWeek(week) : [];
+  const [references, guidedEntries, caseEntries] = await Promise.all([
+    readGradingReferences(assignments.map(a => a.id)),
+    Promise.all(assignments.map(async a => [a.id, await readGuidedProject(a.id)])),
+    Promise.all(assignments.map(async a => [a.id, await readCaseExercise(a.id, true)])),
+  ]);
+  const guided = Object.fromEntries(guidedEntries), cases = Object.fromEntries(caseEntries);
   return <AdminWeekEditor key={id} weekId={id} references={references} guided={guided} cases={cases} caseTemplate={caseTemplate} />;
 }

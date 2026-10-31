@@ -118,8 +118,10 @@ test('eight-case exercise lifecycle and boundaries',async t=>{
      const roster=p.getByRole('region',{name:'Case exercise progress',exact:true}),filters=roster.getByLabel('Filter case progress');
      await filters.getByRole('button',{name:'All participants 3',exact:true}).waitFor();
      assert.equal(await roster.getByRole('button',{name:/Awaiting review|Revisions requested|Mark complete/}).count(),0);
+     const filterRequests=[];const trackFilter=request=>{if(request.method()==='GET'&&new URL(request.url()).pathname==='/admin'&&request.headers().rsc==='1'&&!request.headers()['next-router-prefetch'])filterRequests.push(request.url());};p.on('request',trackFilter);
      await filters.getByRole('button',{name:'Complete 1',exact:true}).click();await p.waitForURL(u=>u.searchParams.get('caseStatus')==='complete');assert.equal(await roster.getByRole('link',{name:/^View answers/}).count(),1);
-     await roster.getByRole('searchbox',{name:'Search participants',exact:true}).fill('Completed');await p.waitForURL(u=>u.searchParams.get('q')==='Completed');
+     await roster.getByRole('searchbox',{name:'Search participants',exact:true}).pressSequentially('Completed',{delay:1});await p.waitForURL(u=>u.searchParams.get('q')==='Completed');
+     assert.deepEqual(filterRequests,[],'Case filtering and search must not refetch the server page');p.off('request',trackFilter);
      await roster.getByRole('link',{name:/^View answers/}).first().click();
      await p.getByRole('heading',{name:'Completed Case Participant',level:1,exact:true}).waitFor();
      await p.getByText('Edited after all eight references',{exact:true}).waitFor();await p.getByText('PRIVATE REFERENCE 1',{exact:true}).waitFor();

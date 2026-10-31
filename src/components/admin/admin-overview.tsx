@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useRouter,useSearchParams } from 'next/navigation';
+import { useLocalSearchParams, replaceLocalQuery } from '@/lib/navigation/local-query';
 import { AssignmentStatusBadge } from '@/components/program/assignment-status-badge';
 import { PageContainer } from '@/components/ui/container';
 import { StateMessage } from '@/components/ui/state-message';
@@ -18,7 +18,7 @@ function Owner({row}:{row:AdminSubmissionRow}){
  return <><p className="font-bold">{row.team?.name??row.person?.fullName}</p>{row.team?<details className="mt-1 text-xs text-ink-soft"><summary className="min-h-11 cursor-pointer">{row.members.length} teammates</summary><ul>{row.members.map(m=><li key={m.id}>{m.fullName}</li>)}</ul></details>:<p className="mt-1 break-all text-xs text-ink-soft">{row.person?.email}</p>}</>;
 }
 export function AdminOverview({projectEntries=[]}:{projectEntries?:ProjectInboxEntry[]}){
- const state=useAdminWorkspace(),params=useSearchParams(),router=useRouter();
+ const state=useAdminWorkspace(),params=useLocalSearchParams();
  const cohortId=state.selectedCohortId,week=selectQueueWeek(state,cohortId,params.get('week'),params.get('assignment'));
  const audience=params.get('audience')==='test'?'test':'official';
  const overview=buildWeekQueue(state,cohortId,week?.id??'',new Date(),audience);
@@ -30,7 +30,7 @@ export function AdminOverview({projectEntries=[]}:{projectEntries?:ProjectInboxE
  const query=new URLSearchParams({cohort:cohortId,week:week?.id??'',status:filter});
  if(selected)query.set('assignment',selected.assignment.id);if(search)query.set('q',search);if(audience==='test')query.set('audience','test');
  if(selected?.assignment.workflow==='cases'&&params.get('caseStatus'))query.set('caseStatus',params.get('caseStatus')!);
- function update(values:Record<string,string>){const next=new URLSearchParams(query);Object.entries(values).forEach(([k,v])=>v?next.set(k,v):next.delete(k));router.replace('/admin?'+next+'#submissions');}
+ function update(values:Record<string,string>){const next=new URLSearchParams(query);Object.entries(values).forEach(([k,v])=>v?next.set(k,v):next.delete(k));replaceLocalQuery(next,'#submissions');}
  return <main className="pb-20"><PageContainer className="py-9 sm:py-11"><header><p className="text-sm font-bold uppercase tracking-widest text-brand-deep">Admin workspace</p><h1 className="mt-2 text-3xl font-bold sm:text-4xl">Review queue</h1></header>
  <section className="mt-8 overflow-hidden rounded-card border border-border bg-surface" aria-label="Week overview">
  <div className="flex flex-wrap items-end justify-between gap-5 border-b border-border px-5 py-5 sm:px-7"><label className="min-w-0 text-sm font-bold">Week<select aria-label="Week" className={'mt-2 block max-w-full '+control} value={week?.id??''} onChange={e=>update({week:e.target.value,assignment:''})}>{state.weeks.filter(w=>w.cohortId===cohortId && w.publicationState==='published').toSorted((a,b)=>a.weekNumber-b.weekNumber).map(w=><option key={w.id} value={w.id}>Week {w.weekNumber} · {w.title}</option>)}</select></label><label className="text-xs font-semibold text-ink-soft">Participation view<select aria-label="Participation view" className={'mt-2 block '+control} value={audience} onChange={e=>update({audience:e.target.value==='test'?'test':''})}><option value="official">Official participants</option><option value="test">Test participants only</option></select></label></div>

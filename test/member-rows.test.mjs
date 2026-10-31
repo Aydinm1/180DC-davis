@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readMemberRows } from '../src/lib/supabase/member-rows.ts';
 
-function database(tables, failTable) {
+function database(tables, failTable, beforeRead = () => {}) {
   const calls=[];
   return { calls, from(table) {
     const filters=[];
@@ -11,16 +11,31 @@ function database(tables, failTable) {
       eq(key,value){filters.push([key,[value]]);return query;},
       is(key,value){filters.push([key,[value]]);return query;},
       in(key,values){filters.push([key,values]);return query;},
-      async range(from,to){return result(from,to);},
-      async maybeSingle(){const value=result();return {...value,data:value.data?.[0]??null};},
+      async range(from,to){await beforeRead(table);return result(from,to);},
+      async maybeSingle(){await beforeRead(table);const value=result();return {...value,data:value.data?.[0]??null};},
     };
     function result(from=0,to=Infinity) {
       calls.push({table,filters,from,to});
       return {error:table===failTable?new Error('Unavailable'):null,data:(tables[table]??[]).filter(row=>filters.every(([key,values])=>values.includes(row[key]))).slice(from,to+1)};
     }
     return query;
-  },rpc(name,args){calls.push({name,args});if(name==='case_progress')return {order(){return this;},async range(from,to){return {data:(tables.case_progress??[]).filter(p=>p.enrollment_id===args.p_enrollment).slice(from,to+1),error:null};}};return Promise.resolve({data:name==='my_team'?tables.my_team??null:[],error:null});}};
+  },rpc(name,args){calls.push({name,args});if(name==='case_progress')return {order(){return this;},async range(from,to){await beforeRead(name);return {data:(tables.case_progress??[]).filter(p=>p.enrollment_id===args.p_enrollment).slice(from,to+1),error:null};}};return Promise.resolve(beforeRead(name)).then(()=>({data:name==='my_team'?tables.my_team??null:[],error:null}));}};
 }
+
+test('member content, history and progress do not wait for an unrelated team read', async () => {
+  let release;
+  const gate = new Promise(resolve => { release = resolve; }), started = [];
+  const db = database({cohort_enrollments:[{id:'own',person_id:'me',cohort_id:'current',participation_status:'enrolled'}],program_cohorts:[{id:'current',quarter:'fall',year:2026,state:'active'}]}, undefined, name => {
+    started.push(name);
+    return name === 'my_team' ? gate : undefined;
+  });
+  const pending = readMemberRows(db, 'me');
+  try {
+    await new Promise(resolve => setImmediate(resolve));
+    for (const name of ['my_team','program_weeks','submissions','week_catalog','case_progress']) assert.ok(started.includes(name), name);
+  } finally { release(); }
+  assert.equal((await pending).enrollment.id, 'own');
+});
 
 test('member loader scopes database queries even when the client has admin visibility',async()=>{
   const db=database({

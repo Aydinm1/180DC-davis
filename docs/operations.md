@@ -344,6 +344,14 @@ isolated production server for HTTP/browser checks. Tests own disposable account
 and exact cleanup. Hosted migration, commit/push/deployment and real Google acceptance
 remain separate; the anonymous metadata test does not establish authenticated acceptance.
 
+Navigation performance: unit tests verify all 14 independent workspace datasets start
+concurrently, preserve full pagination, reject failed reads and keep request data isolated.
+The week/activity and case browser suites assert queue filtering/search makes no server
+navigation requests; week/activity also types a full email rapidly to detect lost input.
+Use the stable production-mode test server and matching action manifest. These are local
+fixture checks, not hosted latency benchmarks. No protected response caching is introduced;
+cohort/resource navigation, reload and successful mutation refresh still authorize/fetch.
+
 Local closeout (2026-10-23): the five-entry week/activity suite passes with no skips,
 including wrong-domain/unapproved/inactive/anonymous denial, live admin revocation,
 concurrent five-minute throttling, GET/prefetch non-recording, visible desktop/phone visits,
