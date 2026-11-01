@@ -5,6 +5,9 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Aligned case-progress status badges and View answers links in consistent columns,
+  preventing completion timestamps from shifting the badge; phone rows remain stacked.
+
 - Made review-queue filters, assignment drill-down and search update locally without
   refetching the admin page. Parallelized independent admin/member data reads and week
   activity setup reads, retaining live authorization, pagination and private-data scope.

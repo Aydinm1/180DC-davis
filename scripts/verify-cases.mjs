@@ -117,6 +117,10 @@ test('eight-case exercise lifecycle and boundaries',async t=>{
      await p.goto(`${app}/admin?cohort=${cohort}&week=${week}&assignment=${aid}`);
      const roster=p.getByRole('region',{name:'Case exercise progress',exact:true}),filters=roster.getByLabel('Filter case progress');
      await filters.getByRole('button',{name:'All participants 3',exact:true}).waitFor();
+     const alignment=await roster.locator('ul > li').evaluateAll(rows=>rows.map(row=>({badge:row.querySelector('span.rounded-full').getBoundingClientRect().x,action:row.querySelector('a').getBoundingClientRect().x})));
+     assert.equal(alignment.length,3);
+     if(width>=640)for(const row of alignment){assert.ok(Math.abs(row.badge-alignment[0].badge)<1,'Case status badges must align despite different metadata lengths');assert.ok(Math.abs(row.action-alignment[0].action)<1,'Answer links must share a column');}
+     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await p.screenshot({path:join(screens,`aligned-progress-${width}.png`),fullPage:true});
      assert.equal(await roster.getByRole('button',{name:/Awaiting review|Revisions requested|Mark complete/}).count(),0);
      const filterRequests=[];const trackFilter=request=>{if(request.method()==='GET'&&new URL(request.url()).pathname==='/admin'&&request.headers().rsc==='1'&&!request.headers()['next-router-prefetch'])filterRequests.push(request.url());};p.on('request',trackFilter);
      await filters.getByRole('button',{name:'Complete 1',exact:true}).click();await p.waitForURL(u=>u.searchParams.get('caseStatus')==='complete');assert.equal(await roster.getByRole('link',{name:/^View answers/}).count(),1);

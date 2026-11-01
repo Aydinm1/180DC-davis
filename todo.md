@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-10-31
+**Last updated:** 2026-11-01
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,12 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Align case-progress badges/actions across completion timestamps and saved counts.
+  98 unit/docs and seven case entries pass without skips; desktop badge/link column
+  coordinates are asserted, 1280px/390px screenshots inspected, and filtering/answer
+  navigation remain unchanged. Lint/typecheck, Webpack build and diff checks pass;
+  exact fixtures cleaned. Styling only; no release or real data changes.
 
 - [x] Optimize confirmed navigation bottlenecks: local URL-preserved review filtering/
   search and parallel independent workspace/member/week-activity reads. 98 unit/docs,

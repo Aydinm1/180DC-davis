@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-10-31
+**Last updated:** 2026-11-01
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -341,6 +341,9 @@ Admin case progress replaces grading filters with a compact status toolbar and s
 participant rows: name/email, status, saved count or finished timestamp, and View answers.
 Completed participants appear first, followed by in-progress and not-started participants.
 Use the same row layout stacked on phones; no plain unstructured roster or grading buttons.
+On wider screens use consistent name, status and action grid tracks across rows so long
+completion timestamps do not shift badges relative to saved-case counts. Wrap metadata
+without truncation and retain the stacked phone layout.
 Response detail shows participant identity/status, a wrapping case navigator, scenario,
 and Participant response / Reference approach side-by-side on desktop and stacked on phones.
 Reference text is one possible approach; answers are escaped plain text. Keep the read-only
