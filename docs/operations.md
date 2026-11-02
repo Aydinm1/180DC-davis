@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-10-31
+**Last updated:** 2026-11-02
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -14,6 +14,16 @@ file uploads. Local Google callback/admin access and analyst access were user-co
 hosted setup, second-lead provisioning, and extended Monday checks stay open in `todo.md`.
 
 ## Routine releases
+
+Activity presentation: case/guided pages have Instructions / Workspace. New work starts
+with instructions; saved work resumes its workspace. Guided final briefs are reached
+through Read final-document brief without leaving the assignment or losing selected files.
+Admins act only on pending alternatives in Direction requests. Expand Team project progress
+to inspect recommended selections and current research; History retains prior snapshots.
+No migration or real assignment reconfiguration is required for this presentation change.
+Run case/guided and week/activity/assignment browser regressions against the isolated
+local production-mode server; verify view switches preserve input/files and send no
+mutation requests. Local fixture acceptance is not hosted or real-Google acceptance.
 
 Case response inspection is read-only: select a case assignment in Review queue, filter
 Complete / In progress / Not started, then View answers. Finish challenge, not eight saved

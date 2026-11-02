@@ -5,11 +5,11 @@ function Inline({ text }: { text: string }) {
     : part.type === 'link' ? <a key={index} href={part.href} target="_blank" rel="noreferrer" className="font-semibold text-action underline underline-offset-4">{part.text}</a> : part.text);
 }
 
-export function AssignmentBrief({ instructions, format = 'plain' }: { instructions: string; format?: BriefFormat }) {
+export function AssignmentBrief({ instructions, format = 'plain', headingScope }: { instructions: string; format?: BriefFormat; headingScope?: string }) {
   if (format === 'plain') return <p className="whitespace-pre-wrap break-words [overflow-wrap:anywhere] text-base leading-8 text-ink-soft">{instructions}</p>;
   return <div className="space-y-5 break-words [overflow-wrap:anywhere] text-base leading-8 text-ink-soft">{briefBlocks(instructions).map((block, index) => {
-    if (block.type === 'heading') return <h2 key={index} className="pt-5 text-xl font-bold tracking-tight text-ink first:pt-0 sm:text-2xl"><Inline text={block.text} /></h2>;
-    if (block.type === 'subheading') return <h3 key={index} className="pt-3 text-lg font-bold text-ink"><Inline text={block.text} /></h3>;
+    if (block.type === 'heading') return <h2 key={index} id={headingScope ? `${headingScope}-${index}` : undefined} tabIndex={headingScope ? -1 : undefined} className="scroll-mt-24 pt-5 text-xl font-bold tracking-tight text-ink first:pt-0 sm:text-2xl"><Inline text={block.text} /></h2>;
+    if (block.type === 'subheading') return <h3 key={index} id={headingScope ? `${headingScope}-${index}` : undefined} tabIndex={headingScope ? -1 : undefined} className="scroll-mt-24 pt-3 text-lg font-bold text-ink"><Inline text={block.text} /></h3>;
     if (block.type === 'list') {
       const items = block.items.map((text, i) => <li key={i} className="pl-1"><Inline text={text} /></li>);
       return block.ordered ? <ol key={index} start={block.start} className="list-decimal space-y-2 pl-6 marker:font-semibold marker:text-ink">{items}</ol>

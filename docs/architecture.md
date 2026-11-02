@@ -8,7 +8,7 @@ successful receipts through retries. No background jobs or Monday writes are inv
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-10-31
+**Last updated:** 2026-11-02
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -124,6 +124,17 @@ Preview navigation retains its cohort query; normal member reads remain enrollme
 7. Database and Storage RLS enforce the same policy independently.
 
 ## Data access and mutations
+
+Case and guided assignment Instructions/Workspace views are local client state, not
+new routes or server reads. Native hidden wrappers retain guided step/submission DOM
+while removing inactive controls from layout and keyboard traversal. BriefReader uses
+scoped heading anchors from the existing restricted parser; default brief rendering and
+authored stored text remain unchanged. Read-only preview projections stay unchanged.
+The admin guided panel derives pending alternatives and team progress from the existing
+authorized DTO. Only active, unfrozen pending alternatives expose decisions; recommended
+selections never need an approval. Current week/audience filters match the review overview.
+Decision edits retain note/version/request identity through failures; no schema, RPC,
+submission eligibility or public action contract changes.
 
 Independent workspace datasets are fetched concurrently after authorization through
 `readWorkspaceRows`, preserving deterministic pagination and fail-closed errors.

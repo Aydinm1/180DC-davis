@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-01
+**Last updated:** 2026-11-02
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -31,15 +31,24 @@ approval/locking requirements and warnings about unsaved work or irreversible ch
 Explain consequences at the relevant decision, not persistently across the screen.
 Do not hide essential instructions in tooltips or add a help control for every removed note.
 
-Guided assignments use the existing narrow assignment page, formatted overview and a
-compact three-step navigator (Research / Direction / Final document). One current step
-is visible; the overview is collapsible. Team research uses labeled textareas and explicit
+Activity assignments use Instructions / Workspace navigation on the same route, with a
+roomy desktop workspace and bounded reading column. Long authored briefs have scoped
+heading jumps beside the text on desktop and above it on phones, without internal scroll
+boxes. New work starts in Instructions; saved work resumes Workspace. Keep inactive views
+mounted behind hidden wrappers to retain drafts, selected files and active transfers.
+Guided workspace uses a compact three-step navigator (Research / Direction / Final document).
+The recommendation and action controls lead the Direction step; general explanations live
+in Instructions. Final document leads with submission controls and Read final-document brief.
+Team research uses labeled textareas and explicit
 save/reveal language, not graded-submission language. Research helper copy identifies
 shared answers and the editing cutoff at final submission;
 the internal original snapshot is not presented as a restriction on editing. Direction
 approval and missing-setup notices remain inline. Admin setup is a focused activity section inside the assignment editor with
-independent saves and readiness per team. Approval requests use a separate restrained
-panel below the review queue, not additional summary metrics. Phone layouts wrap actions
+independent saves and readiness per team. Direction requests shows only pending alternatives,
+with team/company/week/assignment, proposed question, decision note and decision actions.
+Recommended selections appear only under collapsed Team project progress, labeled Using
+your recommended direction. Show current questions/research before optional History;
+avoid presenting normal progress as an actionable request. Phone layouts wrap actions
 and preserve 44px controls. Preview is clearly read-only and offers an explicit sample team.
 
 Manual completion stays in existing review rows/cards: a quiet 44px Mark complete action
@@ -350,9 +359,12 @@ Reference text is one possible approach; answers are escaped plain text. Keep th
 label, previous/next actions and context-preserving back link. No scoring or review decision.
 
 Use the existing member assignment typography, neutral cards and green primary action.
-A compact wrapping case navigator and accessible progress indicator show saved cases.
-Keep the overview in a disclosure. Save reveals two comparison sections: Your saved
-response and Reference approach, side-by-side on wide screens and stacked on phones.
+A compact wrapping case navigator and the shared green progress indicator show saved cases.
+The overview lives in Instructions, not ahead of the task. Save reveals Your saved
+response and Reference approach side-by-side only on roomy desktops (1280px and above);
+smaller screens use full-width comparison controls, initially showing the reference.
+Use balanced sections, not a tall narrow shaded sidebar. Next/Finish and Edit response
+sit above long comparison content. Keep the scenario above the form and bound form width.
 Label references as one possible approach, not an answer key. Fields have visible labels,
 radio options have generous targets, errors retain input, and Finish confirms the final
 read-only transition. Preview clearly labels its local-only behavior.

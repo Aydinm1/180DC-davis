@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-10-31
+**Last updated:** 2026-11-02
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -232,13 +232,27 @@ Pending/change-requested teams may prepare, but cannot submit or finalize an upl
 The first final attempt freezes research and direction; ordinary document revisions
 remain available. Textbox submissions are unavailable for this workflow.
 
-Project direction requests appear separately from graded submissions, filtered by
-cohort/week/assignment and official/test scope. Admins inspect original/current research
-and decision history. Final review shows the confirmed direction. Admin member preview
+Direction requests contain only current pending alternative proposals requiring a decision,
+separate from graded submissions and filtered by cohort/week/assignment and official/test
+scope. Choosing the recommended direction needs no approval and never enters this inbox.
+A separate collapsed Team project progress section lists populated teams, their current
+question and explicit direction state, with current research before historical snapshots.
+Admins approve/request changes with existing decision notes; no general commenting or new
+approval gate is introduced. Final review shows the confirmed direction. Admin member preview
 offers a read-only sample-team selector; Explore exposes common instructions and generic
 practice only, never real team research, directions or approvals.
 
 See [ADR 0022](decisions/0022-guided-team-projects.md).
+
+Case challenges and guided projects separate Instructions from Workspace on the existing
+assignment route. New work opens Instructions with Start assignment; saved work resumes
+Workspace. Switching views retains drafts and mounted submission controls. Guided reading
+has Overview/Choosing a direction/Final document briefs with heading jumps; working steps
+remain Research/Direction/Final document. The final submission is accessible without
+scrolling through its full brief. Case save/reveal compares response/reference side by
+side on roomy desktops and in full-width views on smaller screens; Next/Finish stay above
+the comparison. Authored content and existing save, reveal, approval and completion rules
+remain unchanged; previews retain existing no-save and privacy boundaries.
 
 Admins create cohort teams and assign enrolled participants in Members → Teams. Members
 cannot choose, join, leave, create or edit teams. Each cohort enrollment belongs to at

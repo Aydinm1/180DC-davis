@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-01
+**Last updated:** 2026-11-02
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,20 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Focus case/guided assignment Instructions and Workspace; preserve authored content,
+  drafts/files/transfers, existing reveal/approval/submission/completion semantics and
+  private/no-write previews. Separate actionable alternative requests from populated-team
+  progress; recommended paths need no approval. 101 unit/docs, seven case, nine guided,
+  six assignment, five week/activity, twelve program/session and eight Viewer entries
+  pass without skips. Desktop/tablet/phone screenshots inspected; keyboard heading jumps,
+  zero-write view switches, unsaved input, selected files and an actively paused/resumed
+  upload verified. Failed/stale decisions retain notes and require explicit refresh/review.
+  A label association and stretched comparison card found during verification were fixed;
+  the transfer harness was corrected for small-file POST uploads and rerun successfully.
+  Generated-type consistency, lint/typecheck, Webpack production build and diff checks pass.
+  Exact disposable fixtures cleaned; local evidence is not hosted/real-Google acceptance.
+  No schema, real content, commit/push or deployment changes.
 
 - [x] Align case-progress badges/actions across completion timestamps and saved counts.
   98 unit/docs and seven case entries pass without skips; desktop badge/link column

@@ -5,6 +5,12 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Refocused case and guided assignments into separate Instructions and Workspace views,
+  preserving authored content and saved workflows. Added navigable briefs, a roomy case
+  comparison with smaller-screen view controls, and easy-to-reach final submission.
+- Separated pending alternative-direction requests from read-only team project progress.
+  Recommended selections are explicitly labeled and require no new approval.
+
 - Aligned case-progress status badges and View answers links in consistent columns,
   preventing completion timestamps from shifting the badge; phone rows remain stacked.
 

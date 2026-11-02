@@ -5,6 +5,11 @@ export type BriefInline = { type: 'text' | 'bold'; text: string } | { type: 'lin
 export type BriefBlock = { type: 'paragraph' | 'heading' | 'subheading'; text: string }
   | { type: 'list'; ordered: boolean; start: number; items: string[] };
 
+export function briefHeadings(value: string, scope: string) {
+  return briefBlocks(value).flatMap((block, index) => block.type === 'heading' || block.type === 'subheading'
+    ? [{ id: `${scope}-${index}`, text: briefInline(block.text).map(part => part.text).join(''), level: block.type === 'heading' ? 2 : 3 }] : []);
+}
+
 export function safeBriefUrl(value: string) {
   try {
     const url = new URL(value);
