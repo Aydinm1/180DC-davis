@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-04
+**Last updated:** 2026-11-05
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -199,6 +199,11 @@ descriptive filenames.
   Show current filename/download, selection, upload progress, retry/cancel after failure,
   and immediate-save/publication guidance. Members get a quiet download action beside
   instructions. Use existing controls and responsive wrapping.
+- **Formatting links:** use a compact inline editor beneath the toolbar with labeled
+  Link text and Web address fields, Insert link and Cancel. Avoid browser prompts.
+  Stack fields on phones; focus the missing field on open, support Enter to insert and
+  Escape to cancel, and return focus to the instruction text. Keep validation errors
+  beside the fields and preserve input on failure.
 - **Cohort dates:** Members → Manage cohort shows start/end dates, Save dates, and a
   cancel-edits action with the existing unsaved-change safeguards.
 

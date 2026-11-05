@@ -8,7 +8,7 @@ successful receipts through retries. No background jobs or Monday writes are inv
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-04
+**Last updated:** 2026-11-05
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -242,6 +242,9 @@ typed text/heading/list/link tokens and React elements. No HTML injection APIs o
 parser are used. HTTP(S) links are allowlisted; images/raw HTML are literal text.
 Format defaults to plain so existing prose is never silently reinterpreted. The same
 renderer drives the client admin preview; the toolbar inserts the documented subset.
+The shared link editor captures the text range, validates explicit label/HTTP(S) input,
+and refuses insertion if the underlying instructions changed while it was open.
+Link insertion remains a local draft change using the existing week/reference saves.
 
 Runtime weeks expose `assignments` arrays ordered by database `sort_order,id`.
 `assignmentsForWeek` accepts a legacy single field only for existing fixtures and

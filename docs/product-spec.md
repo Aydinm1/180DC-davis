@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-04
+**Last updated:** 2026-11-05
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -194,6 +194,10 @@ bulleted/numbered lists and HTTP(S) links. Raw HTML, images, embeds, arbitrary s
 and unsupported syntax are not interpreted. Unsafe links remain inert literal text.
 The admin editor offers a toolbar, format choice and rendered preview; instructions
 are limited to 50,000 Unicode characters. This does not add rich text to member responses.
+The Link tool opens inline Link text and Web address fields, using the selected text
+or URL as a starting point. Surrounding selection whitespace stays outside the link.
+Insert link applies the change; Cancel/Escape leaves the instructions unchanged.
+Invalid inputs remain editable with a specific error. Adding a link never saves the week.
 See [proposed Notion SWOT formatting](examples/notion-swot-assignment.md); applying it
 to real content requires approval of the full brief, not an automatic migration.
 

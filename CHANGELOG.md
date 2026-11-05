@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Fixed valid links being rejected when selected text included a trailing line break.
+  The formatting toolbar now uses inline Link text/Web address fields with explicit
+  insertion, cancellation and recoverable validation instead of a browser prompt.
+
 - Added Standard-assignment PNG/JPEG/WebP screenshot uploads and private inline admin
   image previews with retry/download recovery. Guided projects remain document-only;
   original files/history and manual Complete/Request revision behavior are unchanged.

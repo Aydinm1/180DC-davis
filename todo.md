@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-04
+**Last updated:** 2026-11-05
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,14 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Repair assignment-toolbar link insertion: reproduced selected-newline rejection
+  at 1280px/390px, then replaced the browser prompt with inline label/address inputs.
+  Six assignment/browser entries and 107 unit/docs checks pass without skips, including
+  the exact feedback URL, trailing newline, selected URL, keyboard focus/Enter/Escape,
+  unsafe URL rejection, cancel, stale draft retention, preview and save/reload.
+  Desktop/phone screenshots inspected; lint/typecheck, Webpack build and diff checks
+  pass. Disposable local fixtures cleaned; no real assignments or hosted/release changes.
 
 - [x] Support Standard-assignment PNG/JPEG/WebP submissions and protected admin previews;
   preserve document-only Guided work, case restrictions, private upload lifecycle and
