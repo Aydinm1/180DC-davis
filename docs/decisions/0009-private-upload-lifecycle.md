@@ -34,8 +34,53 @@ persistent signed URLs, embedded document viewers, or Monday exports are generat
 
 Standard assignments also accept still PNG/JPEG/WebP files under the same intent and
 review lifecycle. Original bytes remain immutable; bounded Sharp decoding verifies
-format and rejects corrupt/animated/multipage images above 20 megapixels. Guided
+format and rejects corrupt/animated/multipage images and images above 50 megapixels. Guided
 projects retain document-only enforcement across preparation, Storage and finalization.
+
+The resolution cap was raised from 20 to 50 megapixels on 2026-11-05 to accommodate
+24/48 MP camera images. The 20 MB byte bound, processing timeout and 1600 × 1600
+preview bound remain unchanged.
+
+### Amendment — Apple HDR JPEG compatibility (2026-11-05)
+
+Apple HDR photos may include an auxiliary brightness image rather than an unrelated
+second photo ([Apple documentation](https://developer.apple.com/documentation/appkit/applying-apple-hdr-effect-to-your-photos)).
+Accept exactly one primary JPEG plus one Apple HDR gain map identified by namespaced
+XMP inside the auxiliary JPEG's APP1 header. Validate the MPF/TIFF table, version,
+entry count, encoding, offsets, sizes, contiguous ranges and complete-file coverage;
+reject nested MPF, unrelated images and malformed/unsupported metadata. Use bounded
+header/XML traversal and disable XML entities/DTDs. Both JPEGs must fully decode within
+50 MP and ten seconds each; auxiliary dimensions cannot exceed the primary, giving a
+maximum 100 MP total decoded sequentially. See also the reference
+[MPF layout](https://github.com/google/libultrahdr/blob/main/lib/src/multipictureformat.cpp).
+
+Previews render only the oriented primary photo with metadata stripped. The original
+HDR JPEG remains immutable and available through existing private downloads. This
+narrowly supersedes blanket MPF rejection, not the restriction on unrelated multipicture
+uploads. The supplied personal photo is tested locally only and is never a repository
+fixture; synthetic HDR containers cover regression tests.
+
+### Amendment — Android Ultra HDR compatibility (2026-11-05)
+
+Extend the same two-image, bounded-decoding policy to Android Ultra HDR v1 JPEGs,
+following the [Android format specification](https://developer.android.com/media/platform/hdr-image-format).
+Require namespace-checked version 1.0 identifiers in both primary and auxiliary XMP,
+exactly two ordered Google container items (Primary/GainMap), JPEG MIME types and an
+auxiliary length matching the MPF range. v1 XMP may coexist with ISO 21496-1 metadata;
+ISO-only and extra-video/Motion Photo containers remain unsupported. Previews use only
+the primary SDR photo, so HDR radiometric metadata is not used for reconstruction.
+
+The [published Pixel 6 Pro sample](https://github.com/MishaalRahmanGH/Ultra_HDR_Samples/blob/main/Originals/Ultra_HDR_Samples_Originals_01.jpg)
+has a primary MPF length that undercounts the actual JPEG by 307 bytes. For Android-
+identified files only, derive the primary boundary from the valid secondary offset;
+the declared primary length must still be in bounds and nonoverlapping. A bounded
+marker/entropy scan verifies that each resulting range contains exactly one complete
+JPEG, not a gap, appended junk or another image. Both ranges then fully decode using
+the existing limits. Apple files retain exact primary-size matching.
+
+Synthetic v1/big/little-endian/legacy/malformed fixtures and public sample checks do not
+require an Android device. Published samples are checked locally outside the repo;
+physical-device browser selection remains unverified until tested separately.
 
 Admins may inspect images through a submission-ID route with the same live RLS/Storage
 permissions as downloads. On each request it creates a metadata-free, auto-oriented PNG

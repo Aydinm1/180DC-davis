@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-04
+**Last updated:** 2026-11-05
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -16,9 +16,14 @@ hosted setup, second-lead provisioning, and extended Monday checks stay open in 
 ## Routine releases
 
 Screenshot support (local implementation): Standard assignments accept PNG, JPG/JPEG and
-WebP alongside documents, up to 20 MB/20 megapixels and one file per attempt. Guided work
+WebP alongside documents, up to 20 MB/50 megapixels and one file per attempt. Guided work
 still requires a document. The private image route uses the same permissions as downloads;
-admins get inline PNG previews and Retry, while originals stay untouched. Sharp 0.35.5 is
+admins get inline PNG previews and Retry, while originals stay untouched. Sharp provides
+bounded primary/auxiliary decoding. Apple HDR and Android Ultra HDR v1 JPEGs with one validated gain map
+are accepted; ordinary multipicture JPEGs remain unsupported. No migration is needed for
+the 50 MP/HDR compatibility adjustment. Android testing uses synthetic files and a public
+Pixel sample; actual Android browser file-picker testing remains manual acceptance.
+Sharp 0.35.5 is
 now an explicit dependency (already present through Next.js); no image optimizer cache or
 new environment variables are used. The submissions bucket/function migration must be
 applied before releasing this code; hosted migration/deployment are separately authorized.

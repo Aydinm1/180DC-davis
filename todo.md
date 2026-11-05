@@ -10,6 +10,32 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Extend bounded HDR JPEG support to Android Ultra HDR v1. Published Pixel sample
+  and supplied iPhone photo pass local validation and metadata-free oriented previews.
+  110 unit/docs checks and thirteen Storage entries pass without skips, including
+  current/legacy offsets, complete JPEG boundaries, forged identities/directories,
+  both platforms' private uploads/downloads, duplicate-safe finalization and desktop/
+  phone Android-HDR replacement/review/retry/history. Lint, typecheck, Webpack build
+  and diff checks pass; disposable local fixtures cleaned. Pending iPhone/50 MP edits
+  preserved. No schema, real program records or release changes. Physical Android
+  file-picker acceptance remains unverified; ISO-only/extra-video files are unsupported.
+
+- [x] Accept bounded Apple HDR gain-map JPEGs without allowing unrelated MPF images.
+  Exact supplied photo passes local inspection and an oriented metadata-free 1200×1600
+  preview, without uploading or copying it into fixtures. 109 unit/docs checks and
+  thirteen Storage entries pass without skips: synthetic big/little-endian HDR,
+  malformed tables/XML/auxiliary pixels, private original downloads, browser HDR
+  replacement/preview on desktop/phone, retry/history and live access denial. Lint,
+  typecheck, Webpack build and diff checks pass. Exact disposable fixtures cleaned.
+  Preserve 50 MP cap; no schema, real program data or release changes.
+
+- [x] Raise image decoding/preview limit to 50 MP. 107 unit/docs checks pass, including
+  24/48 MP JPEGs, the exact 50 MP boundary, upload/preview over-limit rejection and
+  unchanged 20 MB/format/container restrictions. Lint, typecheck, Webpack build and
+  diff checks pass. Supplied iPhone JPEG was read locally only: resolution now fits,
+  but its MPF container then failed the separate check (resolved by the HDR item above). Personal photo
+  not copied into the repo or uploaded. No schema or release changes.
+
 - [x] Repair assignment-toolbar link insertion: reproduced selected-newline rejection
   at 1280px/390px, then replaced the browser prompt with inline label/address inputs.
   Six assignment/browser entries and 107 unit/docs checks pass without skips, including

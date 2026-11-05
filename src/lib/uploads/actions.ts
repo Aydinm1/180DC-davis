@@ -11,7 +11,7 @@ const messages: Record<string, string> = {
   stale: 'Your submission changed. Refresh before submitting again.',
   closed: 'Completed work cannot be replaced.',
   abandoned: 'This upload expired or was canceled. Select the file and start a new upload.',
-  invalid: 'File validation failed. Use a supported document or a still PNG, JPEG, or WebP image up to 20 megapixels, then upload again.',
+  invalid: 'File validation failed. Use a supported document or a still PNG, JPEG, or WebP image up to 50 megapixels, then upload again.',
   too_many: 'Too many unfinished uploads. Cancel one or wait for its one-hour expiry.',
 };
 function resultMessage(result: UploadResult): UploadResult {

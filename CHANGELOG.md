@@ -5,6 +5,17 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added Android Ultra HDR v1 JPEG compatibility alongside Apple HDR support, including
+  verified legacy Pixel boundaries, private previews and unchanged original downloads.
+  Unrelated images, malformed containers and extra video remain unsupported.
+
+- Added compatibility for iPhone JPEGs containing one validated Apple HDR gain map.
+  Private previews show the main photo; original downloads retain the complete file.
+  Unrelated multipicture files and malformed auxiliary data remain rejected.
+
+- Raised the still-image upload and protected-preview limit from 20 to 50 megapixels;
+  the 20 MB file limit and existing format/container checks remain unchanged.
+
 - Fixed valid links being rejected when selected text included a trailing line break.
   The formatting toolbar now uses inline Link text/Web address fields with explicit
   insertion, cancellation and recoverable validation instead of a browser prompt.

@@ -3,6 +3,7 @@ import sharp from 'sharp';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { hdrJpeg } from '../../test/jpeg-fixtures.mjs';
 
 export async function verifyImageSubmissions({ app, fixture, prepare, upload, finalize, current, sql, cookieJar, cohort, assignment, paths }) {
   assert.ok(['localhost', '127.0.0.1'].includes(new URL(app).hostname));
@@ -28,6 +29,21 @@ export async function verifyImageSubmissions({ app, fixture, prepare, upload, fi
     assert.match(original.headers.get('content-disposition'), /^attachment/);
     assert.deepEqual(Buffer.from(await original.arrayBuffer()), bytes);
     first ??= receipt;
+  }
+  for (const kind of ['apple', 'android']) {
+    const { bytes: hdr } = await hdrJpeg({ kind });
+    const hdrIntent = await prepare(owner, 'jpeg', await current(owner), hdr);
+    await upload(owner, hdrIntent, hdr);
+    const hdrReceipt = await finalize(owner, hdrIntent);
+    assert.equal(hdrReceipt.state, 'committed');
+    assert.deepEqual(await finalize(owner, hdrIntent), hdrReceipt);
+    const hdrPreview = await request(lead, hdrReceipt.submissionId);
+    assert.equal(hdrPreview.status, 200); assert.equal(hdrPreview.headers.get('cache-control'), 'private, no-store');
+    const hdrMeta = await sharp(Buffer.from(await hdrPreview.arrayBuffer())).metadata();
+    assert.equal(hdrMeta.width, 40); assert.equal(hdrMeta.height, 80); assert.equal(hdrMeta.exif, undefined);
+    const hdrDownload = await request(owner, hdrReceipt.submissionId, 'download');
+    assert.deepEqual(Buffer.from(await hdrDownload.arrayBuffer()), hdr);
+    for (const denied of [null, other, viewer]) assert.equal((await request(denied, hdrReceipt.submissionId)).status, denied ? 404 : 401);
   }
   for (const user of [null, other, viewer]) assert.equal((await request(user, first.submissionId)).status, user ? 404 : 401);
   assert.equal((await request(owner, first.submissionId)).status, 200, 'Historical image access');
@@ -90,7 +106,7 @@ export async function verifyImageSubmissions({ app, fixture, prepare, upload, fi
       await review.getByText('Review saved.', { exact: true }).waitFor();
       await page.reload(); await page.getByRole('button', { name: 'Revise submission', exact: true }).click();
       await page.getByRole('button', { name: /^Upload file/ }).click();
-      const replacement = await sharp(source).jpeg().toBuffer();
+      const replacement = (await hdrJpeg({ kind: 'android' })).bytes;
       await page.getByLabel('Choose file', { exact: true }).setInputFiles({ name: 'replacement.jpg', mimeType: 'image/jpeg', buffer: replacement });
       await page.getByRole('button', { name: 'Revise submission', exact: true }).click();
       await page.getByRole('heading', { name: 'Previous submissions', exact: true }).waitFor();

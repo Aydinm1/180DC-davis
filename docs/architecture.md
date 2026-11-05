@@ -298,8 +298,22 @@ bounded Office ZIP/XML package (entry count, total expansion, required main-part
 relationships and valid XML; no DTD/entities). This is format validation, not malware
 scanning. Browser callers cannot invoke the service-only commit RPC to bypass inspection.
 Still PNG/JPEG/WebP submissions additionally use direct-dependency Sharp to verify format,
-page count and full decoding under a 20-megapixel limit and ten-second processing timeout.
-Explicit PNG animation-control and JPEG multipicture checks supplement decoder metadata.
+page count and full decoding under a 50-megapixel limit and ten-second processing timeout.
+Explicit PNG animation-control and JPEG container checks supplement decoder metadata.
+JPEG MPF tables may describe exactly one primary image plus one Apple/Android HDR gain map.
+Parse bounded TIFF offsets/counts and namespace-checked XMP auxiliary identification;
+require contiguous nonoverlapping JPEG ranges covering the complete file. Decode both
+images sequentially with the existing pixel/timeout limits; the gain map must not exceed
+the primary dimensions (at most 100 MP total). Preview only the oriented primary image;
+downloads retain the complete original. Reject unrelated/nested/malformed multipicture data.
+Android Ultra HDR v1 requires matching namespaced version identifiers in both images
+and two ordered Google container items (Primary/GainMap), JPEG MIME types and matching
+auxiliary byte length. Coexisting ISO metadata is not interpreted; ISO-only containers
+are unsupported. Some early Pixel encoders undercounted the primary MPF length: only
+Android-identified files may use the verified secondary offset as the primary boundary.
+A bounded JPEG marker/entropy scan requires one complete image per range with no junk,
+gaps or extra images; Sharp still fully decodes both. HDR radiometric metadata is never
+used for preview rendering; the primary SDR image is displayed.
 Client/Server Action preparation, the upload RPC, Storage intent policy and finalization
 retain workflow restrictions; Guided insert guards also reject nondocument file MIME types.
 The RPC repeats live authority/version checks and commits metadata/history atomically.

@@ -306,7 +306,13 @@ duplicate-safe, not permission to overwrite newer work. Private team files retai
   other relevant providers are accepted without a provider allowlist.
 - Standard assignment files may be PDF, DOCX, PPTX, XLSX, PNG, JPG/JPEG or WebP;
   Guided projects remain document-only and case exercises accept no file submissions.
-  Images must be still/single-page, decode correctly and not exceed 20 megapixels.
+  Images must be still/single-page, decode correctly and not exceed 50 megapixels.
+  JPEGs may contain one explicitly identified Apple HDR or Android Ultra HDR v1 gain map for the same photo;
+  validate its container and pixels, render only the primary photo, and retain the original
+  download. Unrelated multipicture images and malformed auxiliary data remain unsupported.
+  Android v1 metadata may coexist with ISO metadata; ISO-only and extra-video containers
+  are not included in this compatibility change. Previews use the primary photo without
+  reconstructing HDR brightness.
   Reject SVG, GIF, HEIC and other unsupported formats. Files must be nonempty and not exceed
   20 × 1024 × 1024 bytes. Private downloads are available to the active owner and admins,
   including previous attempts. Documents remain download-first. Admin review displays
