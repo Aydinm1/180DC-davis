@@ -4,13 +4,14 @@ import { requireParticipant } from '@/lib/supabase/auth';
 import { storageServer, storageObjectUrl, readBounded } from './server';
 import { fileError, fileMime, type UploadResult } from './format';
 import { inspectFile } from './inspect';
+import { createClient } from '@/lib/supabase/server';
 
 const failure = 'Private uploads are unavailable. Check that local Supabase Storage is running, then retry. Your file selection is kept; link submission is still available.';
 const messages: Record<string, string> = {
   stale: 'Your submission changed. Refresh before submitting again.',
   closed: 'Completed work cannot be replaced.',
   abandoned: 'This upload expired or was canceled. Select the file and start a new upload.',
-  invalid: 'File validation failed. Check the document and upload it again.',
+  invalid: 'File validation failed. Use a supported document or a still PNG, JPEG, or WebP image up to 20 megapixels, then upload again.',
   too_many: 'Too many unfinished uploads. Cancel one or wait for its one-hour expiry.',
 };
 function resultMessage(result: UploadResult): UploadResult {
@@ -20,6 +21,10 @@ export async function prepareUpload(assignmentId: string, file: { name: string; 
   const user = await requireParticipant();
   const invalid = fileError(file); if (invalid) return { error: invalid };
   try {
+    const { data: assignment, error: assignmentError } = await (await createClient()).from('assignments').select('workflow').eq('id', assignmentId).maybeSingle();
+    if (assignmentError || !assignment) return { error: 'Assignment unavailable. Refresh before uploading.' };
+    const workflowError = fileError(file, assignment.workflow !== 'standard');
+    if (workflowError) return { error: workflowError };
     const db = storageServer();
     const bucket = await db.storage.getBucket('submissions');
     if (bucket.error || bucket.data.public) return { error: failure };
@@ -50,6 +55,7 @@ export async function finalizeUpload(intentId: string): Promise<UploadResult> {
       revalidatePath('/', 'layout'); revalidatePath('/admin', 'layout');
       return intent;
     }
+    // Database finalization also rechecks workflow eligibility atomically.
     const response = await fetch(storageObjectUrl(intent.path), { headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}`, apikey: process.env.SUPABASE_SECRET_KEY! }, cache: 'no-store', signal: AbortSignal.timeout(30000) });
     if (!response.ok) return { error: 'Upload is not available yet. Retry saving, or cancel and upload again.' };
     let bytes: Buffer;

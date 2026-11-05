@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+- [ADR 0024: Public marketing boundary](0024-public-marketing-boundary.md)
+
 - [ADR 0023: Individual case exercises](0023-individual-case-exercises.md)
 
 - [ADR 0022: Guided team projects](0022-guided-team-projects.md)
@@ -9,7 +11,7 @@
 - [ADR 0020: Admin-assigned teams and shared submission targets](0020-admin-assigned-team-submissions.md)
 
 **Status:** Active
-**Last updated:** 2026-10-25
+**Last updated:** 2026-11-02
 **Source of truth for:** Durable decision history and ADR format
 
 Create an ADR for decisions that materially affect architecture, schema, security,

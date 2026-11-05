@@ -5,6 +5,14 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added Standard-assignment PNG/JPEG/WebP screenshot uploads and private inline admin
+  image previews with retry/download recovery. Guided projects remain document-only;
+  original files/history and manual Complete/Request revision behavior are unchanged.
+
+- Added an independently styled public website starter at `/landing`, with approved
+  branding, an Open GAP link and noindex metadata/headers. Public visits skip GAP session
+  refresh and activity tracking; existing portal URLs and authentication stay unchanged.
+
 - Refocused case and guided assignments into separate Instructions and Workspace views,
   preserving authored content and saved workflows. Added navigable briefs, a roomy case
   comparison with smaller-screen view controls, and easy-to-reach final submission.

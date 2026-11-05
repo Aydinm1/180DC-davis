@@ -20,11 +20,16 @@ import { useAdminWorkspace } from "./admin-workspace";
 import { GradingReferencePanel } from './grading-reference';
 import type { GradingReference } from '@/lib/grading/types';
 import type { GuidedProject } from '@/lib/guided/types';
+import { isImageMime } from '@/lib/uploads/format';
+import { SubmissionImage } from './submission-image';
 
 function ViewAttempt({ attempt, announce }: { attempt: ReturnType<typeof useAdminWorkspace>["submissions"][number]; announce: (message: string) => void }) {
   if (attempt.payload.type === 'text') return <WrittenResponse text={attempt.payload.submittedText} />;
   const className = "inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-border-strong px-4 text-sm font-bold text-ink hover:bg-surface-subtle";
-  return attempt.payload.type === "link" ? <a className={className} href={attempt.payload.submittedUrl} target="_blank" rel="noreferrer">Open submitted link ↗</a> : /^[0-9a-f-]{36}$/i.test(attempt.id) ? <a className={className} href={`/api/submissions/${attempt.id}/download`}>Download original file</a> : <button className={className} type="button" onClick={() => announce("This fictional preview file is not available to download.")}>Download original file</button>;
+  return attempt.payload.type === "link" ? <a className={className} href={attempt.payload.submittedUrl} target="_blank" rel="noreferrer">Open submitted link ↗</a> : /^[0-9a-f-]{36}$/i.test(attempt.id) ? <>
+    {isImageMime(attempt.payload.mimeType) ? <SubmissionImage key={attempt.id} id={attempt.id} name={attempt.payload.originalFilename} /> : null}
+    <a className={className} href={`/api/submissions/${attempt.id}/download`}>Download original file</a>
+  </> : <button className={className} type="button" onClick={() => announce("This fictional preview file is not available to download.")}>Download original file</button>;
 }
 
 export function AdminSubmissionReview({ submissionId, reference, project }: { submissionId: string; reference?: GradingReference; project?: GuidedProject }) {

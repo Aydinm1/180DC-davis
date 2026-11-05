@@ -10,6 +10,7 @@ import {tmpdir} from 'node:os';
 import {createClient} from '@supabase/supabase-js';
 import {createServerClient} from '@supabase/ssr';
 import {pdf} from '../test/upload-fixtures.mjs';
+import sharp from 'sharp';
 import {readMemberRows} from '../src/lib/supabase/member-rows.ts';
 const exec=promisify(execFile),config=JSON.parse((await exec('./node_modules/.bin/supabase',['status','-o','json'])).stdout);
 assert.equal(new URL(config.API_URL).hostname,'127.0.0.1');
@@ -98,6 +99,19 @@ test('admin-assigned teams share one private submission without altering individ
    assert.equal(ok(await b.client.storage.from('submissions').download(prepared.path)).size,pdf.length);
    assert.ok((await b.client.rpc('file_upload',{p_actor:b.id,p_action:'finalize',p_intent:stale.id})).error);
   });
+  await t.test('team screenshots retain private teammate/admin access and reject outsiders',async()=>{
+   const bytes=await sharp({create:{width:20,height:10,channels:3,background:'white'}}).png().toBuffer();
+   const prior=ok(await root.from('submissions').select('*').eq('assignment_id',uploadAssignment).eq('is_current',true).single());
+   const intent=ok(await file(a,'prepare',{assignmentId:uploadAssignment,name:'team.png',size:bytes.length,mime:'image/png',expectedId:prior.id,expectedUpdatedAt:prior.updated_at}));paths.push(intent.path);
+   ok(await a.client.storage.from('submissions').upload(intent.path,bytes,{contentType:'image/png'}));
+   const receipt=ok(await file(a,'finalize',{size:bytes.length,mime:'image/png'},intent.id));assert.equal(receipt.state,'committed');
+   assert.equal(ok(await b.client.storage.from('submissions').download(intent.path)).size,bytes.length);
+   assert.ok((await outsider.client.storage.from('submissions').download(intent.path)).error);
+   if(app)for(const [user,status] of [[b,200],[lead,200],[outsider,404],[viewer,404]]){
+    const jar=await cookies(user),response=await fetch(`${app}/api/submissions/${receipt.submissionId}/image`,{headers:{cookie:jar.map(c=>c.name+'='+c.value).join('; ')}});
+    assert.equal(response.status,status);
+   }
+  });
   await t.test('membership changes invalidate pending uploads and mode changes roll back safely',async()=>{
    const otherTeam=ok(await teamOp(lead,'create',{cohortId:cohort,name:'Unsubmitted team',isTest:false}));
    ok(await teamOp(lead,'members',{id:otherTeam,version:0,enrollmentIds:[outsider.enrollment]}));
@@ -124,7 +138,7 @@ test('admin-assigned teams share one private submission without altering individ
    for(const args of [['unknown',{}],['members',{id:'forged',version:0,enrollmentIds:[]}],['create',{cohortId:cohort,name:'Bad',isTest:'false'}]])assert.match((await action(lead,args)).body,/Invalid team/);
    for(const u of [inactive,wrong,viewer])assert.match((await action(u,[assignment,'Forged response',null,null,randomUUID()],'saveText')).redirect,/access-denied/);
    assert.match((await action(outsider,[assignment,'Not on this team'],'saveText')).body,/Could not submit/);
-   const fileRow=ok(await root.from('submissions').select('id').eq('assignment_id',uploadAssignment).eq('submission_type','file').single());
+   const fileRow=ok(await root.from('submissions').select('id').eq('assignment_id',uploadAssignment).eq('submission_type','file').eq('mime_type','application/pdf').single());
    for(const[u,status]of [[a,200],[b,200],[lead,200],[outsider,404],[viewer,404],[inactive,404],[wrong,404],[null,401]]){
     const jar=u?await cookies(u):[],r=await fetch(`${app}/api/submissions/${fileRow.id}/download`,{headers:{cookie:jar.map(c=>c.name+'='+c.value).join('; ')}});assert.equal(r.status,status);assert.match(r.headers.get('cache-control'),/no-store/);if(status===200)assert.equal((await r.arrayBuffer()).byteLength,pdf.length);
    }

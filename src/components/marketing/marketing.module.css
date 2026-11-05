@@ -1,0 +1,113 @@
+.site {
+  --marketing-background: #fff;
+  --marketing-ink: #243027;
+  --marketing-green: #2f7328;
+  --marketing-border: #e0e5dd;
+  display: flex;
+  min-height: 100svh;
+  flex: 1;
+  flex-direction: column;
+  background: var(--marketing-background);
+  color: var(--marketing-ink);
+}
+
+.header,
+.main,
+.footer {
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.75rem;
+  border-bottom: 1px solid var(--marketing-border);
+}
+
+.logo {
+  width: 13rem;
+  height: auto;
+}
+
+.portalLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem;
+  color: var(--marketing-green);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 0.25em;
+  white-space: nowrap;
+}
+
+.portalLink:is(:hover, :focus-visible, :active) {
+  text-decoration: underline;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.hero {
+  width: 100%;
+  padding-block: clamp(5rem, 12vw, 10rem);
+}
+
+.accent {
+  width: 3rem;
+  height: 0.25rem;
+  margin-bottom: 2rem;
+  background: var(--marketing-green);
+}
+
+.title {
+  max-width: 16ch;
+  margin: 0;
+  font-size: clamp(2.5rem, 6.6vw, 6rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  overflow-wrap: break-word;
+}
+
+.title span {
+  display: block;
+  color: var(--marketing-green);
+}
+
+.footer {
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--marketing-border);
+  color: #5f645f;
+  font-size: 0.75rem;
+  line-height: 1.75;
+}
+
+.skipLink {
+  position: fixed;
+  top: 0.75rem;
+  left: 1.5rem;
+  z-index: 50;
+  padding: 0.75rem 1rem;
+  transform: translateY(-200%);
+  background: var(--marketing-background);
+  color: var(--marketing-green);
+  font-weight: 600;
+}
+
+.skipLink:focus {
+  transform: none;
+}
+
+@media (max-width: 480px) {
+  .logo { width: 10rem; }
+  .header { padding-block: 1.25rem; }
+}

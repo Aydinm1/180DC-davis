@@ -1,8 +1,10 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { supabaseConfig } from '@/lib/supabase/config';
+import { isMarketingPath } from '@/lib/marketing/site';
 
 export async function proxy(request: NextRequest) {
+  if (isMarketingPath(request.nextUrl.pathname)) return NextResponse.next({ request });
   let response = NextResponse.next({ request });
   const config = supabaseConfig();
   if (!config) return response;

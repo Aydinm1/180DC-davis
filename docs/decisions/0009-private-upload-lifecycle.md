@@ -27,8 +27,22 @@ and retryable network/API failure receipts. Lost finalization responses use the 
 committed receipt; cancellation errors must not prevent link submission.
 
 Download by submission ID through an authenticated, no-store streaming attachment route.
-Only live owners/admins can read committed files. No public or persistent signed URLs,
-embedded viewers, or Monday exports are generated.
+Only live owners/authorized teammates/admins can read committed files. No public or
+persistent signed URLs, embedded document viewers, or Monday exports are generated.
+
+### Amendment — private screenshot previews (2026-11-04)
+
+Standard assignments also accept still PNG/JPEG/WebP files under the same intent and
+review lifecycle. Original bytes remain immutable; bounded Sharp decoding verifies
+format and rejects corrupt/animated/multipage images above 20 megapixels. Guided
+projects retain document-only enforcement across preparation, Storage and finalization.
+
+Admins may inspect images through a submission-ID route with the same live RLS/Storage
+permissions as downloads. On each request it creates a metadata-free, auto-oriented PNG
+inside 1600 × 1600 without enlargement, with private/no-store/nosniff responses and no
+shared optimizer cache. No preview object is persisted. This narrowly supersedes the
+earlier no-embedded-viewer limitation for still images only; documents stay download-first.
+Retries retain feedback and do not constitute a review decision or automatic credit.
 
 ## Consequences
 

@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-02
+**Last updated:** 2026-11-04
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -14,6 +14,18 @@ loop:
 > learn → submit → review → receive feedback
 
 It should feel like a restrained consulting-firm training portal, not a school LMS.
+
+## Public website starter
+
+`/landing` is a public, unindexed website starter for 180 Degrees Consulting at UC Davis.
+It has its own shell, approved logo, brand heading and Open GAP link to the existing `/`.
+It does not require or refresh GAP sessions, load private program content, synchronize
+profiles or record Last active. Public access also works with expired/invalid GAP cookies.
+Noindex/nofollow metadata and response headers discourage indexing; they do not restrict access.
+The starter contains no speculative clients, people, outcomes or recruiting information.
+
+GAP retains its existing URLs and access rules. Moving GAP to `/gap` and making marketing
+the homepage is a separately planned future migration, not part of this starter.
 
 ## Users and access
 
@@ -288,9 +300,15 @@ duplicate-safe, not permission to overwrite newer work. Private team files retai
   reload. Warn on unloading unsaved input and confirm explicit cancellation.
 - Links must be valid `http` or `https` URLs. Google Docs, Slides, Sheets, Canva, and
   other relevant providers are accepted without a provider allowlist.
-- Files may be PDF, DOCX, PPTX, or XLSX, must be nonempty, and must not exceed
+- Standard assignment files may be PDF, DOCX, PPTX, XLSX, PNG, JPG/JPEG or WebP;
+  Guided projects remain document-only and case exercises accept no file submissions.
+  Images must be still/single-page, decode correctly and not exceed 20 megapixels.
+  Reject SVG, GIF, HEIC and other unsupported formats. Files must be nonempty and not exceed
   20 × 1024 × 1024 bytes. Private downloads are available to the active owner and admins,
-  including previous attempts. Review is download-first, not an embedded viewer.
+  including previous attempts. Documents remain download-first. Admin review displays
+  private orientation-correct image previews with download access; failed previews offer
+  Retry without clearing feedback or blocking a decision. Images remain ordinary `file`
+  submissions, one per attempt, with normal review and no automatic completion.
 - Uploads show progress, checking/saving, retryable errors, and cancellation. An uploaded
   object is not a submission until validation and atomic finalization succeed. The
   selected file is retained for recoverable failures only in the current page session;

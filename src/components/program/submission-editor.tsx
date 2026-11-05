@@ -12,7 +12,7 @@ import {
 import type { SubmissionPayload } from "@/lib/program/types";
 import { cn } from "@/lib/ui";
 import { uploadTask } from '@/lib/uploads/client';
-import { fileError } from '@/lib/uploads/format';
+import { fileAccept, fileError } from '@/lib/uploads/format';
 import { useRouter } from 'next/navigation';
 
 
@@ -84,7 +84,7 @@ export function SubmissionEditor({
   }
   async function sendFile() {
     if (preview || !file || busy.current) return;
-    const invalid = fileError(file); if (invalid) return setError(invalid);
+    const invalid = fileError(file, documentsOnly); if (invalid) return setError(invalid);
     busy.current = true; setSaving(true); setError(undefined); setFinalizing(false);
     task.current ??= uploadTask(file, assignmentId, expected, setProgress, () => setFinalizing(true));
     const currentTask = task.current;
@@ -164,7 +164,7 @@ export function SubmissionEditor({
             </span>
             <span className="mt-1 block text-xs leading-5 text-ink-soft">
               {choice === 'text' ? 'Type or paste your response · Up to 20,000 characters' : choice === "file"
-                ? "PDF, DOCX, PPTX, or XLSX · Up to 20 MB"
+                ? documentsOnly ? "PDF, DOCX, PPTX, or XLSX · Up to 20 MB" : "Documents or PNG, JPG/JPEG, WebP · Up to 20 MB"
                 : "Google Docs, Slides, Sheets, Canva, or another web link"}
             </span>
           </button>
@@ -190,7 +190,7 @@ export function SubmissionEditor({
             id={inputId}
             type="file"
             disabled={saving || hasTask}
-            accept=".pdf,.docx,.pptx,.xlsx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            accept={fileAccept(documentsOnly)}
             className="mt-2 block min-h-11 w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-action file:px-3 file:py-2 file:font-bold file:text-white"
             onChange={(event) => { patchDraft({ file: event.target.files?.[0] }); setError(undefined); }}
           />

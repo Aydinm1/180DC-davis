@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-10-31
+**Last updated:** 2026-11-04
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -541,7 +541,9 @@ not an inference that every submitted assignment was approved.
 - Bucket: `submissions`
 - Visibility: private
 - Maximum object size: 20 MB
-- Allowed types: PDF, DOCX, PPTX, XLSX MIME types
+- Allowed types: PDF, DOCX, PPTX, XLSX, PNG, JPEG and WebP MIME types. Images are accepted
+  only for Standard assignments; Guided projects require documents. Existing file
+  submission rows store their original bytes/name/size/MIME, without a new enum/table.
 - Object path: `{user_id}/{assignment_id}/{submission_id}-{sanitized_filename}`
 - Filenames are sanitized for paths while `original_filename` is stored for display.
 - INSERT requires an exact pending, unexpired upload intent owned by `auth.uid()`,
@@ -556,6 +558,10 @@ not an inference that every submitted assignment was approved.
   historical submissions.
 - Downloads use `/api/submissions/[id]/download`, with current user-scoped RLS and
   private/no-store attachment streaming; the app does not generate signed or public URLs.
+- `/api/submissions/[id]/image` applies identical RLS and live Storage permissions before
+  decoding a committed image. Individual historical access after withdrawal remains as
+  with downloads; Viewer/deactivation/admin revocation still remove authority. It returns
+  only a derived metadata-free PNG, never an uncommitted object or a public URL.
 
 ### Private upload ledger
 
@@ -576,6 +582,13 @@ supersedes/inserts/commits. Link/text saves and reviews use the same gates and t
 ownership; cleanup never acquires a target/gate, so no reverse intent dependency exists.
 Committed retries return the same receipt. Stale and
 invalid finalizations abandon the intent without changing submission history.
+
+Migration `202611040001_submission_images.sql` extends only the submissions bucket and
+upload function MIME allowlist. Preparation, exact-intent Storage INSERT and finalization
+deny images outside Standard workflows, including forged prepared intents. Guided insert
+guards preserve approval/freezing and reject image or unknown file MIME types. Browser RPC
+grants remain unchanged. Existing submissions, feedback, timestamps, files, schema columns,
+assignment PDFs and grading-example buckets are not rewritten.
 
 `cleanup_uploads` is service-only. It locks and terminally abandons up to 100 expired or
 abandoned intents, marks a cleanup attempt, and returns paths to the local Storage API

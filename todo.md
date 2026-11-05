@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-02
+**Last updated:** 2026-11-04
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,33 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Support Standard-assignment PNG/JPEG/WebP submissions and protected admin previews;
+  preserve document-only Guided work, case restrictions, private upload lifecycle and
+  pending landing edits. Verify bounded image inspection, RLS/Storage/HTTP access,
+  desktop/phone review/retry/history and affected regressions. 107 unit/docs, thirteen
+  Storage, nine team, nine guided, five brief, seven grading and seven case entries pass
+  without skips. Actual image uploads, interrupted-transfer retries, preview retry with
+  retained feedback, orientation/metadata removal, immutable originals/history and live
+  owner/team/admin/Viewer denial verified; screenshots inspected. Guided preparation and
+  forged-finalization image denial pass. Fixture enrollment/history assumptions were
+  corrected to retain existing Viewer and historical individual-download rules.
+  Local migration, generated-type consistency, lint/typecheck, Webpack build and diff
+  checks pass; ignored duplicate generated Next types were moved aside for typecheck.
+  Install-script review reports no unreviewed scripts. Exact local fixtures cleaned.
+  Hosted migration, real Week 3 configuration, commit/push and deployment remain separate.
+
+- [x] Add an independently styled, public `/landing` starter in the existing Next.js
+  app; retain npm/Node, GAP routes and sign-in. Bypass session work only for the landing
+  subtree, isolate public branding and noindex metadata/headers, and verify anonymous,
+  signed-in and expired-session visits plus protected-route regressions. 104 unit/docs,
+  fourteen program/session, eight Viewer and five week/activity entries pass without
+  skips. Public HTML is identity-independent; cookies/activity remain unchanged, no
+  speculative portal requests occur, and scoped CSS leaves GAP unchanged after navigation.
+  Desktop/390px/320px, keyboard focus/skip navigation, no-JavaScript rendering and metadata/
+  subtree-header checks pass; screenshots inspected. Lint/typecheck, Webpack build and
+  diff checks pass. Exact local fixtures cleaned. Local evidence is not hosted or real
+  Google acceptance. No dependencies, schema, provider settings, commit or deployment changed.
 
 - [x] Focus case/guided assignment Instructions and Workspace; preserve authored content,
   drafts/files/transfers, existing reveal/approval/submission/completion semantics and

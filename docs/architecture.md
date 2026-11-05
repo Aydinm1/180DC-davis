@@ -8,7 +8,7 @@ successful receipts through retries. No background jobs or Monday writes are inv
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-02
+**Last updated:** 2026-11-04
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -66,6 +66,7 @@ updates without shared protected caching or realtime.
 
 | Route | Access | Purpose |
 | --- | --- | --- |
+| `/landing` | Public; no GAP session work | Independent public website starter; noindex/nofollow |
 | `/` | Active member/admin | Student dashboard and portal home |
 | `/login` | Public | Google sign-in and access explanation |
 | `/explore` | Active Viewer/Admin | Published active/archived program browser |
@@ -86,6 +87,7 @@ updates without shared protected caching or realtime.
 | `/admin/weeks/[id]` | Admin | Week, assignment, and resource editing |
 | `/admin/members` | Admin | Approved-roster management |
 | `/api/submissions/[id]/download` | Active individual owner/authorized teammate/admin | Private current/historical file attachment |
+| `/api/submissions/[id]/image` | Same live RLS as downloads | Private, bounded metadata-free PNG preview |
 
 In Next.js 16, dynamic `params`, `searchParams`, `cookies()`, and `headers()` are async.
 Use the installed documentation rather than legacy examples.
@@ -124,6 +126,17 @@ Preview navigation retains its cohort query; normal member reads remain enrollme
 7. Database and Storage RLS enforce the same policy independently.
 
 ## Data access and mutations
+
+The public website uses the `(marketing)` route group under the existing root document
+and fonts. Its Server Components live in `src/components/marketing`, with CSS Modules
+and no protected shell/provider/data imports. Public-only assets belong in `public/marketing`;
+approved logos remain shared in `public/brand`. The thin `/landing` page renders a
+path-independent starter, and marketing's Open GAP destination lives in one site config.
+Marketing overrides inherited GAP metadata; `next.config.ts` adds indexing headers for
+exactly `/landing` and descendants. The proxy exits before Supabase configuration/client/
+cookie work for that subtree, never similarly named paths such as `/landing-other`.
+Ordinary anchors avoid speculative portal prefetch. No new API, schema, runtime or
+deployment project is introduced. See [ADR 0024](decisions/0024-public-marketing-boundary.md).
 
 Case and guided assignment Instructions/Workspace views are local client state, not
 new routes or server reads. Native hidden wrappers retain guided step/submission DOM
@@ -281,6 +294,11 @@ a bounded 20 MB read. It verifies bytes/MIME/extension, PDF header/end marker, o
 bounded Office ZIP/XML package (entry count, total expansion, required main-part type,
 relationships and valid XML; no DTD/entities). This is format validation, not malware
 scanning. Browser callers cannot invoke the service-only commit RPC to bypass inspection.
+Still PNG/JPEG/WebP submissions additionally use direct-dependency Sharp to verify format,
+page count and full decoding under a 20-megapixel limit and ten-second processing timeout.
+Explicit PNG animation-control and JPEG multipicture checks supplement decoder metadata.
+Client/Server Action preparation, the upload RPC, Storage intent policy and finalization
+retain workflow restrictions; Guided insert guards also reject nondocument file MIME types.
 The RPC repeats live authority/version checks and commits metadata/history atomically.
 Retryable infrastructure failures retain the upload; invalid/stale work is abandoned for
 cleanup. Success alone refreshes member/admin views.
@@ -292,7 +310,14 @@ user can switch to link submission even if abandonment could not be confirmed.
 Download routes resolve submission IDs under user-scoped RLS and stream the derived
 Storage path using the session credential. Responses are attachments with original
 filenames, private/no-store and nosniff headers. Downloading has no review side effect.
-There is no embedded viewer, persistent signed URL, or Monday file export.
+Documents have no embedded viewer. Image previews resolve IDs through the same user-scoped
+RLS and authenticated Storage fetch, bounded by stored size and 20 MB. Sharp auto-orients
+and creates a fresh PNG inside 1600 × 1600 without enlargement/metadata. Responses use
+private/no-store, nosniff, same-origin resource policy and restrictive CSP, including errors.
+The admin image component uses a native image request, never the shared Next image optimizer;
+local retry state does not remount feedback. Stored MIME enters optional typed file DTOs,
+while legacy/fictional payloads without it remain download-only. There are no persistent
+signed URLs, public previews, preview-storage objects or Monday exports.
 
 ### P5 implementation status
 

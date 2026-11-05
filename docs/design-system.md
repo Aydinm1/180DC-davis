@@ -1,10 +1,20 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-02
+**Last updated:** 2026-11-04
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
+
+### Public website boundary
+
+The `/landing` starter has an independent public header/main/footer, without portal
+navigation, profile controls or dashboard cards. Initially reuse Montserrat and approved
+logos, with a simple oversized brand heading, green accent and Open GAP link. Do not
+invent marketing facts or add empty navigation. Marketing CSS belongs in locally scoped
+CSS Modules with wrapper-scoped variables; never change global body/theme styles for
+public-site art direction. Keep visible keyboard focus, a skip-to-content link, 44px
+actions and usable narrow/zoomed layouts. Its design may evolve separately from GAP.
 
 ### Interface copy
 
@@ -287,6 +297,12 @@ descriptive filenames.
 - Submission editors show file formats and the 20 MB limit before selection. Opening an
   editor focuses its heading; cancelling restores focus to the action that opened it.
   Unavailable sample-file actions display an adjacent explanation.
+- Standard file selection includes PNG/JPEG/WebP screenshots; Guided controls still list
+  documents only. Admin Submitted work displays still images at their natural aspect
+  ratio within the column/viewport, with Download original file retained. Preview errors
+  offer Retry image preview and download; neither resets feedback nor disables grading.
+  Historical images load only when their disclosure is opened. Do not embed documents,
+  show private images in public/member-preview projections, or add a gallery/lightbox.
 - Offer Write response, Upload file and Submit link. Stack choices in narrow desktop
   rails; wide editors can use three columns. Written responses use a labeled multiline
   textbox, 20,000-character counter and plain-text/draft guidance. Review preserves line

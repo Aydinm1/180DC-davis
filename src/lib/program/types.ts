@@ -84,6 +84,7 @@ export type FileSubmission = {
   type: "file";
   originalFilename: string;
   filePath: string;
+  mimeType?: string;
 };
 
 export type LinkSubmission = {

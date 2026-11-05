@@ -1,10 +1,12 @@
 import { fromBuffer, type Entry } from 'yauzl';
-import { fileError, fileMime, MAX_FILE_BYTES } from './format.ts';
+import { fileError, fileMime, isImageMime, MAX_FILE_BYTES } from './format.ts';
+import { inspectImage } from './image.ts';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
 
 // Bounded format checks, NOT antivirus or a guarantee that a document is safe.
 export async function inspectFile(bytes: Buffer, name: string, mime: string, expectedSize: number) {
   if (fileError({ name, size: bytes.length, type: mime }) || bytes.length !== expectedSize || bytes.length > MAX_FILE_BYTES) throw new Error('Invalid file size or type.');
+  if (isImageMime(mime)) return inspectImage(bytes, mime);
   if (fileMime(name) === 'application/pdf') {
     if (!/^%PDF-1\.[0-7]|^%PDF-2\.0/.test(bytes.subarray(0, 8).toString('ascii')) || !bytes.subarray(-1024).toString('ascii').includes('%%EOF')) throw new Error('Invalid PDF.');
     return;

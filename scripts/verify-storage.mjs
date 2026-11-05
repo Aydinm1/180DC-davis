@@ -12,6 +12,7 @@ import { inspectFile } from '../src/lib/uploads/inspect.ts';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { verifyImageSubmissions } from './lib/image-submissions.mjs';
 
 const exec = promisify(execFile);
 const config = JSON.parse((await exec('./node_modules/.bin/supabase',['status','-o','json'])).stdout);
@@ -31,7 +32,7 @@ async function fixture(role='member') {
   await sql(`insert into auth.identities(provider_id,user_id,identity_data,provider,created_at,updated_at,last_sign_in_at) values (${q(user.id)},${q(user.id)},jsonb_build_object('sub',${q(user.id)},'email',${q(email)},'email_verified',true),'google',now(),now(),now());
   insert into public.people(id,email,full_name) values (${q(person)},${q(email)},'File Test');
   insert into public.approved_members(person_id,email,full_name,role) values (${q(person)},${q(email)},'File Test',${q(role)});
-  insert into public.cohort_enrollments(person_id,cohort_id) values (${q(person)},${q(cohort)});`);
+  ${role === 'viewer' ? '' : `insert into public.cohort_enrollments(person_id,cohort_id) values (${q(person)},${q(cohort)});`}`);
   const link=ok(await admin.auth.admin.generateLink({type:'magiclink',email}));
   const client=createClient(config.API_URL,config.ANON_KEY,options);
   ok(await client.auth.verifyOtp({token_hash:link.properties.hashed_token,type:'magiclink'}));
@@ -209,6 +210,9 @@ test('private Storage lifecycle using isolated local accounts',async t=>{
       assert.equal((await downloadRoute(member,first.submissionId)).status,404);
       await sql(`update public.approved_members set active=true where person_id=${q(member.person)}`);
       for(const user of [member,lead]) { const response=await downloadRoute(user,first.submissionId); assert.equal(response.status,200); assert.match(response.headers.get('cache-control'),/private, no-store/); assert.match(response.headers.get('content-disposition'),/^attachment/); assert.deepEqual(Buffer.from(await response.arrayBuffer()),pdf); }
+    });
+    await t.test('image uploads, private previews, live authorization and desktop/phone review recovery', { skip: !process.env.GAP_TEST_BROWSER, timeout: 120000 }, async () => {
+      await verifyImageSubmissions({ app: process.env.GAP_TEST_APP_URL, fixture, prepare, upload, finalize, current, sql, cookieJar, cohort, assignment, paths });
     });
     await t.test('desktop and phone upload → reload → review → feedback → replacement/history',{skip:!process.env.GAP_TEST_BROWSER,timeout:120000},async()=>{
       assert.ok(process.env.GAP_TEST_APP_URL);

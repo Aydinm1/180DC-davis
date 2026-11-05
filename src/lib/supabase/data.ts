@@ -33,7 +33,7 @@ export const readWorkspace = cache(async (admin = true) => {
         assignments:weekAssignments };
     }),
     submissions:(submissions.data ?? []).map((r): SubmissionAttempt => ({ id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id ?? undefined,targetId:r.target_id,teamId:r.team_id ?? undefined,participantEnrollmentIds:teams.find(t=>t.id===r.team_id)?.enrollmentIds,submittedByName:people.data.find(p=>p.id===r.submitted_by)?.full_name,status:r.status,submittedAt:r.submitted_at,updatedAt:r.updated_at,isCurrent:r.is_current,feedback:r.feedback ?? undefined,reviewedAt:r.reviewed_at ?? undefined,reviewedByUserId:r.reviewed_by ?? undefined,supersedesSubmissionId:r.supersedes_submission_id ?? undefined,
-      payload:r.submission_type==='text' ? { type:'text',submittedText:r.submitted_text! } : r.submission_type==='link' ? { type:'link',submittedUrl:r.submitted_url! } : { type:'file',filePath:r.file_path!,originalFilename:r.original_filename! } })),
+      payload:r.submission_type==='text' ? { type:'text',submittedText:r.submitted_text! } : r.submission_type==='link' ? { type:'link',submittedUrl:r.submitted_url! } : { type:'file',filePath:r.file_path!,originalFilename:r.original_filename!,mimeType:r.mime_type ?? undefined } })),
   };
   return { user, state };
 });
@@ -61,7 +61,7 @@ export const readMember = cache(async () => {
     return { id:r.id,cohortId:r.cohort_id,weekNumber:r.week_number,title:r.title,publicationState:'draft' };
   });
   const submissions: SubmissionAttempt[] = rows.submissions.map(r => ({ id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id ?? undefined,targetId:r.target_id,teamId:r.team_id ?? undefined,participantEnrollmentIds:r.team_id===team?.id?team?.members.map(m=>m.enrollmentId):undefined,submittedByName:team?.members.find(m=>m.personId===r.submitted_by)?.name ?? (r.enrollment_id===e?.id?user.fullName:undefined),status:r.status,submittedAt:r.submitted_at,updatedAt:r.updated_at,isCurrent:r.is_current,feedback:r.feedback ?? undefined,reviewedAt:r.reviewed_at ?? undefined,reviewedByUserId:r.reviewed_by ?? undefined,supersedesSubmissionId:r.supersedes_submission_id ?? undefined,
-    payload:r.submission_type==='text' ? { type:'text',submittedText:r.submitted_text! } : r.submission_type==='link' ? { type:'link',submittedUrl:r.submitted_url! } : { type:'file',filePath:r.file_path!,originalFilename:r.original_filename! } }));
+    payload:r.submission_type==='text' ? { type:'text',submittedText:r.submitted_text! } : r.submission_type==='link' ? { type:'link',submittedUrl:r.submitted_url! } : { type:'file',filePath:r.file_path!,originalFilename:r.original_filename!,mimeType:r.mime_type ?? undefined } }));
   return { user,cohort,enrollment,weeks,submissions,now:new Date().toISOString() };
 });
 

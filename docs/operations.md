@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-02
+**Last updated:** 2026-11-04
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -14,6 +14,33 @@ file uploads. Local Google callback/admin access and analyst access were user-co
 hosted setup, second-lead provisioning, and extended Monday checks stay open in `todo.md`.
 
 ## Routine releases
+
+Screenshot support (local implementation): Standard assignments accept PNG, JPG/JPEG and
+WebP alongside documents, up to 20 MB/20 megapixels and one file per attempt. Guided work
+still requires a document. The private image route uses the same permissions as downloads;
+admins get inline PNG previews and Retry, while originals stay untouched. Sharp 0.35.5 is
+now an explicit dependency (already present through Next.js); no image optimizer cache or
+new environment variables are used. The submissions bucket/function migration must be
+applied before releasing this code; hosted migration/deployment are separately authorized.
+Use the existing `test:storage` suite with `GAP_TEST_BROWSER=1` and the matching local
+production server for image upload/privacy/retry/review/history plus document regressions.
+Also run team/guided/type checks. Fixture-only acceptance is not hosted or real-Google proof.
+No real Week 3 assignment is created/configured. For the anonymous-feedback use case,
+instruct members to upload only the final completion screen, never feedback answers;
+GAP verifies identifiable completion, not the external form's anonymity configuration.
+
+Public website development: run the existing npm/Node app and open `/landing`. Edit the
+thin page under `(marketing)/landing` and public-site components under
+`src/components/marketing`; put website-only assets in `public/marketing`, never private
+GAP files. Open GAP still points to `/`, centralized in `src/lib/marketing/site.ts`.
+The starter needs no new dependencies, environment values, migration, auth settings or
+Vercel project. It is public, not access-protected: robots metadata and X-Robots-Tag only
+discourage indexing. No Supabase refresh or Last active recording occurs on public visits.
+Run `GAP_TEST_APP_URL=http://localhost:3004 GAP_TEST_BROWSER=1 npm run test:program`
+against a matching local production build for session-free public and protected GAP
+regressions; the suite uses disposable local fixtures. No hosted or real-Google result
+is implied. A future homepage and `/gap` cutover requires its own plan and release,
+including callbacks, legacy links, downloads and attendance QR destinations.
 
 Activity presentation: case/guided pages have Instructions / Workspace. New work starts
 with instructions; saved work resumes its workspace. Guided final briefs are reached

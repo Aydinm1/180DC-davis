@@ -85,8 +85,11 @@ test('guided project lifecycle, privacy and final submission gates',async t=>{
    s=await read(member);ok(await mutate(member,'recommended',{version:s.state.version}));
   });
   await t.test('prepared uploads cannot bypass new approval gates; finalization freezes work',async()=>{
+   for(const [name,mime] of [['proof.png','image/png'],['proof.jpg','image/jpeg'],['proof.webp','image/webp']])assert.ok((await root.rpc('file_upload',{p_actor:member.id,p_action:'prepare',p_data:{assignmentId:aid,name,size:100,mime}})).error);
    const p=ok(await root.rpc('file_upload',{p_actor:member.id,p_action:'prepare',p_data:{assignmentId:aid,name:'project.pdf',size:pdf.length,mime:'application/pdf'}}));paths.push(p.path);
    ok(await member.client.storage.from('submissions').upload(p.path,pdf,{contentType:'application/pdf'}));
+   const forged=await sql(`begin;update private.upload_intents set mime_type='image/png',original_filename='forged.png' where id=${q(p.id)};select public.file_upload(${q(member.id)},'finalize',${q(p.id)},'{"size":${pdf.length},"mime":"image/png"}');rollback;`);
+   assert.match(forged,/invalid/);assert.equal((await read(member)).state.frozen,false);
    let s=await read(member);ok(await mutate(member,'alternative',{version:s.state.version,proposal}));
    assert.ok((await root.rpc('file_upload',{p_actor:member.id,p_action:'finalize',p_intent:p.id,p_data:{size:pdf.length,mime:'application/pdf'}})).error);
    assert.equal(await sql(`select count(*) from public.submissions where assignment_id=${q(aid)}`),'0');

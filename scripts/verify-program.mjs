@@ -5,6 +5,7 @@ import { randomUUID, createHmac } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { readMemberRows } from '../src/lib/supabase/member-rows.ts';
 import { verifyProgramBrowser } from './lib/program-browser.mjs';
+import { verifyMarketingHttp, verifyMarketingBrowser } from './lib/marketing-browser.mjs';
 import test from 'node:test';
 import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
@@ -118,6 +119,12 @@ test('local Supabase Auth, API policies and persistent program mutations',async 
     const inactive=await fixture('member',{ active:false }),wrong=await fixture('member',{ domain:'example.com' });
     const unapproved=await fixture('member',{ approved:false }),nongoogle=await fixture('member',{ google:false });
     for(const person of [member,other]) ok(await lead.client.rpc('admin_mutate',{p_action:'enroll',p_data:{personId:person.personId,cohortId}}));
+    await t.test('public landing ignores anonymous, signed-in and expired GAP sessions', { skip: !appUrl }, async () => {
+      await verifyMarketingHttp({ appUrl, fixture, jarFor, sql });
+    });
+    await t.test('public landing desktop/phone keyboard, no-write visits and isolated styling', { skip: !process.env.GAP_TEST_BROWSER }, async () => {
+      await verifyMarketingBrowser({ appUrl, fixture, jarFor, sql });
+    });
     await t.test('application layouts enforce real cookie-session boundaries', { skip: !appUrl }, async () => {
       assert.match((await appPage('/')).html, /Continue with Google/);
       for (const denied of [inactive, wrong, unapproved, nongoogle]) {
