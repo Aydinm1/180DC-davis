@@ -10,6 +10,13 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Resolve all nine dependency findings with Zod 4.6.7 and a scoped typescript-estree
+  minimatch 11.0.4 override. Clean locked install and full/production audits report zero
+  vulnerabilities; dependency tree is valid and no install scripts need new approval.
+  111 unit/docs checks pass, including real type-aware project-service glob matching
+  and rejection; lint, standalone typecheck, Webpack build and diff checks pass.
+  Stable runtime/framework versions preserved. No schema, hosted or release changes.
+
 - [x] Extend bounded HDR JPEG support to Android Ultra HDR v1. Published Pixel sample
   and supplied iPhone photo pass local validation and metadata-free oriented previews.
   110 unit/docs checks and thirteen Storage entries pass without skips, including

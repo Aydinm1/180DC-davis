@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Resolved all nine dependency audit findings with transitive Zod 4.6.7 and a scoped
+  minimatch 11.0.4 override for TypeScript lint tooling. Framework/runtime versions stay
+  unchanged; the full dependency audit now reports zero vulnerabilities.
+
 - Added Android Ultra HDR v1 JPEG compatibility alongside Apple HDR support, including
   verified legacy Pixel boundaries, private previews and unchanged original downloads.
   Unrelated images, malformed containers and extra video remain unsupported.

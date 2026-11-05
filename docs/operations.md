@@ -15,6 +15,30 @@ hosted setup, second-lead provisioning, and extended Monday checks stay open in 
 
 ## Routine releases
 
+### Dependency security checkpoint — 2026-11-05
+
+This checkpoint supersedes the older unresolved dependency-audit follow-ups below.
+The full npm audit (including development packages) reports zero advisories after
+updating transitive Zod from 4.4.3 to 4.6.7 and overriding only
+`@typescript-eslint/typescript-estree`'s minimatch dependency from 10.2.6 to 11.0.4.
+Both affected packages belong to development-only lint tooling; application/runtime
+packages, Next/eslint-config-next 16.4.2 and the React pair remain unchanged.
+
+The override addresses [the minimatch advisory](https://github.com/advisories/GHSA-g3hv-75wg-m249)
+while upstream typescript-estree still requests minimatch 10. Its consumer uses the
+retained named `minimatch()` function, not removed v11 APIs. A type-aware parser regression
+checks matching and rejected default-project paths, in addition to full lint/build checks.
+Keep the override scoped: unrelated minimatch 3 consumers retain their compatible versions.
+Revisit/remove it when upstream requests a patched compatible major and rerun those checks.
+Zod's update addresses [its memory-exhaustion advisory](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5).
+
+The updated lockfile reproduces with `npm ci --ignore-scripts`; install-script review
+reports no unreviewed scripts. No install-script approvals were broadened. Verify both
+`npm audit` and `npm audit --omit=dev` for subsequent releases. This is local validation,
+not evidence that the updated dependencies have been deployed.
+
+### Upload and browser verification
+
 Screenshot support (local implementation): Standard assignments accept PNG, JPG/JPEG and
 WebP alongside documents, up to 20 MB/50 megapixels and one file per attempt. Guided work
 still requires a document. The private image route uses the same permissions as downloads;
