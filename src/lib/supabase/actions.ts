@@ -37,6 +37,7 @@ export async function saveAdmin(action: string, data: Record<string, unknown>) {
   const { error } = result;
   if (error?.code === '22023' && /^((Change Viewer access)|(Resolve current cohort participation)|(Submission mode is locked))/.test(error.message)) return { error: error.message };
   if (error?.code === '22023' && error.message === 'Configure a recommended direction for every populated official team before publishing') return { error:error.message };
+  if (error?.code === '22023' && error.message === 'Configure every spreadsheet investigation before publishing') return {error:error.message};
   if (error) return { error:error.code==='40001' ? 'This record changed. Refresh before saving again.' : 'Could not save. Check the entered values and try again. Existing submissions and inactive access are protected.' };
   const receipt = typeof result.data === 'object' && result.data !== null ? result.data : null;
   revalidatePath('/admin','layout');

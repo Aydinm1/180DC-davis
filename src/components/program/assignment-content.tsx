@@ -1,4 +1,6 @@
 import { readCaseExercise } from '@/lib/cases/data';
+import { readInvestigation } from '@/lib/investigations/data';
+import { InvestigationFlow } from './investigation';
 import { CaseExerciseFlow } from './case-exercise';
 import Link from 'next/link';
 import { PageContainer } from '@/components/ui/container';
@@ -14,6 +16,10 @@ import { GuidedPreview } from '@/components/admin/guided-preview';
 export async function AssignmentContent({ assignment, weekNumber, enrollmentId, weekHref, preview = false, browse = false }: {
   assignment: AssignmentDetail; weekNumber: number; enrollmentId: string; weekHref: string; preview?: boolean; browse?: boolean;
 }) {
+  if(assignment.workflow==='investigation') {
+    const initial=await readInvestigation(assignment.id,preview||browse);
+    return <main className="pb-20"><PageContainer className="py-9"><div className="mx-auto max-w-6xl"><Link href={weekHref} className="action-link inline-flex min-h-11 items-center text-sm font-bold text-action">← Week {weekNumber}</Link><header className="mt-5 max-w-3xl"><p className="text-sm font-semibold text-brand-deep">Week {weekNumber} · Individual investigation</p><h1 className="mt-3 break-words text-3xl font-bold sm:text-4xl">{assignment.title}</h1><p className="mt-3 text-sm text-ink-soft">Due {assignment.dueLabel}</p></header><InvestigationFlow key={assignment.id} assignmentId={assignment.id} initial={initial} preview={preview} browse={browse} reviewHref={`/week/${weekNumber}/submission?assignment=${assignment.id}`}/></div></PageContainer></main>;
+  }
   if(assignment.workflow==='cases') {
     const exercise=await readCaseExercise(assignment.id,preview||browse);
     return <main className="pb-20"><PageContainer className="py-9"><div className="mx-auto max-w-6xl"><Link href={weekHref} className="action-link inline-flex min-h-11 items-center text-sm font-bold text-action">← Week {weekNumber}</Link><header className="mt-5 max-w-3xl"><p className="text-sm font-semibold text-brand-deep">Week {weekNumber} · Individual challenge</p><h1 className="mt-3 break-words text-3xl font-bold sm:text-4xl">{assignment.title}</h1><p className="mt-3 text-sm text-ink-soft">Due {assignment.dueLabel}</p></header><CaseExerciseFlow key={assignment.id} assignmentId={assignment.id} initial={exercise} preview={preview||browse}/></div></PageContainer></main>;

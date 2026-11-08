@@ -52,6 +52,7 @@ export default async function SubmissionReviewPage({ params, searchParams }: Sub
             initialAttempts={attempts}
             completionCredit={assignment.completionCredit}
             documentsOnly={assignment.workflow==='guided'}
+            checkedWorkflow={assignment.workflow==='investigation'}
           />
         </div>
       </PageContainer>

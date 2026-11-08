@@ -382,6 +382,147 @@ export type Database = {
           },
         ]
       }
+      investigation_attempts: {
+        Row: {
+          assignment_id: string
+          created_at: string
+          enrollment_id: string
+          hints: Json
+          name: string
+          reason: string
+          submission_id: string
+        }
+        Insert: {
+          assignment_id: string
+          created_at?: string
+          enrollment_id: string
+          hints: Json
+          name: string
+          reason: string
+          submission_id: string
+        }
+        Update: {
+          assignment_id?: string
+          created_at?: string
+          enrollment_id?: string
+          hints?: Json
+          name?: string
+          reason?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_attempts_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "investigation_configs"
+            referencedColumns: ["assignment_id"]
+          },
+        ]
+      }
+      investigation_configs: {
+        Row: {
+          assignment_id: string
+          content: Json
+          version: number
+        }
+        Insert: {
+          assignment_id: string
+          content: Json
+          version?: number
+        }
+        Update: {
+          assignment_id?: string
+          content?: Json
+          version?: number
+        }
+        Relationships: []
+      }
+      investigation_receipts: {
+        Row: {
+          actor_id: string
+          payload: Json
+          request_id: string
+          result: Json
+        }
+        Insert: {
+          actor_id: string
+          payload: Json
+          request_id: string
+          result: Json
+        }
+        Update: {
+          actor_id?: string
+          payload?: Json
+          request_id?: string
+          result?: Json
+        }
+        Relationships: []
+      }
+      investigation_reveals: {
+        Row: {
+          hint_id: string
+          opened_at: string
+          run_id: string
+        }
+        Insert: {
+          hint_id: string
+          opened_at?: string
+          run_id: string
+        }
+        Update: {
+          hint_id?: string
+          opened_at?: string
+          run_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_reveals_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "investigation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      investigation_runs: {
+        Row: {
+          assignment_id: string
+          enrollment_id: string
+          id: string
+          name: string
+          reason: string
+          saved_at: string | null
+          version: number
+        }
+        Insert: {
+          assignment_id: string
+          enrollment_id: string
+          id?: string
+          name?: string
+          reason?: string
+          saved_at?: string | null
+          version?: number
+        }
+        Update: {
+          assignment_id?: string
+          enrollment_id?: string
+          id?: string
+          name?: string
+          reason?: string
+          saved_at?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_runs_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "investigation_configs"
+            referencedColumns: ["assignment_id"]
+          },
+        ]
+      }
       monday_application_links: {
         Row: {
           account_id: string
@@ -591,6 +732,11 @@ export type Database = {
         Args: { p_assignment: string; p_team: string }
         Returns: boolean
       }
+      investigation_enrollment: {
+        Args: { p_assignment: string }
+        Returns: string
+      }
+      investigation_name: { Args: { p_name: string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       is_viewer: { Args: never; Returns: boolean }
       manage_team_impl: {
@@ -635,6 +781,16 @@ export type Database = {
         }
       }
       resolve_submission_target_before_guided: {
+        Args: { p_assignment: string }
+        Returns: Database["public"]["Tables"]["submission_targets"]["Row"]
+        SetofOptions: {
+          from: "*"
+          to: "submission_targets"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      resolve_submission_target_before_investigation: {
         Args: { p_assignment: string }
         Returns: Database["public"]["Tables"]["submission_targets"]["Row"]
         SetofOptions: {
@@ -1597,6 +1753,11 @@ export type Database = {
         }
         Returns: Json
       }
+      investigation_insights: {
+        Args: { p_assignment: string; p_test?: boolean }
+        Returns: Json
+      }
+      investigation_review: { Args: { p_submission: string }; Returns: Json }
       manage_team: { Args: { p_action: string; p_data: Json }; Returns: string }
       monday_import: {
         Args: {
@@ -1625,6 +1786,15 @@ export type Database = {
         }
         Returns: Json
       }
+      mutate_investigation: {
+        Args: {
+          p_action: string
+          p_assignment: string
+          p_data: Json
+          p_request: string
+        }
+        Returns: Json
+      }
       my_team: { Args: { p_enrollment: string }; Returns: Json }
       read_case_exercise: {
         Args: {
@@ -1636,6 +1806,10 @@ export type Database = {
       }
       read_guided_project: {
         Args: { p_assignment: string; p_team?: string }
+        Returns: Json
+      }
+      read_investigation: {
+        Args: { p_assignment: string; p_preview?: boolean }
         Returns: Json
       }
       record_activity: { Args: never; Returns: undefined }

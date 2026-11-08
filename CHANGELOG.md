@@ -5,6 +5,12 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added reusable Individual spreadsheet investigations with private progressive/optional
+  hints, saved conclusions, server-checked suspect names and ordinary admin-reviewed
+  submissions. Review retains per-attempt hint snapshots; assignment-level insights keep
+  Official/Test opens separate. Added draft-week setup and zero-write previews without
+  configuring real Week 3 content or publishing the admin answer-key workbook.
+
 - Resolved all nine dependency audit findings with transitive Zod 4.6.7 and a scoped
   minimatch 11.0.4 override for TypeScript lint tooling. Framework/runtime versions stay
   unchanged; the full dependency audit now reports zero vulnerabilities.

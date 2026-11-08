@@ -1,10 +1,25 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-08
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
+
+### Spreadsheet investigation presentation
+
+Reuse Instructions / Workspace with a bounded reading column. The workspace pairs one
+selected stage with the conclusion form on desktop and stacks them on phones. Stage
+buttons wrap, have 44px targets and expose the current step. Opened hints use disclosures;
+Reveal next hint is the primary stage action, with optional reveals as secondary actions.
+Keep name/evidence mounted while changing stage or view. Save draft and Submit conclusion
+are explicit. Retry/conflict errors retain input; hint refreshes do not advance the local
+draft version. Formula text uses literal, safely escaped inline code with wrapping and
+normal text selection/copy, preserving quotes, brackets and dollar references.
+
+Activity setup uses Setup / Stages and hints and edits only one selected stage/hint.
+Private answer/guidance labels stay explicit. Review snapshots and assignment-level insights
+are compact disclosures using “opened,” never implying reading, use or grading penalties.
 
 ### Public website boundary
 

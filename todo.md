@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-08
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,20 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Implement reusable Individual spreadsheet investigations: four stages/fifteen private
+  progressive/optional starter hints, saved drafts, checked names, ordinary reviewed text
+  attempts, per-attempt hint snapshots and Official/Test insights. Nine local investigation
+  entries pass without skips, including database/Storage/forged-action boundaries,
+  concurrent drafts and hint/submission races, name normalization/retries, snapshots,
+  desktop/phone setup, keyboard controls, failed-save recovery and zero-write previews.
+  116 unit/docs checks, thirteen Storage entries, nine Guided entries, seven case entries
+  and fourteen program entries pass without skips. Lint, standalone typecheck, generated
+  types, Webpack production build and diff checks pass; screenshots inspected and exact
+  disposable fixtures cleaned. Hosted migration `202611080001` applied and verified on
+  2026-11-08 under separate release authorization. Real Week 3 configuration/publication
+  and real Google acceptance remain separate; await the student workbook URL and
+  admin-configured accepted name before publishing the assignment.
 
 - [x] Resolve all nine dependency findings with Zod 4.6.7 and a scoped typescript-estree
   minimatch 11.0.4 override. Clean locked install and full/production audits report zero

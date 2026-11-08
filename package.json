@@ -42,6 +42,7 @@
     "test:completion": "node --experimental-strip-types --test scripts/verify-completion.mjs",
     "test:guided": "node --experimental-strip-types --test scripts/verify-guided.mjs",
     "test:cases": "node --experimental-strip-types --test scripts/verify-cases.mjs",
+    "test:investigations": "node --experimental-strip-types --test scripts/verify-investigations.mjs",
     "db:clean:examples": "node scripts/cleanup-grading-examples.mjs"
   },
   "dependencies": {

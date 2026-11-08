@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-04
+**Last updated:** 2026-11-08
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -609,6 +609,37 @@ See [ADR 0009](decisions/0009-private-upload-lifecycle.md).
 - Regenerate checked-in database TypeScript types after schema changes.
 - Test policies as anonymous, member, admin, inactive roster member, and cross-user
   access before release.
+
+## Private spreadsheet investigations
+
+Migration `202611080001` extends the text workflow discriminator with `investigation`,
+restricted to Individual assignments. Separate RLS-enabled private tables have no direct
+anonymous, authenticated or service-role table privileges:
+
+- `investigation_configs`: assignment-keyed versioned overview, URL, accepted names,
+  private guidance and stable UUID stage/hint content.
+- `investigation_runs`: unique assignment/enrollment draft, optimistic version and DB save time.
+- `investigation_reveals`: unique run/hint, DB first-open timestamp; reveals never advance the
+  draft version or modify draft fields.
+- `investigation_attempts`: submission-keyed name, evidence and immutable opened-hint snapshot.
+- `investigation_receipts`: actor/request-keyed payload and result for duplicate-safe retries.
+
+Narrow `read_investigation`, `mutate_investigation`, `investigation_review` and
+`investigation_insights` RPCs enforce live verified identity, roster and role. Participant
+operations derive the enrollment, require enrolled access to the matching active cohort
+and published week, and reject Viewers even with retained enrollments. Admin-only previews
+may read draft configuration; Viewer projections contain common instructions, never real
+accepted names, hints or participant data. All timestamps come from the database.
+
+Mutations use the existing submission advisory gate and assignment/run locks. Draft saves
+use optimistic versions. Reveal operations preserve that version. Submission checks current
+attempt ID/update time and exact accepted-name matching after NFKC normalization, whitespace
+collapse/trim and lowercasing. Only matching conclusions atomically insert a private attempt
+and ordinary text submission. A deferred FK supports this order; an insert guard requires
+the private matching attempt, preventing generic submission or prepared-upload bypasses.
+Storage's existing upload predicate also rejects investigation paths. Review decisions are
+unchanged. Configuration locks after activity, and publish/workflow/credit guards close
+alternate write paths. See [ADR 0025](decisions/0025-spreadsheet-investigations.md).
 
 ## Private individual case exercises
 

@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+- [ADR 0025: Private hints and checked investigation submissions](0025-spreadsheet-investigations.md)
+
 - [ADR 0024: Public marketing boundary](0024-public-marketing-boundary.md)
 
 - [ADR 0023: Individual case exercises](0023-individual-case-exercises.md)

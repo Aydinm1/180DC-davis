@@ -115,7 +115,7 @@ export type SubmissionAttempt = {
 };
 
 export type Assignment = {
-  workflow?: 'standard' | 'guided' | 'cases';
+  workflow?: 'standard' | 'guided' | 'cases' | 'investigation';
   /** Member-scoped manual credit; never a fabricated submission. */
   caseProgress?: { answered: number; completedAt?: string };
   completionCredit?: { id: string; grantedAt: string };

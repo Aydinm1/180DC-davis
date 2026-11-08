@@ -13,7 +13,7 @@ import {
 } from "./state.ts";
 
 export type AssignmentDetail = {
-    workflow?: 'standard' | 'guided' | 'cases';
+    workflow?: 'standard' | 'guided' | 'cases' | 'investigation';
     caseProgress?: { answered: number; completedAt?: string };
     completionCredit?: { id: string; grantedAt: string };
     id: string;

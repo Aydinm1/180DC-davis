@@ -61,12 +61,14 @@ export function SubmissionReviewWorkspace({
   initialAttempts,
   completionCredit,
   documentsOnly=false,
+  checkedWorkflow=false,
 }: {
   assignmentId: string;
   enrollmentId: string;
   initialAttempts: readonly SubmissionAttempt[];
   completionCredit?: {id:string;grantedAt:string};
   documentsOnly?: boolean;
+  checkedWorkflow?: boolean;
 }) {
   const [attempts] = useMemberAttempts(initialAttempts);
   const actionRef = useRef<HTMLButtonElement>(null);
@@ -80,7 +82,7 @@ export function SubmissionReviewWorkspace({
 
   const previous = attempts.filter((attempt) => !attempt.isCurrent && attempt.assignmentId === assignmentId && submissionBelongsTo(attempt,enrollmentId)).toSorted((a, b) => b.submittedAt.localeCompare(a.submittedAt));
   const presentation = reviewPresentation[current.status];
-  const replacementAllowed = canReplaceSubmission(current);
+  const replacementAllowed = !checkedWorkflow && canReplaceSubmission(current);
   const actionLabel = current.status === "revision_requested" ? "Revise submission" : "Replace submission";
 
   async function submit(payload: SubmissionPayload, requestId?: string) {

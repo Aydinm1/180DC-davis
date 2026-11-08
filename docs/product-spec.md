@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-08
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -190,7 +190,7 @@ Admins may write a separate optional summary (up to 300 Unicode characters), nev
 automatically truncated brief. Existing assignments without summaries show no teaser.
 Instructions remain plain text unless an admin explicitly chooses formatting or uses
 the toolbar. The restricted Markdown subset supports section headings, bold, flat
-bulleted/numbered lists and HTTP(S) links. Raw HTML, images, embeds, arbitrary styles,
+bulleted/numbered lists, literal inline code and HTTP(S) links. Raw HTML, images, embeds, arbitrary styles,
 and unsupported syntax are not interpreted. Unsafe links remain inert literal text.
 The admin editor offers a toolbar, format choice and rendered preview; instructions
 are limited to 50,000 Unicode characters. This does not add rich text to member responses.
@@ -525,6 +525,37 @@ See [ADR 0019](decisions/0019-private-assignment-grading-references.md).
   Supabase requests.
 - Student dashboard and week pages work well on mobile; admin pages remain usable with
   responsive cards or horizontal table scrolling.
+
+## Individual spreadsheet investigation
+
+Assignments may use **Spreadsheet investigation · Individual**. Activity setup contains
+an editable overview, student workbook URL, private canonical suspect/accepted variants,
+private grading guidance and ordered stages/hints. The supplied four-stage, fifteen-hint
+material is an admin-only starter; no real answer, student URL or assignment is configured
+automatically. Configuration requires a draft week and freezes at the first participant
+draft or hint reveal. Publishing requires saved, complete configuration. Existing work,
+uploads and manual credit prevent conversion into this workflow.
+
+Members use Instructions / Workspace, investigate in their own workbook and switch stages
+without losing their conclusion. Reveal next hint opens the next ordinary hint within
+that stage. Optional hints are independent, never prerequisites for later hints. Opened
+hints persist across visits/devices; unopened bodies and accepted names remain private.
+Hints have no completion requirement or grading penalty.
+
+Save draft preserves the suspect name and supporting evidence (maximum 2,000 characters).
+Submit conclusion checks a Unicode-normalized, whitespace-collapsed, case-insensitive exact
+name against configured names. Incorrect names retain both fields and create no submission.
+A correct name creates an ordinary Awaiting review text attempt, with its structured name,
+reason and immutable snapshot of hints opened before submission. Admin approval is required
+for completion. Replacement, revision, feedback and history retain their existing behavior;
+completed responses are read-only. Hints remain available after submission without changing
+earlier snapshots. Generic document/link/text submissions and manual credit are unavailable.
+
+Admin review shows name/evidence with **Hints opened before this submission**, including
+historical attempts. Assignment-level Hint insights shows distinct opens by hint and person;
+Official/Test scopes remain separate. These counts never enter dashboard metrics. Admin
+preview simulates without writes; Viewer practice is fictional and cannot check real names.
+See [ADR 0025](decisions/0025-spreadsheet-investigations.md).
 
 ## Individual eight-case challenge
 

@@ -1,11 +1,39 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-08
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
+
+## Spreadsheet investigation setup and verification
+
+In a draft week, save an Individual assignment, open Activity setup, select Spreadsheet
+investigation, and complete Setup. Provide the **student** workbook URL, canonical suspect,
+optional accepted variants and private grading guidance; inspect/edit the four-stage hint
+starter. Save investigation independently, then publish through the existing week controls.
+Configuration locks at the first participant draft/reveal. No real Week 3 setup, publication,
+answer or student workbook URL is seeded. The located answer-key workbook is linked only
+in the starter's private grading guidance, remains unchanged, and must not be used as the
+student link.
+
+Run `npm run test:investigations` against local Supabase. Set
+`GAP_TEST_APP_URL=http://localhost:3004` with a matching local production build to exercise
+desktop/phone setup, drafts/reveals, retry, checked submission, review and preview. The suite
+creates disposable cohort/accounts, verifies private database and Storage boundaries,
+optimistic conflicts, exact-name normalization, duplicate receipts, hint snapshots and
+Official/Test insights, then removes its own fixtures. Never point it at hosted Supabase.
+Real Google-session acceptance remains separate from local fixture results. Migration
+`202611080001` must precede production code, but hosted migration, real configuration,
+commit/push and deployment require separate release authorization.
+
+Local verification on 2026-11-08: nine investigation entries, thirteen Storage entries,
+nine Guided entries, seven case entries and fourteen program entries passed without
+skips, alongside 116 unit/documentation checks, lint, standalone typecheck, generated-type
+consistency, Webpack production build and diff checks. Desktop/phone screenshots were
+inspected and disposable fixtures cleaned. This is local fixture evidence, not hosted
+migration, real Google acceptance or real Week 3 configuration/publication evidence.
 
 P5 has Supabase-backed reads, server mutations, and Google sign-in code. Local core
 workflow and session-authorization acceptance passed on 2026-10-20. Missing configuration shows a

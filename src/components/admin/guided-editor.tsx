@@ -1,5 +1,7 @@
 'use client';
 import { CaseEditor } from './case-editor';
+import { InvestigationEditor } from './investigation-editor';
+import type { Investigation, InvestigationConfig } from '@/lib/investigations/types';
 import type { CaseContent, CaseExercise } from '@/lib/cases/types';
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,7 +12,7 @@ import type { GuidedProject, GuidedAction } from '@/lib/guided/types';
 import { guidedOverview, directionIntro, finalBrief } from '@/lib/guided/content';
 import { EditorSections } from './editor-sections';
 
-export function GuidedEditor({assignmentId,initial,teamMode,onDirty,cases,caseTemplate}:{assignmentId:string;initial:GuidedProject;teamMode:boolean;onDirty:(id:string,dirty:boolean)=>void;cases?:CaseExercise;caseTemplate?:CaseContent}) {
+export function GuidedEditor({assignmentId,initial,teamMode,onDirty,cases,caseTemplate,investigation,investigationTemplate}:{assignmentId:string;initial:GuidedProject;teamMode:boolean;onDirty:(id:string,dirty:boolean)=>void;cases?:CaseExercise;caseTemplate?:CaseContent;investigation?:Investigation;investigationTemplate?:InvestigationConfig}) {
  const router=useRouter();
  const [project,setProject]=useState(initial);
  const [workflow,setWorkflow]=useState(initial.workflow);
@@ -33,9 +35,10 @@ export function GuidedEditor({assignmentId,initial,teamMode,onDirty,cases,caseTe
   const key=JSON.stringify({action,data});if(request.current?.key!==key)request.current={key,id:crypto.randomUUID()};const id=request.current.id;
   startTransition(async()=>{const r=await saveGuidedProject(action,assignmentId,data,id);if(r.error)return setMessage(r.error);if(r.project)setProject(r.project);setMessage('Project settings saved.');router.refresh();});
  }
- return <section id={'guided-'+assignmentId} aria-label="Activity setup"><div className="grid grid-cols-1 gap-5"><label className="text-sm font-bold">Workflow<select className="mt-2 min-h-11 w-full rounded-lg border border-border p-3" value={workflow} disabled={pending} onChange={e=>setWorkflow(e.target.value as 'standard'|'guided'|'cases')}><option value="standard">Standard</option><option value="guided" disabled={!teamMode}>Guided project · requires saved Team mode</option><option value="cases" disabled={teamMode}>Eight-case challenge · Individual</option></select></label>
+ return <section id={'guided-'+assignmentId} aria-label="Activity setup"><div className="grid grid-cols-1 gap-5"><label className="text-sm font-bold">Workflow<select className="mt-2 min-h-11 w-full rounded-lg border border-border p-3" value={workflow} disabled={pending} onChange={e=>setWorkflow(e.target.value as GuidedProject['workflow'])}><option value="standard">Standard</option><option value="guided" disabled={!teamMode}>Guided project · requires saved Team mode</option><option value="cases" disabled={teamMode}>Eight-case challenge · Individual</option><option value="investigation" disabled={teamMode}>Spreadsheet investigation · Individual</option></select></label>
+ <div hidden={workflow!=='investigation'}>{investigation&&investigationTemplate?<InvestigationEditor assignmentId={assignmentId} initial={investigation} template={investigationTemplate} onDirty={onDirty} onSaved={()=>setProject({...project,workflow:'investigation'})}/>:null}</div>
  <div hidden={workflow!=='cases'}>{cases&&caseTemplate?<CaseEditor assignmentId={assignmentId} initial={cases} template={caseTemplate} onDirty={onDirty} onSaved={()=>setProject({...project,workflow:'cases'})}/>:null}</div>
- <div hidden={workflow==='cases'}><div className="grid grid-cols-1 gap-5">
+ <div hidden={workflow==='cases'||workflow==='investigation'}><div className="grid grid-cols-1 gap-5">
  <p className="text-xs leading-6 text-ink-soft">Save Team mode first. Configure every populated official team before publishing. Workflow saves independently; directions lock when research starts.</p>
  {workflow==='guided'||project.config?<>
  <EditorSections label="Guided project sections" value={section} onChange={setSection} options={[{value:'overview',label:'Overview'},{value:'intro',label:'Direction introduction'},{value:'brief',label:'Final brief'},{value:'teams',label:'Team directions'}]}/>

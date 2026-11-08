@@ -5,7 +5,7 @@ export type Recommendation = { company: string; title: string; guidance: string;
 export type GuidedState = { research: Research; original_research?: Research; version: number; direction: 'recommended' | 'alternative' | null; frozen: boolean; researched_at: string };
 export type DirectionRequest = { id: string; proposal: Proposal; status: 'pending' | 'approved' | 'changes_requested' | 'superseded'; decision?: 'approved' | 'changes_requested'; decision_note: string; requested_at: string; decided_at?: string };
 export type GuidedTeam = { id: string; name: string; isTest: boolean; members: number; recommendation: Recommendation | null; state: GuidedState | null; requests: DirectionRequest[] };
-export type GuidedProject = { workflow: 'standard' | 'guided' | 'cases'; config: GuidedConfig | null; teamId?: string; state?: GuidedState | null; recommendation?: Recommendation | null; requests?: DirectionRequest[]; teams?: GuidedTeam[] };
+export type GuidedProject = { workflow: 'standard' | 'guided' | 'cases' | 'investigation'; config: GuidedConfig | null; teamId?: string; state?: GuidedState | null; recommendation?: Recommendation | null; requests?: DirectionRequest[]; teams?: GuidedTeam[] };
 export type GuidedAction = 'config' | 'recommendation' | 'research' | 'recommended' | 'alternative' | 'decide';
 export function canSubmitGuided(project: GuidedProject) {
  return Boolean(project.recommendation && project.state && (project.state.direction === 'recommended' || project.state.direction === 'alternative' && project.requests?.some(r => r.status === 'approved')));

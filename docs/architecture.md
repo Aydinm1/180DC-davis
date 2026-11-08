@@ -8,7 +8,7 @@ successful receipts through retries. No background jobs or Monday writes are inv
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-08
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -465,6 +465,25 @@ URLs, credentials, or private submission payloads into club reporting.
 - Distinguish authentication failure, roster denial, validation failure, and transient
   backend failure.
 - Never cache authenticated responses in a way that could share sessions between users.
+
+## Spreadsheet investigation boundary
+
+`lib/investigations` owns typed validation/projections, live authorized user-scoped RPC
+reads and Server Actions. Its supplied template is server-only and passed to the editor
+only after admin authorization; no template body or answer key enters member bundles.
+AssignmentContent uses a dedicated investigation flow instead of the generic submission
+editor. Participant payloads contain only common instructions, hint metadata/opened bodies,
+their draft and current receipt. Admin preview receives configuration only under live
+admin authority; Explore practice substitutes fictional local content and sends no writes.
+
+Draft/reveal/submit are separate operations. Client retries retain a request UUID for an
+identical operation. Reveals refresh hint state without overwriting fields or advancing the
+client's draft version, so another device's draft still produces a recoverable conflict.
+Only checked submit creates an ordinary text attempt; existing review/count/completion
+logic is reused. The member history page is read-only for this workflow and links back to
+the conclusion workspace for replacement. Admin review separately loads per-attempt private
+snapshots; lazy assignment-level insights recheck admin authority on every request.
+No broad workspace payload, shared cache, public Storage URL or extra upload path is added.
 
 ## Eight-case exercise boundary
 

@@ -1,6 +1,6 @@
 export type CaseAnswer = { method: string; framework: string; priority: string; reviewedAt?: string | null };
 export type ExerciseCase = { number: number; title: string; scenario: string; reference?: string | null; answer?: CaseAnswer | null };
-export type CaseExercise = { workflow: 'standard' | 'guided' | 'cases'; configVersion: number; overview?: string | null; closing?: string | null; cases: ExerciseCase[]; run?: { version: number; completedAt?: string | null } | null };
+export type CaseExercise = { workflow: 'standard' | 'guided' | 'cases' | 'investigation'; configVersion: number; overview?: string | null; closing?: string | null; cases: ExerciseCase[]; run?: { version: number; completedAt?: string | null } | null };
 export type CaseContent = { overview: string; closing: string; cases: { number: number; title: string; scenario: string; reference: string }[] };
 export type CaseAction = 'configure' | 'save' | 'next' | 'finish';
 export function caseInputError(action: unknown, input: unknown): string | undefined {

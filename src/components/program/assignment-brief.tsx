@@ -2,6 +2,7 @@ import { briefBlocks, briefInline, type BriefFormat } from '@/lib/program/brief'
 
 function Inline({ text }: { text: string }) {
   return briefInline(text).map((part, index) => part.type === 'bold' ? <strong key={index} className="font-bold text-ink">{part.text}</strong>
+    : part.type === 'code' ? <code key={index} className="rounded bg-surface-subtle px-1 py-0.5 font-mono text-sm text-ink [overflow-wrap:anywhere]">{part.text}</code>
     : part.type === 'link' ? <a key={index} href={part.href} target="_blank" rel="noreferrer" className="font-semibold text-action underline underline-offset-4">{part.text}</a> : part.text);
 }
 
