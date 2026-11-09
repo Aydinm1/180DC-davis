@@ -10,6 +10,14 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Simplify submission review into a compact document/grade workspace: remove repeated
+  metadata and nested cards, keep feedback/reference tools and save actions reachable,
+  preserve PDF/draft state across navigation, and verify desktop/phone review locally.
+  Six PDF, seven grading, 13 Storage, nine team, nine guided and nine investigation
+  entries pass without skips; 121 unit/docs checks, lint, typecheck, Webpack production
+  build and diff checks pass. Desktop/phone screenshots inspected and fixtures cleaned.
+  Code-only release authorized; no schema changes or hosted migration required.
+
 - [x] Audit current access controls, private files, privileged operations and recent
   assignment workflows; compare hosted schema/Storage read-only, scan current dependencies
   and local public artifacts, and rerun security regressions. Record confirmed findings

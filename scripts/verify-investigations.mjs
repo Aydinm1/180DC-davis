@@ -1,3 +1,4 @@
+import {showReview} from './lib/review-workspace.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {execFile} from 'node:child_process';
@@ -141,7 +142,7 @@ test('spreadsheet investigation lifecycle and security',async t=>{
     await page.getByLabel('Suspect’s name').fill('Fictional Person');await page.getByRole('button',{name:'Submit conclusion',exact:true}).click();await page.getByText('Conclusion submitted for review.',{exact:true}).waitFor();
     const sub=(await read(u,browserAid)).submission.id;assert.equal((await read(u,browserAid)).submission.status,'submitted');
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:join(screens,`workspace-${width}.png`),fullPage:true});
-    const opened=width===1280?3:2;const adminCtx=await browser.newContext({viewport:{width,height:900}});await adminCtx.addCookies(await cookies(lead));const ap=await adminCtx.newPage();await ap.goto(`${app}/admin/submissions/${sub}?cohort=${cohort}`);await ap.getByText(`Hints opened before this submission · ${opened}`,{exact:true}).waitFor();await ap.getByRole('textbox').last().fill('Feedback persists while viewing hints');await ap.getByText(`Hints opened before this submission · ${opened}`,{exact:true}).click();assert.equal(await ap.getByRole('textbox').last().inputValue(),'Feedback persists while viewing hints');await ap.screenshot({path:join(screens,`review-${width}.png`),fullPage:true});
+    const opened=width===1280?3:2;const adminCtx=await browser.newContext({viewport:{width,height:900}});await adminCtx.addCookies(await cookies(lead));const ap=await adminCtx.newPage();await ap.goto(`${app}/admin/submissions/${sub}?cohort=${cohort}`);await showReview(ap);await ap.getByText(`Hints opened before this submission · ${opened}`,{exact:true}).waitFor();await ap.getByRole('textbox').last().fill('Feedback persists while viewing hints');await showReview(ap);await ap.getByText(`Hints opened before this submission · ${opened}`,{exact:true}).click();assert.equal(await ap.getByRole('textbox').last().inputValue(),'Feedback persists while viewing hints');await ap.screenshot({path:join(screens,`review-${width}.png`),fullPage:true});
     await ap.goto(`${app}/admin?cohort=${cohort}&week=${week}&assignment=${browserAid}`);await ap.getByText('Hint insights · Official',{exact:true}).click();await ap.getByRole('heading',{name:'Hints opened',exact:true}).waitFor();assert.ok(await ap.getByText(new RegExp(`${opened} opened`)).count());
     await ap.screenshot({path:join(screens,`insights-${width}.png`),fullPage:true});await adminCtx.close();assert.deepEqual(errors,[]);await ctx.close();
    }

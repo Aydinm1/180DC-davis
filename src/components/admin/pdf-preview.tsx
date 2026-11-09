@@ -2,9 +2,9 @@
 import {useEffect,useState,type ComponentType} from 'react';
 import {pdfUrls,type PdfResource} from '@/lib/pdf/types';
 
-export function PdfPreview({resource,lazy=false}:{resource:PdfResource;lazy?:boolean}) {
+export function PdfPreview({resource,lazy=false,fill=false}:{resource:PdfResource;lazy?:boolean;fill?:boolean}) {
   const [active,setActive]=useState(!lazy);
-  const [Reader,setReader]=useState<ComponentType<{resource:PdfResource}>>();
+  const [Reader,setReader]=useState<ComponentType<{resource:PdfResource;fill?:boolean}>>();
   const [error,setError]=useState(false),[retry,setRetry]=useState(0);
   useEffect(()=>{
     if(!active)return;
@@ -12,7 +12,7 @@ export function PdfPreview({resource,lazy=false}:{resource:PdfResource;lazy?:boo
     import('./pdf-reader').then(m=>{if(live)setReader(()=>m.PdfReader);}).catch(()=>{if(live)setError(true);});
     return()=>{live=false;};
   },[active,retry]);
-  if(Reader)return <Reader key={`${resource.kind}:${resource.id}`} resource={resource}/>;
+  if(Reader)return <Reader key={`${resource.kind}:${resource.id}`} resource={resource} fill={fill}/>;
   return <div className="rounded-lg border border-border bg-surface p-4 text-sm">
     <p className="break-all font-semibold">{resource.name}</p>
     <div className="mt-3 flex flex-wrap items-center gap-4">

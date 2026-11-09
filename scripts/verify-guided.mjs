@@ -1,3 +1,4 @@
+import {showReview} from './lib/review-workspace.mjs';
 import { openAssignmentEditor } from './lib/week-editor.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -165,8 +166,8 @@ test('guided project lifecycle, privacy and final submission gates',async t=>{
      await page.getByRole('link',{name:'View submission',exact:true}).waitFor();await page.unroute('**/*',pauseTransfer);
      const attempt=ok(await root.from('submissions').select('*').eq('assignment_id',browserAid).eq('team_id',team).eq('is_current',true).single());paths.push(attempt.file_path);
      await page.reload();await page.getByRole('button',{name:/Final document/}).click();await page.getByRole('link',{name:'View submission',exact:true}).click();await page.getByRole('heading',{name:'Submission received',exact:true}).waitFor();
-     const admin=await browser.newContext({viewport:{width,height:900}});await admin.addCookies(await cookies(lead));const ap=await admin.newPage();await ap.goto(`${app}/admin/submissions/${attempt.id}?cohort=${cohort}&week=${week}&assignment=${browserAid}`);await ap.getByText('Confirmed project direction',{exact:true}).click();await ap.getByText('Approved alternative',{exact:false}).waitFor();
-     const dl=await ap.request.get(`${app}/api/submissions/${attempt.id}/download`);assert.equal(dl.status(),200);assert.ok((await dl.body()).equals(pdf));await ap.getByLabel('Request revision',{exact:true}).check();await ap.getByLabel('Feedback (required)',{exact:true}).fill('Clarify the evidence plan.');await ap.getByRole('button',{name:'Save review',exact:true}).click();await ap.getByText('Review saved.',{exact:true}).waitFor();
+     const admin=await browser.newContext({viewport:{width,height:900}});await admin.addCookies(await cookies(lead));const ap=await admin.newPage();await ap.goto(`${app}/admin/submissions/${attempt.id}?cohort=${cohort}&week=${week}&assignment=${browserAid}`);await showReview(ap);await ap.getByText('Confirmed project direction',{exact:true}).click();await ap.getByText('Approved alternative',{exact:false}).waitFor();
+     const dl=await ap.request.get(`${app}/api/submissions/${attempt.id}/download`);assert.equal(dl.status(),200);assert.ok((await dl.body()).equals(pdf));await showReview(ap);await ap.getByLabel('Request revision',{exact:true}).check();await ap.getByLabel('Feedback (required)',{exact:true}).fill('Clarify the evidence plan.');await ap.getByRole('button',{name:'Save review',exact:true}).click();await ap.getByText('Review saved.',{exact:true}).waitFor();
      await page.reload();await page.getByText('Clarify the evidence plan.',{exact:true}).waitFor();await page.getByRole('button',{name:'Revise submission',exact:true}).click();await page.getByRole('button',{name:/^Submit link/}).click();await page.getByLabel('Submission link',{exact:true}).fill('https://example.com/revised-guided-document');await page.getByRole('button',{name:'Revise submission',exact:true}).last().click();await page.getByRole('heading',{name:'Previous submissions',exact:true}).waitFor();await admin.close();
     }
     await ctx.close();

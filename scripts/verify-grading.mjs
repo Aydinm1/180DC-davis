@@ -1,3 +1,4 @@
+import {showReview} from './lib/review-workspace.mjs';
 import { openAssignmentEditor } from './lib/week-editor.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -210,18 +211,18 @@ test('private grading references use disposable local records', async t => {
         await editor.getByRole('link',{name:`Download Model ${width}.pdf`,exact:true}).waitFor();
         const latest=ok(await member.client.from('submissions').select('*').eq('assignment_id',assignment).eq('is_current',true).single());
         await page.goto(app+`/admin/submissions/${latest.id}?cohort=${cohort}&week=${week}&status=all`);
-        await page.getByRole('heading',{name:'Submitted work',exact:true}).waitFor();await page.getByLabel('Feedback (optional)',{exact:true}).fill('Keep this feedback while comparing.');
-        await page.getByRole('tab',{name:'Example',exact:true}).click();await page.getByRole('heading',{name:'Model answer',exact:true}).waitFor();
-        assert.equal(await page.getByLabel('Feedback (optional)',{exact:true}).inputValue(),'Keep this feedback while comparing.');
+        await page.getByRole('heading',{name:'Submitted work',exact:true}).waitFor();await showReview(page);await page.getByLabel('Feedback (optional)',{exact:true}).fill('Keep this feedback while comparing.');
+        await page.getByRole('tab',{name:'Example',exact:true}).click();await page.getByText('Written example',{exact:true}).click();await page.getByRole('heading',{name:'Model answer',exact:true}).waitFor();
+        assert.equal(await page.locator('#admin-feedback').inputValue(),'Keep this feedback while comparing.');
         const href=await page.getByRole('link',{name:'Download',exact:true}).getAttribute('href');assert.equal((await ctx.request.get(app+href)).status(),200);
         await page.getByRole('tab',{name:'Rubric',exact:true}).click();await page.getByRole('heading',{name:`Private criteria ${width}`,exact:true}).waitFor();
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:join(screenshots,`review-${width}.png`),fullPage:true});
         page.once('dialog',d=>d.dismiss());await page.getByRole('link',{name:'Edit reference →',exact:true}).click();assert.ok(page.url().includes('/admin/submissions/'));
         await page.getByRole('button',{name:'Save review',exact:true}).click();await page.getByText('Review saved.',{exact:true}).waitFor();
-        await page.reload();await page.getByRole('heading',{name:`Private criteria ${width}`,exact:true}).waitFor();
+        await page.reload();await showReview(page);await page.getByRole('tab',{name:'Rubric',exact:true}).click();await page.getByRole('heading',{name:`Private criteria ${width}`,exact:true}).waitFor();
         await page.getByRole('button',{name:'Save & review next',exact:true}).click();
         await page.waitForURL(url=>url.pathname.includes('/admin/submissions/')&&!url.pathname.includes(latest.id));
-        await page.getByText('Sibling only',{exact:true}).waitFor();
+        await showReview(page);await page.getByRole('tab',{name:'Rubric',exact:true}).click();await page.getByText('Sibling only',{exact:true}).waitFor();
         assert.equal(await page.getByRole('heading',{name:`Private criteria ${width}`,exact:true}).count(),0);
         assert.ok(page.url().includes('week='+week));assert.ok(!page.url().includes('assignment='));
         await page.goto(app+`/admin/weeks/${week}?cohort=${cohort}#grading-${assignment}`);

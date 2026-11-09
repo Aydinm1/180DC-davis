@@ -526,9 +526,13 @@ Within the week editor, a collapsible Grading reference section saves text indep
 from the week. Save an assignment before adding its reference; upload/replace/remove PDF
 actions save immediately and require their own explicit controls. Removing/replacing a
 PDF retains committed history; text edits have stale-save protection and preserved input.
-Review shows Rubric/Example tabs in one collapsible panel above Feedback and decision,
-alongside submitted work on desktop and after it on phones. Empty references show a quiet
-Add grading reference link. Tab changes retain unsaved feedback; editing respects existing
+Review uses a compact document workspace with Feedback/Rubric/Example tabs, opening
+Feedback first. Desktop places submitted work in the larger pane; each pane scrolls
+independently and save actions stay visible below the review tools. Phones switch between
+Submitted work and Review without unmounting either. Metadata appears once in the header;
+History opens within the document pane and returns to the current reading position.
+Empty references show a quiet Add grading reference link. Tab changes retain unsaved
+feedback; editing respects existing
 unsaved-review safeguards. Admins read example PDFs inline when opening Example; prior
 submission PDFs load only on explicit View PDF. The private reader provides continuous
 scrolling, page navigation, zoom/Fit width, text selection/search and Expand. Closing the

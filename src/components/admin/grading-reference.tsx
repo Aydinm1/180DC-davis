@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {PdfPreview} from './pdf-preview';
@@ -109,18 +109,13 @@ export function GradingReferenceEditor({ assignmentId, initial, persisted, onDir
   </details>;
 }
 
-export function GradingReferencePanel({ reference, editHref }: { reference?: GradingReference; editHref: string }) {
-  const [tab, setTab] = useState<'rubric' | 'example'>('rubric');
-  const [exampleOpened,setExampleOpened]=useState(false);
-  const id = useId();
-  function selectTab(value:'rubric'|'example'){setTab(value);if(value==='example')setExampleOpened(true);}
-  if (!reference || !(reference.rubric.trim() || reference.example.trim() || reference.document)) return <Link className="mb-5 inline-flex min-h-11 items-center text-sm font-bold text-action" href={editHref}>Add grading reference →</Link>;
-  return <details open className="mb-6 rounded-card border border-border bg-surface p-5 sm:p-6">
-    <summary className="cursor-pointer text-lg font-bold">Grading reference <span className="ml-2 text-xs font-semibold text-ink-soft">Admins only</span></summary>
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div role="tablist" aria-label="Grading reference">{(['rubric', 'example'] as const).map(value => <button type="button" role="tab" id={`${id}-${value}`} aria-controls={`${id}-panel`} aria-selected={tab === value} tabIndex={tab === value ? 0 : -1} key={value} onKeyDown={event => { if (['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'rubric' : event.key === 'End' ? 'example' : tab === 'rubric' ? 'example' : 'rubric'; selectTab(next); document.getElementById(`${id}-${next}`)?.focus(); } }} onClick={() => selectTab(value)} className={`min-h-11 border-b-2 px-3 text-sm font-bold ${tab === value ? 'border-action text-action' : 'border-transparent text-ink-soft'}`}>{value === 'rubric' ? 'Rubric' : 'Example'}</button>)}</div><Link href={editHref} className="inline-flex min-h-11 items-center text-sm font-bold text-action">Edit reference →</Link></div>
-    <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${tab}`} tabIndex={0} className="mt-5 [overflow-wrap:anywhere]">
-      <div hidden={tab!=='rubric'}>{reference.rubric.trim()?<AssignmentBrief instructions={reference.rubric} format="markdown"/>:<p className="text-sm text-ink-soft">No rubric added yet.</p>}</div>
-      <div hidden={tab!=='example'}>{reference.example.trim()?<AssignmentBrief instructions={reference.example} format="markdown"/>:<p className="text-sm text-ink-soft">No written example added yet.</p>}{exampleOpened&&reference.document?<div className="mt-4"><PdfPreview resource={{kind:'example',id:reference.document.id,name:reference.document.name}}/></div>:null}</div>
-    </div>
-  </details>;
+export function GradingReferenceContent({reference,kind,editHref,loadPdf=false}:{reference?:GradingReference;kind:'rubric'|'example';editHref:string;loadPdf?:boolean}) {
+  const text=kind==='rubric'?reference?.rubric:reference?.example;
+  const document=kind==='example'?reference?.document:undefined;
+  const edit=<Link href={editHref} className="inline-flex min-h-11 items-center text-sm font-semibold text-action">{reference?'Edit reference →':'Add grading reference →'}</Link>;
+  if(document)return <div className="flex h-full min-h-0 flex-col">
+    <div className="shrink-0 px-4 pt-2">{text?.trim()?<details className="border-b border-border"><summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold">Written example</summary><div className="max-h-40 overflow-y-auto pb-4"><AssignmentBrief instructions={text} format="markdown"/></div></details>:null}<div className="flex justify-end">{edit}</div></div>
+    <div className="min-h-0 flex-1">{loadPdf?<PdfPreview resource={{kind:'example',id:document.id,name:document.name}} fill/>:null}</div>
+  </div>;
+  return <div className="p-5"><div className="mb-3 flex justify-end">{edit}</div>{text?.trim()?<AssignmentBrief instructions={text} format="markdown"/>:<p className="text-sm text-ink-soft">{kind==='rubric'?'No rubric added yet.':'No example added yet.'}</p>}</div>;
 }

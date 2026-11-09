@@ -8,10 +8,16 @@
 
 ### Admin PDF reading
 
-Use the larger desktop review column for Submitted work, sticky within the review grid;
-reference/feedback remain adjacent. Phones stack the document before reference/decision.
+Use one compact review header and two viewport-bounded desktop panes: the larger
+Submitted work pane and Feedback/Rubric/Example tools, with Feedback selected initially.
+Keep save actions outside the tools scroller. Avoid nested file cards and repeated
+filenames/timestamps. Phones show a Submitted work/Review switch; both panes remain
+mounted to retain reading position, feedback, decision and reference state. History
+replaces the visible document area without discarding the current reader.
 The reader has a bounded scrolling viewport, compact wrapping controls with 44px targets,
-labeled page/search inputs, visible focus and native text selection. Expand uses a native
+labeled page/search inputs, visible focus and native text selection. Reveal the search row
+with Find or the reader’s keyboard shortcut. Example PDF text uses a separate Written
+example disclosure so it cannot push the reader out of view. Expand uses a native
 modal with contained focus, Escape/Close, and focus restoration. Preserve the controller,
 reading state and unsaved feedback through expansion/tab changes. Errors offer Retry
 and Download without resetting the review. See ADR 0027 for privacy and lazy loading.

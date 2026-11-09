@@ -9,12 +9,25 @@ been configured or verified.
 
 ## Private PDF reader
 
+Review-workspace UI verification (2026-11-09): six PDF, seven grading-reference,
+13 Storage, nine team, nine guided and nine investigation entries pass locally without
+skips. Desktop/phone screenshots were inspected; long-rubric footer visibility, keyboard
+tabs, history, retry and draft/reading-state retention passed. All 121 unit/docs checks,
+lint, typecheck, Webpack production build and diff checks pass. Disposable fixtures were
+cleaned. This UI revision has no schema changes; the authorized release uses the code-only
+path. Verify the exact commit and production aliases through the release runbook.
+
 Security maintenance: run `npm run test:security-schema` against local Docker after
 schema changes, alongside the relevant authenticated/Storage regressions and dependency
 audit. This is read-only and checks grants, RLS, privileged RPCs and bucket policies.
 See [the 2026-11-09 audit](security-audit-2026-11-09.md) for hosted parity evidence and open
 follow-ups: cumulative upload limits/hosted cleanup, HTML headers and private retry-ledger
 RLS. Those findings are documented; their runtime/schema remediation is not yet applied.
+
+Review now uses a bounded document/tools workspace. Feedback opens first; Rubric and
+Example are adjacent tabs with save actions kept below the tools scroller. On phones use
+Submitted work / Review. Open History to inspect earlier attempts, then Current submission
+to resume reading. These local view changes preserve unsaved feedback and PDF state.
 
 Current submitted PDFs open automatically during Admin review. Use page controls, Find,
 zoom/Fit width or Expand; Escape/Close returns focus without losing feedback. Open Example

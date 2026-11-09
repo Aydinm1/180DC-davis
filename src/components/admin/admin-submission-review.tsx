@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AssignmentStatusBadge } from "@/components/program/assignment-status-badge";
-import { SubmittedWorkRecord } from "@/components/program/submitted-work-record";
+
 import { WrittenResponse } from '@/components/program/written-response';
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+
 import { PageContainer } from "@/components/ui/container";
 import { StateMessage } from "@/components/ui/state-message";
 import { filterSubmissionRows, getNextAwaitingSubmission, type AdminQueueFilter } from "@/lib/program/admin";
@@ -17,7 +17,7 @@ import { formatSubmissionTime } from "@/lib/program/state";
 import { submissionDisplayName, validateReviewFeedback } from "@/lib/program/submission";
 import { assignmentsForWeek, type SubmissionStatus } from "@/lib/program/types";
 import { useAdminWorkspace } from "./admin-workspace";
-import { GradingReferencePanel } from './grading-reference';
+import { GradingReferenceContent } from './grading-reference';
 import type { GradingReference } from '@/lib/grading/types';
 import type { GuidedProject } from '@/lib/guided/types';
 import { isImageMime } from '@/lib/uploads/format';
@@ -25,13 +25,14 @@ import type { InvestigationReview } from '@/lib/investigations/types';
 import { InvestigationHintSnapshot } from './investigation-insights';
 import {PdfPreview} from './pdf-preview';
 import {isPdfFile} from '@/lib/pdf/types';
+import {ReviewWorkspace} from './review-workspace';
 import { SubmissionImage } from './submission-image';
 
-function ViewAttempt({ attempt, announce, historical=false }: { historical?:boolean; attempt: ReturnType<typeof useAdminWorkspace>["submissions"][number]; announce: (message: string) => void }) {
+function ViewAttempt({ attempt, announce, historical=false, fill=false }: { historical?:boolean; fill?:boolean; attempt: ReturnType<typeof useAdminWorkspace>["submissions"][number]; announce: (message: string) => void }) {
   if (attempt.payload.type === 'text') return <WrittenResponse text={attempt.payload.submittedText} />;
   const className = "inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-border-strong px-4 text-sm font-bold text-ink hover:bg-surface-subtle";
   return attempt.payload.type === "link" ? <a className={className} href={attempt.payload.submittedUrl} target="_blank" rel="noreferrer">Open submitted link ↗</a> : /^[0-9a-f-]{36}$/i.test(attempt.id) ? <>
-    {isPdfFile(attempt.payload.mimeType,attempt.payload.originalFilename)?<PdfPreview resource={{kind:'submission',id:attempt.id,name:attempt.payload.originalFilename}} lazy={historical}/>:isImageMime(attempt.payload.mimeType) ? <SubmissionImage key={attempt.id} id={attempt.id} name={attempt.payload.originalFilename} /> : null}
+    {isPdfFile(attempt.payload.mimeType,attempt.payload.originalFilename)?<PdfPreview resource={{kind:'submission',id:attempt.id,name:attempt.payload.originalFilename}} lazy={historical} fill={fill}/>:isImageMime(attempt.payload.mimeType) ? <SubmissionImage key={attempt.id} id={attempt.id} name={attempt.payload.originalFilename} /> : null}
     {!isPdfFile(attempt.payload.mimeType,attempt.payload.originalFilename)?<a download className={className} href={`/api/submissions/${attempt.id}/download`}>Download original file</a>:null}
   </> : <button className={className} type="button" onClick={() => announce("This fictional preview file is not available to download.")}>Download original file</button>;
 }
@@ -41,6 +42,11 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
   const router = useRouter();
   const params = useSearchParams();
   const submission = workspace.submissions.find((item) => item.id === submissionId && item.isCurrent);
+  const toolsId=useId();
+  const [tool,setTool]=useState<'feedback'|'rubric'|'example'>('feedback');
+  const [exampleOpened,setExampleOpened]=useState(false);
+  const [showHistory,setShowHistory]=useState(false);
+  function selectTool(next:'feedback'|'rubric'|'example'){setTool(next);if(next==='example')setExampleOpened(true);}
   const [status, setStatus] = useState<SubmissionStatus>(submission?.status ?? "submitted");
   const [feedback, setFeedback] = useState(submission?.feedback ?? "");
   const [expectedUpdatedAt, setExpectedUpdatedAt] = useState(submission?.updatedAt);
@@ -75,7 +81,7 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
 
   function saveReview(reviewNext = false) {
     const error = status === "submitted" ? undefined : validateReviewFeedback(status, feedback);
-    if (error) return setMessage(error);
+    if (error) {selectTool('feedback');setMessage(error);return;}
     startSaving(async () => {
       const result = await workspace.updateSubmission(currentSubmission.id, status, feedback, expectedUpdatedAt);
       if (result.error) return setMessage(result.error);
@@ -88,20 +94,41 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
     });
   }
 
-  return <main className="pb-20 sm:pb-24"><PageContainer className="py-9 sm:py-11">
-    <Link href={backHref} className="inline-flex min-h-11 items-center text-sm font-bold text-action">← Review queue</Link>
-    {enrollment.isTest ? <p className="mt-4 text-sm font-bold text-ink-soft">Test submission</p> : null}
-    <header className="mt-6"><p className="text-sm font-bold uppercase tracking-[0.16em] text-brand-deep">Week {week.weekNumber.toString().padStart(2, "0")} · Submission review</p><h1 className="mt-2 text-3xl font-bold tracking-[-0.035em] sm:text-4xl">{team?.name??person?.fullName ?? "Member submission"}</h1><p className="mt-3 text-base text-ink-soft">{assignment?.title} · Submitted {formatSubmissionTime(submission.submittedAt)}</p>{team?<p className="mt-3 text-sm text-ink-soft">{team.enrollmentIds.map(id=>workspace.people.find(p=>p.id===workspace.enrollments.find(e=>e.id===id)?.personId)?.fullName).filter(Boolean).join(' · ')}</p>:null}</header>
-
-    <div className="mt-9 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.65fr)] lg:gap-10">
-      <section aria-labelledby="submitted-work-heading" className="min-w-0 lg:sticky lg:top-4"><h2 id="submitted-work-heading" className="text-2xl font-bold">Submitted work</h2><div className="mt-5"><SubmittedWorkRecord attempt={submission}><ViewAttempt attempt={submission} announce={setMessage} /></SubmittedWorkRecord></div>
-        {history.length ? <details className="mt-5 rounded-card border border-border bg-surface p-5"><summary className="cursor-pointer font-bold">Previous submissions ({history.length})</summary><ol className="mt-5 space-y-4">{history.map((attempt) => <li key={attempt.id} className="border-t border-border pt-4 first:border-0 first:pt-0"><p className="font-bold">{submissionDisplayName(attempt)}</p><p className="mt-1 text-sm text-ink-soft">{formatSubmissionTime(attempt.submittedAt)} · {attempt.status.replace("_", " ")}</p>{attempt.feedback ? <p className="mt-2 text-sm leading-6 text-ink-soft">{attempt.feedback}</p> : null}<div className="mt-3"><ViewAttempt attempt={attempt} announce={setMessage} historical /></div>{investigations[attempt.id]?<div className="mt-4"><InvestigationHintSnapshot reference={investigations[attempt.id]!}/></div>:null}</li>)}</ol></details> : null}
-      </section>
-      <section aria-labelledby="review-decision-heading">{investigations[submissionId]?<InvestigationHintSnapshot reference={investigations[submissionId]!}/>:null}{project?<details className="mb-5 rounded-card border border-border p-5"><summary className="min-h-11 cursor-pointer font-bold">Confirmed project direction</summary><p className="mt-3 text-sm font-semibold">{project.recommendation?.company} · {project.state?.direction==='recommended'?project.recommendation?.title:'Approved alternative'}</p>{project.state?.direction==='alternative'?project.requests?.filter(r=>r.status==='approved').map(r=><div key={r.id} className="mt-3 whitespace-pre-wrap text-sm"><p>{r.proposal.direction}</p><p className="mt-2">{r.proposal.question}</p><p className="mt-2">Admin note: {r.decision_note||'Approved without a note.'}</p></div>):null}</details>:null}<GradingReferencePanel reference={reference} editHref={`/admin/weeks/${week.id}?cohort=${workspace.selectedCohortId}#grading-${submission.assignmentId}`} /><Card className="p-6 sm:p-7"><div className="flex flex-wrap items-center gap-3"><h2 id="review-decision-heading" className="text-2xl font-bold">Feedback and decision</h2><AssignmentStatusBadge state={submission.status} /></div><p className="mt-3 text-sm leading-6 text-ink-soft">Choose the next state for this submission.</p>
-        <fieldset className="mt-6 grid gap-3"><legend className="sr-only">Submission status</legend>{(["submitted", "revision_requested", "completed"] as const).map((value) => <label key={value} className={`cursor-pointer rounded-card border p-4 text-sm font-bold outline-none focus-within:ring-2 focus-within:ring-action focus-within:ring-offset-2 ${status === value ? "border-action bg-success-bg" : "border-border bg-surface"}`}><input type="radio" className="mr-3 size-4 accent-action" checked={status === value} onChange={() => { setStatus(value); setMessage(""); }} />{value === "submitted" ? "Return to awaiting review" : value === "revision_requested" ? "Request revision" : "Mark complete"}</label>)}</fieldset>
-        <label className="mt-6 block text-sm font-bold" htmlFor="admin-feedback">Feedback {status === "revision_requested" ? "(required)" : "(optional)"}</label><textarea id="admin-feedback" rows={8} value={feedback} onChange={(event) => { setFeedback(event.target.value); setMessage(""); }} className="mt-2 w-full rounded-card border border-border-strong bg-surface p-4 text-base leading-7" placeholder="Give the member clear, actionable feedback." />
-        {message ? <p className={`mt-4 text-sm font-bold ${message === "Review saved." ? "text-success-text" : "text-danger-text"}`} role="status">{message}</p> : null}<div className="mt-6 flex flex-wrap gap-3"><Button disabled={!dirty || saving} onClick={() => saveReview(false)}>{saving ? "Saving…" : "Save review"}</Button><Button variant="secondary" disabled={saving} onClick={() => saveReview(true)}>Save &amp; review next</Button></div>
-      </Card></section>
+  const isPdf=submission.payload.type==='file'&&isPdfFile(submission.payload.mimeType,submission.payload.originalFilename);
+  const editHref=`/admin/weeks/${week.id}?cohort=${workspace.selectedCohortId}#grading-${submission.assignmentId}`;
+  const tabs=['feedback','rubric','example'] as const;
+  const work=<section aria-label="Submitted work" className="flex h-full min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface">
+    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-2"><h2 className="text-sm font-semibold">Submitted work</h2>{history.length?<button type="button" aria-pressed={showHistory} className="min-h-11 text-sm font-semibold text-action" onClick={()=>setShowHistory(v=>!v)}>{showHistory?'← Current submission':`History (${history.length})`}</button>:null}</div>
+    <div hidden={showHistory} className={`min-h-0 flex-1 ${isPdf?'':'overflow-y-auto p-5'}`}>
+      {submission.payload.type==='file'&&!isPdf?<p className="mb-4 break-all text-sm font-semibold">{submission.payload.originalFilename}</p>:null}
+      <ViewAttempt attempt={submission} announce={setMessage} fill={isPdf}/>
     </div>
+    <div hidden={!showHistory} className="min-h-0 flex-1 overflow-y-auto p-5"><h3 className="mb-4 text-base font-semibold">Previous submissions</h3><ol className="space-y-5">{history.map(attempt=><li key={attempt.id} className="border-b border-border pb-5 last:border-0"><p className="font-semibold">{submissionDisplayName(attempt)}</p><p className="mt-1 text-xs text-ink-soft">{formatSubmissionTime(attempt.submittedAt)} · {attempt.status.replace('_',' ')}</p>{attempt.feedback?<p className="mt-2 text-sm leading-6 text-ink-soft">{attempt.feedback}</p>:null}<div className="mt-3"><ViewAttempt attempt={attempt} announce={setMessage} historical/></div>{investigations[attempt.id]?<div className="mt-4"><InvestigationHintSnapshot reference={investigations[attempt.id]!}/></div>:null}</li>)}</ol></div>
+  </section>;
+  const review=<section aria-label="Review tools" className="flex h-full min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface">
+    <div role="tablist" aria-label="Review tools" className="flex shrink-0 border-b border-border px-3">{tabs.map(value=><button type="button" role="tab" key={value} id={`${toolsId}-${value}`} aria-controls={`${toolsId}-${value}-panel`} aria-selected={tool===value} tabIndex={tool===value?0:-1} onClick={()=>selectTool(value)} onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const i=tabs.indexOf(value);const next=e.key==='Home'?tabs[0]:e.key==='End'?tabs[2]:tabs[(i+(e.key==='ArrowRight'?1:2))%3];selectTool(next);document.getElementById(`${toolsId}-${next}`)?.focus();}}} className={`min-h-12 border-b-2 px-4 text-sm font-semibold ${tool===value?'border-action text-action':'border-transparent text-ink-soft hover:text-ink'}`}>{value==='feedback'?'Feedback':value==='rubric'?'Rubric':'Example'}</button>)}</div>
+    <div className="min-h-0 flex-1">
+      <div role="tabpanel" id={`${toolsId}-feedback-panel`} aria-labelledby={`${toolsId}-feedback`} hidden={tool!=='feedback'} className="h-full overflow-y-auto p-5">
+        <h2 className="sr-only">Feedback and decision</h2>
+        {investigations[submissionId]?<InvestigationHintSnapshot reference={investigations[submissionId]!}/>:null}
+        {project?<details className="mb-4 border-b border-border pb-3"><summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold">Confirmed project direction</summary><p className="text-sm font-semibold">{project.recommendation?.company} · {project.state?.direction==='recommended'?project.recommendation?.title:'Approved alternative'}</p>{project.state?.direction==='alternative'?project.requests?.filter(r=>r.status==='approved').map(r=><div key={r.id} className="mt-3 whitespace-pre-wrap text-sm"><p>{r.proposal.direction}</p><p className="mt-2">{r.proposal.question}</p>{r.decision_note?<p className="mt-2">{r.decision_note}</p>:null}</div>):null}</details>:null}
+        <fieldset><legend className="mb-3 text-sm font-semibold">Decision</legend><div className="divide-y divide-border rounded-lg border border-border">{(['submitted','revision_requested','completed'] as const).map(value=><label key={value} className={`flex min-h-12 cursor-pointer items-center gap-3 px-3 text-sm font-semibold focus-within:ring-2 focus-within:ring-inset focus-within:ring-action ${status===value?'bg-success-bg':'hover:bg-surface-subtle'}`}><input type="radio" name="review-decision" className="size-4 shrink-0 accent-action" checked={status===value} onChange={()=>{setStatus(value);setMessage('');}}/>{value==='submitted'?'Awaiting review':value==='revision_requested'?'Request revision':'Mark complete'}</label>)}</div></fieldset>
+        <label htmlFor="admin-feedback" className="mt-5 block text-sm font-semibold">Feedback {status==='revision_requested'?'(required)':'(optional)'}</label><textarea id="admin-feedback" rows={6} value={feedback} onChange={e=>{setFeedback(e.target.value);setMessage('');}} className="mt-2 w-full rounded-lg border border-border-strong p-3 text-base leading-7" placeholder="Add feedback…"/>
+      </div>
+      <div role="tabpanel" tabIndex={0} id={`${toolsId}-rubric-panel`} aria-labelledby={`${toolsId}-rubric`} hidden={tool!=='rubric'} className="h-full overflow-y-auto [overflow-wrap:anywhere]"><GradingReferenceContent reference={reference} kind="rubric" editHref={editHref}/></div>
+      <div role="tabpanel" tabIndex={0} id={`${toolsId}-example-panel`} aria-labelledby={`${toolsId}-example`} hidden={tool!=='example'} className={`h-full ${reference?.document?'overflow-hidden':'overflow-y-auto'} [overflow-wrap:anywhere]`}><GradingReferenceContent reference={reference} kind="example" editHref={editHref} loadPdf={exampleOpened}/></div>
+    </div>
+    <footer className="shrink-0 border-t border-border bg-surface p-4">
+      {message?<p role="status" className={`mb-3 text-sm font-semibold ${message==='Review saved.'?'text-success-text':'text-danger-text'}`}>{message}</p>:null}
+      <div className="flex flex-wrap items-center gap-2"><Button className="flex-1 px-3" disabled={!dirty||saving} onClick={()=>saveReview(false)}>{saving?'Saving…':'Save review'}</Button><Button className="flex-1 px-3" variant="secondary" disabled={saving} onClick={()=>saveReview(true)}>Save &amp; review next</Button></div>
+    </footer>
+  </section>;
+  return <main className="pb-4"><PageContainer className="pt-3 sm:pt-4" style={{maxWidth:'100rem'}}>
+    <header className="mb-4"><div className="flex flex-wrap items-center justify-between gap-x-4"><Link href={backHref} className="inline-flex min-h-11 items-center text-sm font-semibold text-action">← Review queue</Link><span className="text-xs font-semibold text-ink-soft">Week {week.weekNumber}{enrollment.isTest?' · Test submission':''}</span></div>
+      <div className="mt-1 flex flex-wrap items-center gap-3"><h1 className="text-2xl font-bold tracking-tight">{team?.name??person?.fullName??'Member submission'}</h1><AssignmentStatusBadge state={submission.status}/></div>
+      <p className="mt-1 text-sm leading-6 text-ink-soft">{assignment?.title} · Submitted {formatSubmissionTime(submission.submittedAt)}</p>
+      {team?<details className="mt-1 text-xs text-ink-soft"><summary className="cursor-pointer py-2">Team members</summary><p>{team.enrollmentIds.map(id=>workspace.people.find(p=>p.id===workspace.enrollments.find(e=>e.id===id)?.personId)?.fullName).filter(Boolean).join(' · ')}</p></details>:null}
+    </header>
+    <ReviewWorkspace work={work} review={review}/>
   </PageContainer></main>;
 }

@@ -1,3 +1,4 @@
+import {showReview,showWork} from './lib/review-workspace.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { execFile } from 'node:child_process';
@@ -60,7 +61,7 @@ test('private PDF endpoints and reader on disposable local records',{timeout:240
   // Both a historical and current PDF: opening history must not prefetch its bytes.
   const old=await submission(member,makePdf({padding:18*1024*1024}));const current=await submission(member,pdf,'Current résumé.pdf',old);
   ok(await member.client.rpc('submit_text',{p_assignment_id:sibling,p_text:'Next work'}));
-  ok(await lead.client.rpc('save_grading_reference',{p_assignment:assignment,p_rubric:'## Evidence rubric\nExplain your evidence.',p_example:'## Example response\nCompare these records.',p_version:0}));
+  ok(await lead.client.rpc('save_grading_reference',{p_assignment:assignment,p_rubric:'## Evidence rubric\n'+('### Criterion\nExplain your evidence and compare relevant sources.\n\n'.repeat(35)),p_example:'## Example response\nCompare these records.',p_version:0}));
   const model=await example(lead);
   async function request(path,user){const cookies=user?await cookieJar(user):[];return fetch(app+path,{headers:{cookie:cookies.map(c=>`${c.name}=${c.value}`).join(';')}});}
   const resources=[`/api/submissions/${current.id}/pdf`,`/api/grading-examples/${model.id}/pdf`];
@@ -87,22 +88,22 @@ test('private PDF endpoints and reader on disposable local records',{timeout:240
     page.on('request',r=>{if(/\/pdf$/.test(new URL(r.url()).pathname))requests.push(r.url());assert.ok(!/google.*viewer|cdnjs|unpkg/.test(r.url()));});page.on('pageerror',e=>errors.push(e.message));
     await page.goto(`${app}/admin/submissions/${current.id}?cohort=${cohort}&week=${week}&status=all`);
     const reader=page.getByRole('dialog',{name:'PDF: Current résumé.pdf',exact:true});
-    await reader.getByText('Could not load this PDF. Retry or download the original.',{exact:true}).waitFor();await page.getByLabel('Feedback (optional)',{exact:true}).fill('Retained on retry');await reader.getByRole('button',{name:'Retry preview',exact:true}).click();
-    await reader.locator('canvas').first().waitFor();assert.equal(await page.getByLabel('Feedback (optional)',{exact:true}).inputValue(),'Retained on retry');await reader.getByRole('button',{name:'Next page',exact:true}).waitFor({state:'visible'});
+    await reader.getByText('Could not load this PDF. Retry or download the original.',{exact:true}).waitFor();await showReview(page);await page.getByLabel('Feedback (optional)',{exact:true}).fill('Retained on retry');await showWork(page);await reader.getByRole('button',{name:'Retry preview',exact:true}).click();
+    await reader.locator('canvas').first().waitFor();assert.equal(await page.locator('#admin-feedback').inputValue(),'Retained on retry');await reader.getByRole('button',{name:'Next page',exact:true}).waitFor({state:'visible'});
     assert.deepEqual(errors,[]);assert.equal(await reader.getByText(/corrupt or unsupported/).count(),0);
     assert.ok(await reader.locator('canvas').first().evaluate(c=>c.width*c.height<=8_000_000));await reader.getByRole('button',{name:'Next page',exact:true}).click();await page.waitForFunction(()=>document.querySelector('input[aria-label="Page number"]')?.value==='2');await reader.getByRole('button',{name:'Previous page',exact:true}).click();
     await reader.getByRole('spinbutton',{name:'Page number',exact:true}).fill('2');await reader.getByRole('spinbutton',{name:'Page number',exact:true}).press('Enter');await page.waitForFunction(()=>document.querySelector('input[aria-label="Page number"]')?.value==='2');
     await reader.getByRole('button',{name:'Zoom in',exact:true}).click();await reader.getByRole('button',{name:'Fit width',exact:true}).click();
-    await reader.getByRole('searchbox',{name:'Find',exact:true}).fill('Evidence');await reader.getByText(/of 2/).waitFor();await reader.getByRole('button',{name:'Zoom in',exact:true}).click();const savedPage=await reader.getByRole('spinbutton',{name:'Page number',exact:true}).inputValue();const savedZoom=await reader.getByText(/^\d+%$/).innerText();
-    await page.getByLabel('Feedback (optional)',{exact:true}).fill('Keep this feedback.');await page.getByLabel('Request revision',{exact:true}).check();
+    await reader.getByRole('button',{name:'Find in PDF',exact:true}).click();await reader.getByRole('searchbox',{name:'Find',exact:true}).fill('Evidence');await reader.getByText(/of 2/).waitFor();await reader.getByRole('button',{name:'Zoom in',exact:true}).click();const savedPage=await reader.getByRole('spinbutton',{name:'Page number',exact:true}).inputValue();const savedZoom=await reader.getByText(/^\d+%$/).innerText();
+    await showReview(page);assert.ok(await page.getByRole('button',{name:'Save & review next',exact:true}).isVisible());await page.getByLabel('Feedback (optional)',{exact:true}).fill('Keep this feedback.');await page.getByLabel('Request revision',{exact:true}).check();await showWork(page);
     await reader.getByRole('button',{name:'Expand',exact:true}).click();const modal=page.getByRole('dialog',{name:'PDF: Current résumé.pdf',exact:true});await modal.waitFor();assert.equal(await modal.getByRole('spinbutton',{name:'Page number',exact:true}).inputValue(),savedPage);assert.equal(await modal.getByText(/^\d+%$/).innerText(),savedZoom);
     await page.screenshot({path:join(shots,`expanded-${width}.png`)});assert.equal(await modal.getByRole('searchbox',{name:'Find',exact:true}).inputValue(),'Evidence');await modal.getByRole('button',{name:'Close reader',exact:true}).focus();await page.keyboard.press('Escape');await reader.waitFor();await page.waitForFunction(()=>document.activeElement?.textContent==='Expand');assert.ok(await reader.getByRole('button',{name:'Expand',exact:true}).evaluate(e=>e===document.activeElement));
     assert.equal(requests.length,2,'expansion never refetches');
-    await page.getByRole('tab',{name:'Example',exact:true}).click();const modelReader=page.getByRole('dialog',{name:'PDF: Example.pdf',exact:true});await modelReader.locator('canvas').first().waitFor();await page.getByRole('tab',{name:'Rubric',exact:true}).click();await page.getByRole('tab',{name:'Example',exact:true}).click();await modelReader.waitFor();assert.equal(requests.length,3,'tabs preserve parsed example');
-    let dialogs=0;page.on('dialog',async d=>{dialogs++;await d.dismiss();});const download=page.waitForEvent('download');await reader.getByRole('link',{name:'Download',exact:true}).click();await download;assert.equal(dialogs,0,'downloading never discards feedback');
+    await showReview(page);await page.getByRole('tab',{name:'Feedback',exact:true}).focus();await page.keyboard.press('ArrowRight');assert.equal(await page.getByRole('tab',{name:'Rubric',exact:true}).getAttribute('aria-selected'),'true');await page.keyboard.press('ArrowRight');assert.equal(await page.getByRole('tab',{name:'Example',exact:true}).getAttribute('aria-selected'),'true');const modelReader=page.getByRole('dialog',{name:'PDF: Example.pdf',exact:true});await modelReader.locator('canvas').first().waitFor();await page.getByRole('tab',{name:'Rubric',exact:true}).click();const rubric=page.getByRole('tabpanel',{name:'Rubric',exact:true});await rubric.evaluate(e=>e.scrollTop=e.scrollHeight);const saveBounds=await page.getByRole('button',{name:'Save review',exact:true}).boundingBox();assert.ok(saveBounds.y+saveBounds.height<=1000,'save remains in viewport below long rubric');assert.ok(await page.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+20),'long rubric does not lengthen page');await page.getByRole('tab',{name:'Example',exact:true}).click();await modelReader.waitFor();assert.equal(requests.length,3,'tabs preserve parsed example');
+    await showWork(page);let dialogs=0;page.on('dialog',async d=>{dialogs++;await d.dismiss();});const download=page.waitForEvent('download');await reader.getByRole('link',{name:'Download',exact:true}).click();await download;assert.equal(dialogs,0,'downloading never discards feedback');
     const selected=await reader.locator('.textLayer span').first().evaluate(e=>{const range=document.createRange();range.selectNodeContents(e);getSelection().removeAllRanges();getSelection().addRange(range);return getSelection().toString();});assert.match(selected,/Evidence/);
-    await page.getByText('Previous submissions (1)',{exact:true}).click();assert.equal(requests.length,3);await page.getByRole('button',{name:'View PDF',exact:true}).click();await page.getByRole('dialog',{name:'PDF: Evidence.pdf',exact:true}).locator('canvas').first().waitFor();assert.equal(requests.length,4);
-    assert.equal(await page.getByLabel('Feedback (required)',{exact:true}).inputValue(),'Keep this feedback.');assert.ok(await page.getByLabel('Request revision',{exact:true}).isChecked());
+    await page.getByRole('button',{name:'History (1)',exact:true}).click();assert.equal(requests.length,3);await page.getByRole('button',{name:'View PDF',exact:true}).click();await page.getByRole('dialog',{name:'PDF: Evidence.pdf',exact:true}).locator('canvas').first().waitFor();assert.equal(requests.length,4);
+    await page.getByRole('button',{name:'← Current submission',exact:true}).click();await showReview(page);assert.equal(await page.getByLabel('Feedback (required)',{exact:true}).inputValue(),'Keep this feedback.');assert.ok(await page.getByLabel('Request revision',{exact:true}).isChecked());
     await page.getByRole('link',{name:'← Review queue',exact:true}).click();assert.equal(dialogs,1,'actual navigation still warns');assert.ok(page.url().includes(current.id));
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:join(shots,`reader-${width}.png`),fullPage:true});assert.deepEqual(errors,[]);
     await ctx.close();
@@ -119,7 +120,7 @@ test('private PDF endpoints and reader on disposable local records',{timeout:240
     await page.goto(`${app}/admin/submissions/${current.id}?cohort=${cohort}&week=${week}&status=all`);
     const reader=page.getByRole('dialog',{name:'PDF: Current résumé.pdf',exact:true});
     if(f.error){await reader.getByText(f.error).waitFor();await reader.getByRole('button',{name:'Retry preview',exact:true}).waitFor();}
-    else{await reader.locator('canvas').first().waitFor();assert.equal(await reader.getByText(/corrupt or unsupported/).count(),0);await reader.getByRole('searchbox',{name:'Find',exact:true}).fill('Evidence');await reader.getByText(f.name==='scanned'?'No matches':/of 2/).waitFor();}
+    else{await reader.locator('canvas').first().waitFor();assert.equal(await reader.getByText(/corrupt or unsupported/).count(),0);await reader.getByRole('button',{name:'Find in PDF',exact:true}).click();await reader.getByRole('searchbox',{name:'Find',exact:true}).fill('Evidence');await reader.getByText(f.name==='scanned'?'No matches':/of 2/).waitFor();}
     await reader.getByRole('link',{name:'Download',exact:true}).waitFor();await ctx.close();
    }}finally{await browser.close();}
   });
@@ -129,9 +130,9 @@ test('private PDF endpoints and reader on disposable local records',{timeout:240
     const ctx=await browser.newContext();await ctx.addCookies(await cookieJar(lead));const page=await ctx.newPage();
     await page.goto(`${app}/admin/submissions/${current.id}?cohort=${cohort}&week=${week}&status=all`);
     await page.getByRole('dialog',{name:'PDF: Current résumé.pdf',exact:true}).locator('canvas').first().waitFor();
-    await page.getByLabel('Feedback (optional)',{exact:true}).fill('Fixture review preserved.');await page.getByLabel('Request revision',{exact:true}).check();await page.getByRole('button',{name:'Save & review next',exact:true}).click();
+    await showReview(page);await page.getByLabel('Feedback (optional)',{exact:true}).fill('Fixture review preserved.');await page.getByLabel('Request revision',{exact:true}).check();await page.getByRole('button',{name:'Save & review next',exact:true}).click();
     await page.waitForURL(url=>url.pathname.includes('/admin/submissions/')&&!url.pathname.includes(current.id));await page.getByText('Next work',{exact:true}).waitFor();
-    assert.equal(await page.getByRole('dialog',{name:'PDF: Current résumé.pdf',exact:true}).count(),0);assert.equal(await page.getByText('Evidence rubric',{exact:true}).count(),0);assert.equal(await page.getByLabel('Feedback (optional)',{exact:true}).inputValue(),'');
+    assert.equal(await page.getByRole('dialog',{name:'PDF: Current résumé.pdf',exact:true}).count(),0);assert.equal(await page.getByText('Evidence rubric',{exact:true}).count(),0);await showReview(page);assert.equal(await page.getByLabel('Feedback (optional)',{exact:true}).inputValue(),'');
     const saved=ok(await root.from('submissions').select('status,feedback').eq('id',current.id).single());assert.equal(saved.status,'revision_requested');assert.equal(saved.feedback,'Fixture review preserved.');await ctx.close();
    }finally{await browser.close();}
   });

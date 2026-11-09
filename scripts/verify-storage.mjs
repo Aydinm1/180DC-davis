@@ -1,3 +1,4 @@
+import {showReview} from './lib/review-workspace.mjs';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -249,7 +250,7 @@ test('private Storage lifecycle using isolated local accounts',async t=>{
           await review.goto(`${process.env.GAP_TEST_APP_URL}/admin/submissions/${attempt.id}?cohort=${cohort}`);
           const downloaded=review.waitForEvent('download'); await review.getByRole('link',{name:'Download',exact:true}).click();
           assert.equal((await downloaded).suggestedFilename(),'browser.pdf');
-          await review.getByLabel('Request revision',{exact:true}).check();
+          await showReview(review);await review.getByLabel('Request revision',{exact:true}).check();
           await review.getByLabel(/Feedback \(/).fill('Please improve the evidence.');
           await review.getByRole('button',{name:'Save review',exact:true}).click();
           await review.getByText('Review saved.',{exact:true}).waitFor();

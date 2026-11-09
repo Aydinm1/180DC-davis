@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Simplified submission review into a larger document pane and Feedback/Rubric/Example
+  tools with persistent save actions. Added phone pane switching, in-pane history and
+  compact PDF controls without discarding reading state or unsaved feedback.
+
 - Recorded a security audit with read-only hosted schema/Storage parity checks, authenticated
   regressions and open hardening findings. Added four read-only local security-schema
   regression checks; no production security settings or permissions were changed.

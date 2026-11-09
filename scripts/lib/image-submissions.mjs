@@ -1,3 +1,4 @@
+import {showReview,showWork} from './review-workspace.mjs';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import { mkdtemp } from 'node:fs/promises';
@@ -91,17 +92,17 @@ export async function verifyImageSubmissions({ app, fixture, prepare, upload, fi
       const review = await adminContext.newPage();
       await review.route(`**/api/submissions/${attempt.id}/image*`, route => route.fulfill({ status: 503, body: 'Fixture preview unavailable' }));
       await review.goto(`${app}/admin/submissions/${attempt.id}?cohort=${cohort}`);
-      await review.getByRole('button', { name: 'Retry image preview', exact: true }).waitFor();
+      await showWork(review);await review.getByRole('button', { name: 'Retry image preview', exact: true }).waitFor();
       const feedback = review.getByLabel(/Feedback \(/);
-      await feedback.fill('Completion confirmed.');
+      await showReview(review);await feedback.fill('Completion confirmed.');
       await review.unroute(`**/api/submissions/${attempt.id}/image*`);
-      await review.getByRole('button', { name: 'Retry image preview', exact: true }).click();
+      await showWork(review);await review.getByRole('button', { name: 'Retry image preview', exact: true }).click();
       const image = review.getByRole('img', { name: 'Submitted image: completion.png', exact: true });
       await image.evaluate(el => el.decode()); assert.equal(await feedback.inputValue(), 'Completion confirmed.');
       assert.ok(await image.evaluate(el => Math.abs(el.getBoundingClientRect().width / el.getBoundingClientRect().height - el.naturalWidth / el.naturalHeight) < 0.01));
       assert.ok(await review.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await review.screenshot({ path: join(screens, `review-${width}.png`), fullPage: true });
-      await review.getByLabel('Request revision', { exact: true }).check();
+      await showReview(review);await review.getByLabel('Request revision', { exact: true }).check();
       await review.getByRole('button', { name: 'Save review', exact: true }).click();
       await review.getByText('Review saved.', { exact: true }).waitFor();
       await page.reload(); await page.getByRole('button', { name: 'Revise submission', exact: true }).click();
@@ -113,9 +114,9 @@ export async function verifyImageSubmissions({ app, fixture, prepare, upload, fi
       const next = await current(learner); paths.push(next.file_path);
       await review.goto(`${app}/admin/submissions/${next.id}?cohort=${cohort}`);
       await review.getByRole('img', { name: 'Submitted image: replacement.jpg', exact: true }).evaluate(el => el.decode());
-      await review.getByText('Previous submissions (1)', { exact: true }).click();
+      await review.getByRole('button',{name:'History (1)',exact:true}).click();
       await review.getByRole('img', { name: 'Submitted image: completion.png', exact: true }).evaluate(el => el.decode());
-      await review.getByLabel('Mark complete', { exact: true }).check();
+      await showReview(review);await review.getByLabel('Mark complete', { exact: true }).check();
       await review.getByRole('button', { name: 'Save review', exact: true }).click();
       await review.getByText('Review saved.', { exact: true }).waitFor();
       assert.equal((await current(learner)).status, 'completed');

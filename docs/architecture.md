@@ -330,6 +330,9 @@ filenames, private/no-store and nosniff headers. Downloading has no review side 
 Admin PDF readers use `/api/submissions/[id]/pdf` and `/api/grading-examples/[id]/pdf`:
 live verified active Admin authorization precedes user-scoped metadata and session-authenticated
 Storage reads. Bounded full-file reads verify signatures and return private inline bytes.
+The review workspace keeps document/history and tool panels mounted while local view
+controls switch visibility. Viewport-bounded panes scroll independently; the review footer
+sits outside the tool scroller. These presentation controls do not navigate or mutate data.
 The lazy PDF.js client uses locally copied version-matched assets and isolated CSS;
 one controller survives inline/modal presentation and reference-tab changes. Historical
 PDFs are explicit-open only. Old controllers/fetches are canceled on navigation.
