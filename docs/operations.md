@@ -1,11 +1,36 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-09
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
+
+## Per-team brief setup
+
+Save the assignment as **Standard / Team**, then open **Instructions → Team briefs**.
+Select each existing team, paste its formatted directions and Save team brief. Shared
+instructions and assignment PDFs retain their existing save controls. Use Preview as member
+and Sample team to inspect each brief. Blank teams remain on shared instructions; this adds
+no publication gate. Guided-project directions remain in their existing activity setup.
+Real Week 3 briefs are not populated automatically; the supplied Team 1 document is source
+material to paste after local implementation and a separately authorized release.
+
+Run `npm run test:team-briefs` against local Supabase, with `GAP_TEST_APP_URL` pointing to a
+matching production-mode local server for desktop/phone checks. The suite uses disposable
+accounts/cohorts and verifies own-team/draft/Test/privacy boundaries, independent saves,
+conflicts/retries, long tables, preview and existing shared review. Migration `202611080002`
+must precede production code; hosted migration, commit/push/deployment and real content
+configuration remain separately authorized. Local fixture acceptance is not real Google
+acceptance. No student records or existing submission timestamps/feedback/files are backfilled.
+
+Local verification on 2026-11-09 passed six team-brief entries, nine team regressions,
+six multiple-assignment regressions and 118 unit/docs checks, plus lint, typecheck,
+generated types, production build and diff checks. The supplied Warby Parker document
+was rendered only in disposable local fixtures through optional `GAP_TEST_BRIEF_SOURCE`;
+its text was not copied into the repository or real assignment records. Desktop/phone
+screenshots were inspected and fixtures cleaned; hosted migration/release remain pending.
 
 ## Spreadsheet investigation setup and verification
 

@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-09
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,19 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Add optional formatted per-team briefs to Standard Team assignments, independent
+  versioned admin saves, retained selection/edits and sample-team preview. Own-team
+  reads exclude other teams, drafts, Viewer/Explore and revoked identities. Long briefs
+  use Instructions / Workspace with heading jumps; no-brief assignments retain their
+  existing layout. Safe flat Markdown tables support the supplied Warby Parker text.
+  Six local brief entries, nine team regressions, six assignment regressions and 118
+  unit/docs checks pass without skips. Desktop/phone views, stale edits, forged actions,
+  table focus, local draft retention and the actual supplied document were verified in
+  disposable fixtures; screenshots inspected and fixtures cleaned. Lint, typecheck,
+  generated types, Webpack build and diff checks pass. Hosted migration `202611080002`
+  applied and verified on 2026-11-09 under separate release authorization. Real Week 3
+  configuration and real Google acceptance remain separate.
 
 - [x] Implement reusable Individual spreadsheet investigations: four stages/fifteen private
   progressive/optional starter hints, saved drafts, checked names, ordinary reviewed text

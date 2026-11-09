@@ -5,6 +5,11 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added optional private formatted briefs per team on Standard Team assignments, with
+  independent versioned admin saves and sample-team preview. Members get their own brief
+  beneath shared instructions in a focused Instructions / Workspace view. Added safe,
+  responsive Markdown tables; submissions and grading remain unchanged.
+
 - Added reusable Individual spreadsheet investigations with private progressive/optional
   hints, saved conclusions, server-checked suspect names and ordinary admin-reviewed
   submissions. Review retains per-attempt hint snapshots; assignment-level insights keep

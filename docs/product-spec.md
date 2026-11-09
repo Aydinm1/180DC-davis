@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-09
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -190,7 +190,7 @@ Admins may write a separate optional summary (up to 300 Unicode characters), nev
 automatically truncated brief. Existing assignments without summaries show no teaser.
 Instructions remain plain text unless an admin explicitly chooses formatting or uses
 the toolbar. The restricted Markdown subset supports section headings, bold, flat
-bulleted/numbered lists, literal inline code and HTTP(S) links. Raw HTML, images, embeds, arbitrary styles,
+bulleted/numbered lists, flat tables, literal inline code and HTTP(S) links. Raw HTML, images, embeds, arbitrary styles,
 and unsupported syntax are not interpreted. Unsafe links remain inert literal text.
 The admin editor offers a toolbar, format choice and rendered preview; instructions
 are limited to 50,000 Unicode characters. This does not add rich text to member responses.
@@ -224,6 +224,29 @@ and revoke are audited; existing work/history is never rewritten. Submitted work
 with a grant wins or fails transactionally, and uploads cannot commit after a grant.
 
 ### Admin-assigned teams
+
+#### Team-specific instructions for Standard assignments
+
+Standard Team assignments support optional formatted briefs for each existing cohort team.
+In the saved assignment's Instructions section, expand Team briefs, select an Official/Test
+team, paste its directions and Save team brief. This save is independent of common week
+instructions and PDF uploads. Changing teams warns before discarding unsaved input; stale
+edits retain local input and require reload. Clear brief removes the displayed content only
+after an explicit save. Existing names and real assignment content are never generated.
+
+Members see common instructions followed by their current team's brief in Instructions,
+with heading jumps for long content. Workspace retains one shared submission and existing
+review, completion, revisions and membership-lock behavior. Briefs are optional; missing
+briefs add no submission/publication gate or student obligation. Admin preview includes a
+sample-team selector. Explore/Viewer sees common instructions only, never real team briefs.
+Private briefs require live admin or matching enrolled team access in a published week and
+active cohort. Unsaved or draft instructions remain unavailable to members.
+
+Briefs use the existing 50,000-character safe format, now including flat Markdown tables
+with literal inline formatting and horizontally scrollable phone layouts. No PDF attachment,
+new activity workflow, approval step or automatic real Week 3 setup is added. Clear all saved
+nonempty team briefs explicitly before converting the assignment's mode/workflow. See
+[ADR 0026](decisions/0026-assignment-team-briefs.md).
 
 #### Guided project assignments
 

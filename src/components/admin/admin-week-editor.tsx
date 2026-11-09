@@ -21,10 +21,12 @@ import type { Investigation, InvestigationConfig } from '@/lib/investigations/ty
 import type { GuidedProject } from '@/lib/guided/types';
 import { GuidedEditor } from './guided-editor';
 import { EditorSections } from './editor-sections';
+import { TeamBriefEditor } from './team-brief-editor';
+import type { TeamBrief } from '@/lib/teams/briefs';
 
 const input = "mt-2 min-h-11 w-full rounded-lg border border-border-strong bg-surface px-3.5 text-base text-ink";
 
-export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = {}, caseTemplate, investigations={}, investigationTemplate }: { weekId: string; references?: GradingReference[]; guided?: Record<string,GuidedProject>; cases?: Record<string,CaseExercise>; caseTemplate?: CaseContent;investigations?:Record<string,Investigation>;investigationTemplate?:InvestigationConfig }) {
+export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = {}, caseTemplate, investigations={}, investigationTemplate,teamBriefs={} }: { weekId: string; references?: GradingReference[]; guided?: Record<string,GuidedProject>; cases?: Record<string,CaseExercise>; caseTemplate?: CaseContent;investigations?:Record<string,Investigation>;investigationTemplate?:InvestigationConfig;teamBriefs?:Record<string,TeamBrief[]> }) {
   const workspace = useAdminWorkspace();
   const router = useRouter();
   const source = workspace.weeks.find((week) => week.id === weekId && week.cohortId === workspace.selectedCohortId);
@@ -125,6 +127,7 @@ export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = 
             </div></div>
             <div hidden={assignmentSection !== 'instructions'}><div className="mt-6 grid grid-cols-1 gap-6">
               <AssignmentInstructionsEditor value={assignment.instructions} format={assignment.instructionsFormat} onChange={values => updateAssignment(assignment.id, values)} />
+              {persisted?.submissionMode==='team'&&(guided[assignment.id]?.workflow??persisted.workflow??'standard')==='standard'?<TeamBriefEditor assignmentId={assignment.id} initial={teamBriefs[assignment.id]??[]} onDirty={referenceChanged}/>:null}
               {persisted ? <AssignmentBriefUpload key={persisted.id} assignment={persisted} onDirty={referenceChanged} /> : <p className="text-sm text-ink-soft">Save the assignment draft first, then attach its PDF.</p>}
             </div></div>
             <div hidden={assignmentSection !== 'grading'} className="mt-6"><GradingReferenceEditor assignmentId={assignment.id} initial={references.find(r => r.assignmentId === assignment.id)} persisted={Boolean(persisted)} onDirty={referenceChanged} expanded /></div>

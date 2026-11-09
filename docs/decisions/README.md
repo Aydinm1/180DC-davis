@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+- [ADR 0026: Private per-team assignment instructions](0026-assignment-team-briefs.md)
+
 - [ADR 0025: Private hints and checked investigation submissions](0025-spreadsheet-investigations.md)
 
 - [ADR 0024: Public marketing boundary](0024-public-marketing-boundary.md)

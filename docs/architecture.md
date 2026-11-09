@@ -8,7 +8,7 @@ successful receipts through retries. No background jobs or Monday writes are inv
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-09
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -465,6 +465,22 @@ URLs, credentials, or private submission payloads into club reporting.
 - Distinguish authentication failure, roster denial, validation failure, and transient
   backend failure.
 - Never cache authenticated responses in a way that could share sessions between users.
+
+## Assignment/team instruction boundary
+
+`lib/teams/brief-data.ts` reads user-scoped private brief projections; the Standard Team
+assignment detail loads them separately from ordinary week/dashboard DTOs. Even admins
+using the normal member route pass only that route's actual team brief to the client.
+Explore skips private reads entirely. Admin week edit loads optional briefs alongside other
+independent configurations after authorization. `TeamBriefEditor` owns its separate save,
+selected team, optimistic version, retained draft and stable retry UUID; its dirty state
+participates in the existing week navigation guards.
+
+`TeamAssignmentInstructions` keeps Instructions / Workspace mounted while switching locally.
+The long private brief uses the shared scoped-heading reader. Admin-only preview receives
+all cohort-team briefs for its sample selector; normal members receive only their own.
+No submission ownership, upload gate, queue or completion contract is widened. Markdown
+table parsing/rendering stays in the safe brief module with escaped text cells and no HTML.
 
 ## Spreadsheet investigation boundary
 

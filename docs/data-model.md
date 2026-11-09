@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-09
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -609,6 +609,27 @@ See [ADR 0009](decisions/0009-private-upload-lifecycle.md).
 - Regenerate checked-in database TypeScript types after schema changes.
 - Test policies as anonymous, member, admin, inactive roster member, and cross-user
   access before release.
+
+## Private assignment/team briefs
+
+Migration `202611080002` adds `private.assignment_team_briefs`, keyed by assignment/team
+with cascading content-only FKs, bounded text, optimistic version, DB update time, live
+admin actor and last retry request UUID. RLS is enabled and direct privileges are revoked
+from anonymous, authenticated and service roles. The narrow `read_assignment_team_briefs`
+RPC permits live admins to inspect cohort teams (including drafts/Test); members require
+current verified roster access, a published Standard Team assignment, matching enrolled
+participation in its active cohort and current team membership/Test scope. Members cannot
+choose a team selector, and Viewers are denied even with retained enrollment records.
+
+`save_assignment_team_brief` requires live admin authority, matching assignment/team cohort,
+Standard Team mode and expected version inside the shared submission gate/row locks.
+Identical last-request retries return the saved receipt; stale edits cannot overwrite.
+Blank saved text clears display while preserving its version. A mode/workflow trigger
+requires explicit clearing of all nonblank briefs before conversion; deletion of unused
+assignments/teams removes only their instruction records through existing authorized delete
+paths. Brief reads/saves never lock team membership or create completion/submission records.
+No publication-readiness rule or private upload bucket is introduced. See
+[ADR 0026](decisions/0026-assignment-team-briefs.md).
 
 ## Private spreadsheet investigations
 

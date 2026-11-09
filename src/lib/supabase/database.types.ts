@@ -24,6 +24,36 @@ export type Database = {
         }
         Relationships: []
       }
+      assignment_team_briefs: {
+        Row: {
+          assignment_id: string
+          instructions: string
+          request_id: string
+          team_id: string
+          updated_at: string
+          updated_by: string
+          version: number
+        }
+        Insert: {
+          assignment_id: string
+          instructions: string
+          request_id: string
+          team_id: string
+          updated_at?: string
+          updated_by: string
+          version?: number
+        }
+        Update: {
+          assignment_id?: string
+          instructions?: string
+          request_id?: string
+          team_id?: string
+          updated_at?: string
+          updated_by?: string
+          version?: number
+        }
+        Relationships: []
+      }
       attendance_attempts: {
         Row: {
           failed_at: string
@@ -1796,6 +1826,10 @@ export type Database = {
         Returns: Json
       }
       my_team: { Args: { p_enrollment: string }; Returns: Json }
+      read_assignment_team_briefs: {
+        Args: { p_assignment: string; p_team?: string }
+        Returns: Json
+      }
       read_case_exercise: {
         Args: {
           p_assignment: string
@@ -1819,6 +1853,16 @@ export type Database = {
           id: string
           updated_at: string
         }[]
+      }
+      save_assignment_team_brief: {
+        Args: {
+          p_assignment: string
+          p_instructions: string
+          p_request: string
+          p_team: string
+          p_version: number
+        }
+        Returns: Json
       }
       save_grading_reference: {
         Args: {

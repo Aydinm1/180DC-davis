@@ -1,10 +1,22 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-08
+**Last updated:** 2026-11-09
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
+
+### Team assignment instructions
+
+Standard Team assignment Instructions contains an optional Team briefs disclosure with one
+labeled team selector and one safe formatted editor. Official/Test and Brief added/No brief
+appear in options. Save team brief is independent, retains selection and preserves failed
+edits; team switching confirms dirty input. Clear brief requires confirmation and explicit save.
+Members read common instructions then their own long brief with heading jumps in Instructions;
+Workspace retains submission controls. Both views remain mounted. Admin preview alone has a
+Sample team selector; Explore has no real brief selector/content. Flat Markdown tables use
+semantic headers/cells in a labeled, focusable overflow region, scrolling horizontally on
+phones without overflowing the page. Keep HTML and unsafe URLs inert.
 
 ### Spreadsheet investigation presentation
 
