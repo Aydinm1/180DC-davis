@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Removed the redundant reload/file-reselection reminder from submission uploads.
+
 - Simplified submission review into a larger document pane and Feedback/Rubric/Example
   tools with persistent save actions. Added phone pane switching, in-pane history and
   compact PDF controls without discarding reading state or unsaved feedback.

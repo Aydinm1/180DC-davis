@@ -12,7 +12,6 @@ test('review, attendance and direction inbox omit bookkeeping commentary',()=>{
 test('copy cleanup preserves submission and data-loss safeguards',()=>{
  const editor=source('components/program/submission-editor.tsx');
  assert.match(editor,/Drafts are not saved after a reload/);
- assert.match(editor,/After reloading, select your file again/);
  assert.match(editor,/review team has permission to open your link/);
  assert.match(editor,/Preview only — nothing will be submitted/);
  assert.match(source('components/admin/admin-week-editor.tsx'),/Return this week to draft\? Members will lose access/);

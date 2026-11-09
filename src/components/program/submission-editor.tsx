@@ -195,7 +195,6 @@ export function SubmissionEditor({
             onChange={(event) => { patchDraft({ file: event.target.files?.[0] }); setError(undefined); }}
           />
           {file ? <p className="mt-2 break-words text-sm text-ink-soft">{file.name} · {formatFileSize(file.size)}</p> : null}
-          <p className="mt-2 text-xs leading-5 text-ink-soft">After reloading, select your file again.</p>
         </div>
       ) : null}
 

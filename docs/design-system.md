@@ -61,6 +61,8 @@ actions and usable narrow/zoomed layouts. Its design may evolve separately from 
 
 ### Interface copy
 
+Omit the routine file-reselection reminder beneath submission file pickers.
+
 The admin week editor uses Overview / Assignments / Materials navigation rather than
 stacking every form. Assignments use a compact ordered selector (sidebar on desktop,
 labeled native select on phones) and one visible assignment, with Details / Instructions /

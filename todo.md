@@ -10,6 +10,10 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Remove the routine file-reselection reminder from submission upload controls;
+  updated the existing copy check. All 121 unit/docs checks, lint, typecheck and diff
+  checks pass. Code-only release authorized; no migration required.
+
 - [x] Simplify submission review into a compact document/grade workspace: remove repeated
   metadata and nested cards, keep feedback/reference tools and save actions reachable,
   preserve PDF/draft state across navigation, and verify desktop/phone review locally.
