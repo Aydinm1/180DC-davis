@@ -10,6 +10,27 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Audit current access controls, private files, privileged operations and recent
+  assignment workflows; compare hosted schema/Storage read-only, scan current dependencies
+  and local public artifacts, and rerun security regressions. Record confirmed findings
+  separately from hardening suggestions; preserve the unreleased PDF work and production.
+  Hosted application functions/policies and private Storage match audited local definitions;
+  68 authenticated regression entries, four new read-only security-schema checks and 121
+  unit/docs checks pass without skips. Lint/typecheck/diff pass; dependency audit and local
+  public artifact secret scan are clean. Report: docs/security-audit-2026-11-09.md.
+  One medium resource-abuse/cleanup gap and two low hardening items remain proposed fixes,
+  not applied runtime/schema changes. No migration, production data changes or release.
+
+- [x] Implement admin-only PDF reading for submitted/history/example PDFs: private bounded
+  endpoints, locally bundled PDF.js, continuous pages/search/zoom and expanded reading
+  without lost feedback. Verify access, worker/assets, desktop/phone and existing grading
+  regressions locally. Six PDF, seven grading, nine team and 13 Storage entries pass
+  without skips, including desktop/phone; 121 unit/docs, lint, typecheck, generated types,
+  audits (zero vulnerabilities), Webpack build and diff checks pass. Fixture files/records
+  cleaned; real files unchanged. Default local Turbopack hits a fetch panic; hosted
+  bundler/worker and real Google acceptance remain release checks. No migration, commit,
+  push or deployment performed or authorized.
+
 - [x] Add optional formatted per-team briefs to Standard Team assignments, independent
   versioned admin saves, retained selection/edits and sample-team preview. Own-team
   reads exclude other teams, drafts, Viewer/Explore and revoked identities. Long briefs

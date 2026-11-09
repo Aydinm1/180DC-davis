@@ -15,6 +15,9 @@
     }
   },
   "scripts": {
+    "predev": "node scripts/prepare-pdf-assets.mjs",
+    "prebuild": "node scripts/prepare-pdf-assets.mjs",
+    "pretest": "node scripts/prepare-pdf-assets.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -38,6 +41,8 @@
     "test:test-participants": "node --experimental-strip-types --test scripts/verify-test-participants.mjs",
     "test:week-activity": "node --experimental-strip-types --test scripts/verify-week-activity.mjs",
     "test:grading": "node --experimental-strip-types --test scripts/verify-grading.mjs",
+    "test:pdf": "node --test scripts/verify-pdf-reader.mjs",
+    "test:security-schema": "node --test scripts/verify-security-schema.mjs",
     "test:teams": "node --experimental-strip-types --test scripts/verify-teams.mjs",
     "test:team-briefs": "node --experimental-strip-types --test scripts/verify-team-briefs.mjs",
     "test:completion": "node --experimental-strip-types --test scripts/verify-completion.mjs",
@@ -51,6 +56,7 @@
     "@supabase/supabase-js": "^2.116.0",
     "fast-xml-parser": "^5.11.1",
     "next": "16.4.2",
+    "pdfjs-dist": "6.5.438",
     "qrcode": "^1.5.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -69,6 +75,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "playwright-core": "^1.63.0",
+    "postcss": "8.5.26",
     "supabase": "^2.117.0",
     "tailwindcss": "^4",
     "typescript": "^5"

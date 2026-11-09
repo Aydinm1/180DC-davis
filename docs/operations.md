@@ -7,6 +7,49 @@
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
 
+## Private PDF reader
+
+Security maintenance: run `npm run test:security-schema` against local Docker after
+schema changes, alongside the relevant authenticated/Storage regressions and dependency
+audit. This is read-only and checks grants, RLS, privileged RPCs and bucket policies.
+See [the 2026-11-09 audit](security-audit-2026-11-09.md) for hosted parity evidence and open
+follow-ups: cumulative upload limits/hosted cleanup, HTML headers and private retry-ledger
+RLS. Those findings are documented; their runtime/schema remediation is not yet applied.
+
+Current submitted PDFs open automatically during Admin review. Use page controls, Find,
+zoom/Fit width or Expand; Escape/Close returns focus without losing feedback. Open Example
+to load a private example PDF, or View PDF in history to load an older attempt. Download
+remains available for unsupported, corrupt or password-protected PDFs. Scans have no OCR.
+
+`predev`, `prebuild` and `pretest` run `scripts/prepare-pdf-assets.mjs`, copying only public
+version-matched library assets into ignored `public/pdfjs/<version>/`. The worker, fonts,
+CMaps, ICC profiles and codecs are local; vendor CSS is scoped to `.gap-pdf-reader`.
+Never place uploads there. Updating pinned `pdfjs-dist` also requires updating the reader's
+asset version, then testing worker/font loading, audits, production builds and browsers.
+No migration, new environment variable or hosted configuration is required.
+
+Against a local production server, run `GAP_TEST_APP_URL=http://localhost:3004 npm run
+test:pdf`. It creates and cleans disposable local users/cohorts/files; never point it at
+hosted data. Tests verify live endpoint authorization, exact bytes/headers, lazy history
+and Example reads, search/page/zoom/modal behavior and preserved review state.
+Local fixture/browser acceptance is separate from real Google-session/production acceptance.
+
+Local acceptance (2026-11-09): six PDF entries, seven grading-reference, nine team and
+13 Storage entries pass without skips, including desktop/390px browsers. Coverage includes
+18 MB historical reads, multipage text, embedded fonts, image-only scans, password/corrupt
+files, expired/revoked access, modal focus/page/zoom/search preservation, download/retry
+feedback retention, review-next and obsolete-request cancellation. Screenshots inspected;
+fixture-owned records/files cleaned, real files unchanged. All 121 unit/docs checks,
+lint, typecheck, generated-type consistency, full/production zero-vulnerability audits,
+install-script review, Webpack production build and diff checks pass.
+
+Default local Turbopack verification remains limited: it stalls in fetch handling and
+reports `request should be cloneable` from `turbo-tasks-fetch`, including an attempt with
+the existing Montserrat bytes supplied through a temporary local font response. No font,
+framework or hosted build settings were changed; the final verified app is a normal
+Webpack production build. Hosted Turbopack/worker and real Google acceptance require a
+separately authorized release. No migration, commit, push or deployment was performed.
+
 ## Per-team brief setup
 
 Save the assignment as **Standard / Team**, then open **Instructions → Team briefs**.

@@ -327,13 +327,21 @@ user can switch to link submission even if abandonment could not be confirmed.
 Download routes resolve submission IDs under user-scoped RLS and stream the derived
 Storage path using the session credential. Responses are attachments with original
 filenames, private/no-store and nosniff headers. Downloading has no review side effect.
-Documents have no embedded viewer. Image previews resolve IDs through the same user-scoped
+Admin PDF readers use `/api/submissions/[id]/pdf` and `/api/grading-examples/[id]/pdf`:
+live verified active Admin authorization precedes user-scoped metadata and session-authenticated
+Storage reads. Bounded full-file reads verify signatures and return private inline bytes.
+The lazy PDF.js client uses locally copied version-matched assets and isolated CSS;
+one controller survives inline/modal presentation and reference-tab changes. Historical
+PDFs are explicit-open only. Old controllers/fetches are canceled on navigation.
+No scripting/XFA/forms/actions, external viewers, range fetching or stored previews.
+Other documents retain Download. Image previews resolve IDs through the same user-scoped
 RLS and authenticated Storage fetch, bounded by stored size and 20 MB. Sharp auto-orients
 and creates a fresh PNG inside 1600 × 1600 without enlargement/metadata. Responses use
 private/no-store, nosniff, same-origin resource policy and restrictive CSP, including errors.
 The admin image component uses a native image request, never the shared Next image optimizer;
 local retry state does not remount feedback. Stored MIME enters optional typed file DTOs,
-while legacy/fictional payloads without it remain download-only. There are no persistent
+while missing-MIME historical PDFs require `.pdf` names plus server signature verification.
+Fictional files remain download notices. There are no persistent
 signed URLs, public previews, preview-storage objects or Monday exports.
 
 ### P5 implementation status

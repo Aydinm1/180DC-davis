@@ -338,7 +338,8 @@ duplicate-safe, not permission to overwrite newer work. Private team files retai
   reconstructing HDR brightness.
   Reject SVG, GIF, HEIC and other unsupported formats. Files must be nonempty and not exceed
   20 × 1024 × 1024 bytes. Private downloads are available to the active owner and admins,
-  including previous attempts. Documents remain download-first. Admin review displays
+  including previous attempts. Admins may read submitted PDFs inline while grading;
+  other document formats retain Download. Admin review displays
   private orientation-correct image previews with download access; failed previews offer
   Retry without clearing feedback or blocking a decision. Images remain ordinary `file`
   submissions, one per attempt, with normal review and no automatic completion.
@@ -528,7 +529,13 @@ PDF retains committed history; text edits have stale-save protection and preserv
 Review shows Rubric/Example tabs in one collapsible panel above Feedback and decision,
 alongside submitted work on desktop and after it on phones. Empty references show a quiet
 Add grading reference link. Tab changes retain unsaved feedback; editing respects existing
-unsaved-review safeguards. PDFs remain download-first; no embedded viewer is introduced.
+unsaved-review safeguards. Admins read example PDFs inline when opening Example; prior
+submission PDFs load only on explicit View PDF. The private reader provides continuous
+scrolling, page navigation, zoom/Fit width, text selection/search and Expand. Closing the
+expanded view restores focus and preserves reading state; reader controls, downloads and
+reference tabs preserve feedback/decision. Password-protected or unsupported files retain
+Download and retry. Scanned PDFs are readable without OCR. Members/Viewers gain no reader
+access. See [ADR 0027](decisions/0027-private-admin-pdf-reader.md).
 See [ADR 0019](decisions/0019-private-assignment-grading-references.md).
 
 ## MVP acceptance criteria

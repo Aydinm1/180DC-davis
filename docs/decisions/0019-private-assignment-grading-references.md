@@ -3,6 +3,9 @@
 - Status: Accepted
 - Date: 2026-10-25
 
+The download-only example restriction is superseded by
+[ADR 0027](0027-private-admin-pdf-reader.md); private reference storage remains unchanged.
+
 ## Context
 
 Reviewers need criteria and a model answer beside member work. The original rubric

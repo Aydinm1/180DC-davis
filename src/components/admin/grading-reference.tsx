@@ -2,6 +2,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {PdfPreview} from './pdf-preview';
 import { Button } from '@/components/ui/button';
 import { AssignmentBrief } from '@/components/program/assignment-brief';
 import { AssignmentInstructionsEditor } from './assignment-instructions-editor';
@@ -110,14 +111,16 @@ export function GradingReferenceEditor({ assignmentId, initial, persisted, onDir
 
 export function GradingReferencePanel({ reference, editHref }: { reference?: GradingReference; editHref: string }) {
   const [tab, setTab] = useState<'rubric' | 'example'>('rubric');
+  const [exampleOpened,setExampleOpened]=useState(false);
   const id = useId();
+  function selectTab(value:'rubric'|'example'){setTab(value);if(value==='example')setExampleOpened(true);}
   if (!reference || !(reference.rubric.trim() || reference.example.trim() || reference.document)) return <Link className="mb-5 inline-flex min-h-11 items-center text-sm font-bold text-action" href={editHref}>Add grading reference →</Link>;
   return <details open className="mb-6 rounded-card border border-border bg-surface p-5 sm:p-6">
     <summary className="cursor-pointer text-lg font-bold">Grading reference <span className="ml-2 text-xs font-semibold text-ink-soft">Admins only</span></summary>
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div role="tablist" aria-label="Grading reference">{(['rubric', 'example'] as const).map(value => <button type="button" role="tab" id={`${id}-${value}`} aria-controls={`${id}-panel`} aria-selected={tab === value} tabIndex={tab === value ? 0 : -1} key={value} onKeyDown={event => { if (['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'rubric' : event.key === 'End' ? 'example' : tab === 'rubric' ? 'example' : 'rubric'; setTab(next); document.getElementById(`${id}-${next}`)?.focus(); } }} onClick={() => setTab(value)} className={`min-h-11 border-b-2 px-3 text-sm font-bold ${tab === value ? 'border-action text-action' : 'border-transparent text-ink-soft'}`}>{value === 'rubric' ? 'Rubric' : 'Example'}</button>)}</div><Link href={editHref} className="inline-flex min-h-11 items-center text-sm font-bold text-action">Edit reference →</Link></div>
-    <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${tab}`} tabIndex={0} className="mt-5 max-h-[32rem] overflow-y-auto [overflow-wrap:anywhere]">
-      {(tab === 'rubric' ? reference.rubric : reference.example).trim() ? <AssignmentBrief instructions={tab === 'rubric' ? reference.rubric : reference.example} format="markdown" /> : <p className="text-sm text-ink-soft">{tab === 'rubric' ? 'No rubric added yet.' : 'No written example added yet.'}</p>}
-      {tab === 'example' && reference.document ? <a className="mt-4 inline-flex min-h-11 items-center break-all text-sm font-bold text-action underline" href={`/api/grading-examples/${reference.document.id}/download`}>Download example PDF · {reference.document.name}</a> : null}
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><div role="tablist" aria-label="Grading reference">{(['rubric', 'example'] as const).map(value => <button type="button" role="tab" id={`${id}-${value}`} aria-controls={`${id}-panel`} aria-selected={tab === value} tabIndex={tab === value ? 0 : -1} key={value} onKeyDown={event => { if (['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'rubric' : event.key === 'End' ? 'example' : tab === 'rubric' ? 'example' : 'rubric'; selectTab(next); document.getElementById(`${id}-${next}`)?.focus(); } }} onClick={() => selectTab(value)} className={`min-h-11 border-b-2 px-3 text-sm font-bold ${tab === value ? 'border-action text-action' : 'border-transparent text-ink-soft'}`}>{value === 'rubric' ? 'Rubric' : 'Example'}</button>)}</div><Link href={editHref} className="inline-flex min-h-11 items-center text-sm font-bold text-action">Edit reference →</Link></div>
+    <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${tab}`} tabIndex={0} className="mt-5 [overflow-wrap:anywhere]">
+      <div hidden={tab!=='rubric'}>{reference.rubric.trim()?<AssignmentBrief instructions={reference.rubric} format="markdown"/>:<p className="text-sm text-ink-soft">No rubric added yet.</p>}</div>
+      <div hidden={tab!=='example'}>{reference.example.trim()?<AssignmentBrief instructions={reference.example} format="markdown"/>:<p className="text-sm text-ink-soft">No written example added yet.</p>}{exampleOpened&&reference.document?<div className="mt-4"><PdfPreview resource={{kind:'example',id:reference.document.id,name:reference.document.name}}/></div>:null}</div>
     </div>
   </details>;
 }

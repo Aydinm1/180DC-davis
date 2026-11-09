@@ -247,7 +247,7 @@ test('private Storage lifecycle using isolated local accounts',async t=>{
           const adminJar=await cookieJar(lead); await adminContext.addCookies([...adminJar].map(([name,value])=>({name,value,url:process.env.GAP_TEST_APP_URL})));
           const review=await adminContext.newPage();
           await review.goto(`${process.env.GAP_TEST_APP_URL}/admin/submissions/${attempt.id}?cohort=${cohort}`);
-          const downloaded=review.waitForEvent('download'); await review.getByRole('link',{name:'Download original file',exact:true}).click();
+          const downloaded=review.waitForEvent('download'); await review.getByRole('link',{name:'Download',exact:true}).click();
           assert.equal((await downloaded).suggestedFilename(),'browser.pdf');
           await review.getByLabel('Request revision',{exact:true}).check();
           await review.getByLabel(/Feedback \(/).fill('Please improve the evidence.');

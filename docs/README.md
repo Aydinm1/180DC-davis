@@ -20,6 +20,10 @@ Before making any change:
 
 ## Document ownership
 
+Point-in-time audit evidence: [Security audit — 2026-11-09](security-audit-2026-11-09.md).
+Audit snapshots record checked scope and open findings; canonical behavior remains in
+the source-of-truth documents below.
+
 | Document | Owns | Does not own |
 | --- | --- | --- |
 | [`product-spec.md`](product-spec.md) | Users, workflows, product rules, scope, acceptance | Technical implementation details |

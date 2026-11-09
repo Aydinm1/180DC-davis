@@ -93,6 +93,17 @@ Public tables grant SELECT only: live admins see all, members see published acti
 enrolled context and own records. Members cannot read codes/classmates, undo, forge time
 or directly write. Resource types also permit `workshop`, preserving order and slides URLs.
 
+### Admin PDF delivery
+
+Admin PDF reading adds no tables or policy changes: `/api/submissions/[id]/pdf` and
+`/api/grading-examples/[id]/pdf` require live verified active Admin authority, then use
+user-scoped metadata RLS and that session's authenticated Storage read. File IDs never
+accept arbitrary paths/URLs. Bound reads to 20 MB and stored size when available; inspect
+PDF signature. Stored MIME selects submissions; missing-MIME legacy rows also need a
+`.pdf` filename. Inline responses (including errors) are private/no-store, nosniff,
+same-origin and restrictive-CSP. Existing owner/team download policies are unchanged.
+See [ADR 0027](decisions/0027-private-admin-pdf-reader.md).
+
 ### Assignment PDF briefs
 
 `public.assignment_documents` stores an immutable unique Storage path, assignment and

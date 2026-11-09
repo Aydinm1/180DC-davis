@@ -5,6 +5,15 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Recorded a security audit with read-only hosted schema/Storage parity checks, authenticated
+  regressions and open hardening findings. Added four read-only local security-schema
+  regression checks; no production security settings or permissions were changed.
+
+- Added private inline PDF reading for admins grading current/historical submissions and
+  example references, with scrolling, page navigation, zoom, embedded-text search and an
+  expanded reader that preserves unsaved feedback. PDF.js and its matching assets are
+  bundled locally; new admin-only endpoints retain existing private file/download rules.
+
 - Added optional private formatted briefs per team on Standard Team assignments, with
   independent versioned admin saves and sample-team preview. Members get their own brief
   beneath shared instructions in a focused Instructions / Workspace view. Added safe,

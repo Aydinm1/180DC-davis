@@ -6,6 +6,16 @@
 
 ## Direction
 
+### Admin PDF reading
+
+Use the larger desktop review column for Submitted work, sticky within the review grid;
+reference/feedback remain adjacent. Phones stack the document before reference/decision.
+The reader has a bounded scrolling viewport, compact wrapping controls with 44px targets,
+labeled page/search inputs, visible focus and native text selection. Expand uses a native
+modal with contained focus, Escape/Close, and focus restoration. Preserve the controller,
+reading state and unsaved feedback through expansion/tab changes. Errors offer Retry
+and Download without resetting the review. See ADR 0027 for privacy and lazy loading.
+
 ### Team assignment instructions
 
 Standard Team assignment Instructions contains an optional Team briefs disclosure with one

@@ -4,6 +4,9 @@
 - **Date:** 2026-09-22
 - **Supersedes:** None
 
+The download-only restriction is superseded for Admin submitted/example PDFs by
+[ADR 0027](0027-private-admin-pdf-reader.md); upload and existing download rules remain.
+
 ## Context
 
 Private 20 MB submissions require direct transfers, retained revision history, and safe

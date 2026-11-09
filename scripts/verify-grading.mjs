@@ -213,7 +213,7 @@ test('private grading references use disposable local records', async t => {
         await page.getByRole('heading',{name:'Submitted work',exact:true}).waitFor();await page.getByLabel('Feedback (optional)',{exact:true}).fill('Keep this feedback while comparing.');
         await page.getByRole('tab',{name:'Example',exact:true}).click();await page.getByRole('heading',{name:'Model answer',exact:true}).waitFor();
         assert.equal(await page.getByLabel('Feedback (optional)',{exact:true}).inputValue(),'Keep this feedback while comparing.');
-        const href=await page.getByRole('link',{name:`Download example PDF · Model ${width}.pdf`,exact:true}).getAttribute('href');assert.equal((await ctx.request.get(app+href)).status(),200);
+        const href=await page.getByRole('link',{name:'Download',exact:true}).getAttribute('href');assert.equal((await ctx.request.get(app+href)).status(),200);
         await page.getByRole('tab',{name:'Rubric',exact:true}).click();await page.getByRole('heading',{name:`Private criteria ${width}`,exact:true}).waitFor();
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:join(screenshots,`review-${width}.png`),fullPage:true});
         page.once('dialog',d=>d.dismiss());await page.getByRole('link',{name:'Edit reference →',exact:true}).click();assert.ok(page.url().includes('/admin/submissions/'));
