@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-09
+**Last updated:** 2026-11-11
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -401,6 +401,38 @@ directory, leaving canonical generated files/source intact, and typecheck passed
 The upstream filesystem cause was not verified. Fixture cleanup was verified; no real analyst records, hosted
 migrations, commit/push, deployments or external configuration changed.
 
+## Manual attendance sync to Monday
+
+Apply `202611100001_monday_attendance.sql` before deploying the new attendance action.
+Reuse the server-only Monday token/account/members-board/email settings and Supabase
+secret. No new environment values are required. On the connected members board, maintain
+one checkbox titled exactly Week 1 through Week 6; the action resolves IDs live and fails
+closed on missing, duplicate or non-checkbox matches. Read-only inspection on 2026-11-10
+confirmed all six checkbox columns on the configured board; no real checks were changed.
+
+Select a cohort/week in Attendance → Official participants → Sync to Monday. Review
+checked/already-checked counts and Sync details for missing/ambiguous mappings. Resolve
+links through the existing Monday intake, not by guessed names. Repeating a sync is safe.
+It never clears a box, including after Undo in GAP, and does not touch other weeks/columns.
+Test participants, completion metrics, files and feedback are not exported.
+
+Local verification: unit transport fixtures cover checkbox scope, unchanged checks,
+partial failures, rate limits, lost responses, mapping/email mismatches and live rechecks.
+Run `scripts/verify-monday-attendance.sql` through local psql (transaction rolls back),
+then `npm run test:monday-attendance` against local Docker after a production build.
+The browser script starts its own localhost server with a guarded server-side Monday
+stub and disposable records; never preload the stub in production. Hosted migration,
+deployment and real Monday write acceptance remain separate release steps.
+
+Local acceptance: all 127 unit/docs checks (including six sync transport checks), the
+rollback-only export SQL, desktop/phone sync/action test, nine attendance regressions
+and four security-schema checks pass. Generated-type consistency, lint, typecheck,
+Webpack production build and diff checks pass. Screenshots inspected and disposable
+fixtures cleaned. Hosted migration `202611100001` was applied on 2026-11-11 after
+explicit approval; it adds only the private service-authorized export function and does
+not change attendance or real Monday boxes. Production release is authorized; verify
+the exact commit and READY aliases through the release runbook.
+
 ## Workshop attendance — release
 
 Apply `supabase/migrations/202610210006_workshop_attendance.sql` with
@@ -425,7 +457,7 @@ destinations. On another physical phone, localhost points at that phone, not the
 Mac; use the deployed site after its separately authorized release. QR images are generated
 locally with `qrcode`; there is no external QR provider. Browser time only affects display;
 the DB clock and locks enforce the two-hour window. There is no expiry scheduler/realtime
-service, automatic percentages or Monday export. Shared codes are not anti-cheating proof.
+service or automatic percentages. Manual Monday attendance export is described above. Shared codes are not anti-cheating proof.
 
 Run `npm run test:attendance` against local Supabase. For browser/action coverage, use
 an isolated app server and `GAP_TEST_APP_URL=http://localhost:3004

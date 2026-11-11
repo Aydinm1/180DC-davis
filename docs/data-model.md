@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-09
+**Last updated:** 2026-11-11
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -466,7 +466,7 @@ Exclude `is_test` enrollments from every official numerator/denominator, active 
 review summaries/default queues and attendance present counts. Test-specific views retain
 their saved work/marks for verification. Future Monday reporting must exclude them too.
 
-## Monday reporting contract — Planned
+## Monday reporting contract — General reporting planned
 
 Manual intake now uses the accepted-members board. The historical application-link
 table name remains, but its triple identifies one member item/cohort participation.
@@ -696,3 +696,14 @@ no answers/references and drives progress independently of grading submissions. 
 The admin response-inspection page reuses `read_case_exercise` with its admin-only
 `p_enrollment` selector and cohort validation. No new table, mutation, grading state or
 completion backfill is introduced; case completion remains `case_runs.completed_at`.
+
+### Attendance export boundary
+
+`public.monday_attendance_snapshot(actor,cohort,week,account,board,enrollment?)` is
+service-only, read-only, SECURITY DEFINER with an empty search path. It rechecks the
+actor’s verified UC Davis Google identity and active Admin authority, validates the week
+belongs to the cohort, and returns official Present enrollment IDs, names/emails and
+existing private Monday item links limited to that account/board. The optional enrollment
+selector narrows rechecks; it never broadens cohort/week or official scope. Anonymous and
+authenticated callers have no execute grant. No attendance code/history is returned, and
+no new table or stored export timestamp is added.

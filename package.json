@@ -36,6 +36,7 @@
     "test:briefs": "node --experimental-strip-types --test scripts/verify-briefs.mjs",
     "test:assignments": "node --experimental-strip-types --test scripts/verify-multiple-assignments.mjs",
     "test:written": "node --experimental-strip-types --test scripts/verify-written-submissions.mjs",
+    "test:monday-attendance": "node --test scripts/verify-monday-attendance.mjs",
     "test:attendance": "node --experimental-strip-types --test scripts/verify-attendance.mjs",
     "test:viewers": "node --experimental-strip-types --test scripts/verify-viewers.mjs",
     "test:test-participants": "node --experimental-strip-types --test scripts/verify-test-participants.mjs",

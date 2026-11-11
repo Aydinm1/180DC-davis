@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added selected-week **Sync to Monday** for official Present attendance, with private
+  enrollment links, live admin authorization, check-only retries and partial-failure details.
+  Test participants and other board columns remain excluded.
+
 - Removed the redundant reload/file-reselection reminder from submission uploads.
 
 - Simplified submission review into a larger document pane and Feedback/Rubric/Example

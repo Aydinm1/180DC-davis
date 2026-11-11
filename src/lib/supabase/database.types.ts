@@ -1789,6 +1789,17 @@ export type Database = {
       }
       investigation_review: { Args: { p_submission: string }; Returns: Json }
       manage_team: { Args: { p_action: string; p_data: Json }; Returns: string }
+      monday_attendance_snapshot: {
+        Args: {
+          p_account: string
+          p_actor: string
+          p_board: string
+          p_cohort: string
+          p_enrollment?: string
+          p_week: string
+        }
+        Returns: Json
+      }
       monday_import: {
         Args: {
           p_action: string

@@ -45,8 +45,8 @@ test('actor-accepting upload/import/cleanup operations remain service-only',()=>
  has_function_privilege('authenticated',p.oid,'execute') as client_execute,
  has_function_privilege('service_role',p.oid,'execute') as service_execute
  from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public'
- and p.proname in ('file_upload','assignment_brief','grading_example','monday_import','cleanup_uploads','cleanup_grading_examples')) x`);
- assert.equal(rows.length,6);
+ and p.proname in ('file_upload','assignment_brief','grading_example','monday_import','monday_attendance_snapshot','cleanup_uploads','cleanup_grading_examples')) x`);
+ assert.equal(rows.length,7);
  for(const r of rows)assert.ok(!r.anon_execute&&!r.client_execute&&r.service_execute,r.name);
 });
 test('file buckets remain private and browser policies cannot overwrite or delete',()=>{

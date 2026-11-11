@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-09
+**Last updated:** 2026-11-11
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,14 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Add selected-week manual attendance sync to Monday checkboxes using private
+  enrollment mappings, live admin checks, official-only Present records, check-only
+  idempotent writes and partial-result recovery. All 127 unit/docs checks, rollback-only
+  export SQL, the desktop/phone sync/action test, nine attendance regressions and four
+  security-schema checks pass. Generated types, lint, typecheck, Webpack build and diff
+  checks pass. Fixtures cleaned; no real Monday writes. Hosted migration 202611100001
+  applied after explicit approval; commit/push/deployment authorized.
 
 - [x] Remove the routine file-reselection reminder from submission upload controls;
   updated the existing copy check. All 121 unit/docs checks, lint, typecheck and diff
@@ -792,7 +800,8 @@ do not satisfy them. See ADR 0007.
 ### Workshop resources and week attendance — local implementation
 
 Supersedes the earlier admin-only planning limitation. One workshop maps to each week;
-no percentages, penalties, GPS/device tracking, realtime or Monday reporting.
+no percentages, penalties, GPS/device tracking or realtime. ADR 0028 now permits the
+selected-week manual, check-only Monday attendance projection.
 
 - [x] Add Workshop resources across the database/type/admin/member/preview contracts,
   preserving manual order, existing materials, slides and publication privacy.

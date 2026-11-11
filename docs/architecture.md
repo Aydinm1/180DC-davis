@@ -4,11 +4,12 @@ Monday manual intake uses server actions behind live admin authorization. A serv
 Supabase secret invokes the service-only batch RPC; no browser has provisioning RPC
 access. Private owner-scoped previews store source rows and cohort mappings, expire in
 15 minutes, and recheck Monday before confirmation. Per-item transactions preserve
-successful receipts through retries. No background jobs or Monday writes are involved.
+successful receipts through retries. Intake has no background jobs or Monday writes.
+Attendance alone has a selected-week, check-only export action described in ADR 0028.
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-09
+**Last updated:** 2026-11-11
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -427,7 +428,7 @@ concrete need emerges.
   daylight-saving gaps and requires disambiguation for repeated PDT/PST times before
   producing a UTC timestamp.
 
-## Monday.com ownership and synchronization — Planned, not implemented
+## Monday.com ownership and synchronization — General reporting planned
 
 See [product scope](product-spec.md#mondaycom-recruiting-and-club-reporting--planned)
 and [ADR 0004](decisions/0004-monday-recruiting-and-gap-reporting.md).
@@ -531,3 +532,14 @@ admin authorization, validates identifiers and assignment/week/enrollment cohort
 calls the existing user-scoped `read_case_exercise` RPC with the selected enrollment.
 Answers are fetched only on detail navigation, never added to the roster/workspace DTO.
 The page is read-only; cohort switching leaves the old participant route for the overview.
+
+### Manual attendance projection
+
+`src/lib/monday/attendance-actions.ts` authorizes live admins, validates cohort/week IDs
+and invokes a service-only attendance snapshot RPC. The server-only credential and private
+mappings never enter browser props. The RPC derives official Present participants and
+existing item links; the sync adapter validates Monday account/board/checkbox/email and
+rechecks each participant before mutation. Three bounded workers set only Week N to true;
+per-item results preserve successes, skip existing checks and support safe retries.
+No public endpoint accepts arbitrary board items, columns or attendance.
+See [ADR 0028](decisions/0028-manual-monday-attendance-sync.md).

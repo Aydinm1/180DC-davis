@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-09
+**Last updated:** 2026-11-11
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -58,6 +58,13 @@ invent marketing facts or add empty navigation. Marketing CSS belongs in locally
 CSS Modules with wrapper-scoped variables; never change global body/theme styles for
 public-site art direction. Keep visible keyboard focus, a skip-to-content link, 44px
 actions and usable narrow/zoomed layouts. Its design may evolve separately from GAP.
+
+### Attendance reporting
+
+Place a quiet **Sync to Monday** action inside the selected week’s attendance panel,
+only in Official participants. Disable conflicting controls while syncing. Show concise
+checked/already-checked counts and an optional Sync details disclosure for unresolved
+participants; avoid persistent explanatory paragraphs.
 
 ### Interface copy
 

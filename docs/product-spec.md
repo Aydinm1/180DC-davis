@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-09
+**Last updated:** 2026-11-11
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -469,7 +469,18 @@ The first adapter is manual and read-only toward Monday: admins preview checked 
 map each dropdown choice to an active/draft GAP cohort, then confirm eligible rows.
 Membership Status is context only, never acceptance or automatic revocation. Results
 appear in GAP. Each external item represents one cohort participation; returning members
-use new items. Automatic sync, Monday result fields, and reporting remain deferred.
+use new items. Automatic sync and general progress reporting remain deferred. Manual
+workshop attendance sync is the narrow exception described below.
+
+### Manual attendance sync — Implemented locally
+
+Admin Attendance offers **Sync to Monday** for the selected week in Official participants.
+It checks that week’s checkbox for official Present records with one existing enrollment
+link on the configured board. Test marks never export. Missing/ambiguous links and changed
+board/email mappings are reported; successful checks survive partial failures and retries.
+The action never clears boxes, creates items, changes attendance or exports private work.
+Undo in GAP does not clear a previously checked Monday box. Other columns are untouched.
+See [ADR 0028](decisions/0028-manual-monday-attendance-sync.md).
 
 ## Explicitly out of scope
 
@@ -500,7 +511,7 @@ attempts per person/session in five minutes temporarily block attempts.
 Only current approved UC Davis Google members enrolled in the matching active cohort and
 published week can self-check-in. Codes/classmate records remain private. Attendance is
 independent of assignments: no inferred absence/lateness, penalties, percentages, GPS,
-device tracking, Monday sync or realtime. See
+device tracking or realtime. See
 [ADR 0015](decisions/0015-week-workshop-attendance.md); local and hosted acceptance are
 tracked separately in `todo.md`.
 
