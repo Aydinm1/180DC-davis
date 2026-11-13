@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-12
+**Last updated:** 2026-11-13
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -570,3 +570,18 @@ Config/run/review interfaces carry format metadata, and snapshots retain their o
 The server derives the permitted format from frozen configuration, rejecting mismatched
 clients. No broader workspace payload receives private schedules. Legacy configuration
 upgrade is an explicit reviewed draft edit, not a backfill. See ADR 0030.
+
+Gantt task metadata is edited inline. Consultant/action popovers use the native top layer
+so horizontal chart overflow does not clip them; scroll/resize dismiss detached popovers.
+Only explicit row schedule editing opens exact range controls. Delete/Backspace handlers
+are scoped to editable chart/bar focus and explicit block IDs; input/menu typing and
+read-only comparisons cannot delete blocks. This presentation change requires no schema
+or operation changes.
+
+Schedule presentation receives a small assignment heading DTO rather than a second
+workspace loader. Its compact navigation is opt-in; other activity navigation is unchanged.
+The brief uses a native modal dialog with focus restoration; exact range controls use an
+anchored top-layer popover. Shared grids accept a client toolbar slot so plan navigation
+and zoom live together in editing and comparison. Brief visibility and zoom are local state. The Gantt measures available width using
+ResizeObserver, retains horizontal day position across zoom, and uses the current day
+scale for pointer calculations. No schedule schema or server operation changes are needed.

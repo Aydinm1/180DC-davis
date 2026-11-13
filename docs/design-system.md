@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-12
+**Last updated:** 2026-11-13
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -68,16 +68,37 @@ participants; avoid persistent explanatory paragraphs.
 
 ### Schedule planning
 
-Use the existing Instructions / Workspace composition. Day-level schedules have grouped
-Week 1–10 headers with 70 Monday–Sunday columns and a sticky task-name column. Use one green
-bar color, clear selected-bar outlines, move/resize cursors and inclusive week/day labels.
-Rows summarize consultant assignments and total effort; one compact selected-task editor
-shows consultant checkboxes, hours and exact block start/end controls. Do not add separate
-calendar, resource-capacity or milestone interfaces.
+Schedule assignments use a compact title/deadline header and non-sticky Instructions /
+Workspace tabs inside a wide (up to 1600px) canvas. One chart toolbar combines Original /
+Revised, Project brief and Overview / Weeks / Days zoom. Project brief opens an accessible
+modal side panel on desktop and full-width dialog on phones; successful disruption reveal
+opens it automatically. Dismissal restores focus and retains work. Group the revised-plan
+explanation and save/submit actions in one footer.
+
+Day-level schedules use one aligned table/timeline with a sticky two-tier Week 1–10 /
+Monday–Sunday header. Desktop rows are 48px; metadata columns are Task 240px, Consultants
+128px and Hours 80px. Task names expand on focus for full editing. Phones use a 180px sticky
+column, stacking consultant/hour controls beneath task names in taller rows. Consultant
+selectors show C1, C3 and open labeled Consultant 1–5 checkboxes; hours edit inline.
+Add task is the last table row. Task actions retain confirmed Delete task and Edit schedule,
+which opens anchored exact block controls rather than a detached section below the chart.
+
+Use one green bar color, faint day lines, stronger week boundaries and subtle weekend
+shading. Task names stay in the left column, never repeated inside bars. Visible fills are
+24px tall with 44px interaction areas; selection outlines follow the fill. Resize handles
+appear on hover, selection or keyboard focus. Preserve accessible task/range labels.
+Default Weeks uses compact day columns; Days expands to 44px cells and full weekday names.
+Overview fits ten weeks when space permits. Zoom retains horizontal day position and input,
+changes no scheduled data, and is disabled during drag/save. The chart scrolls within its
+bounded height with sticky headers and task labels. No calendar, dependencies, milestones,
+resource-capacity interface or extra explanatory copy is introduced.
 
 Pointer dragging creates/moves/resizes bars with day snapping and edge scrolling. Escape
-or pointer cancellation discards the gesture; pending saves disable changes. Explicit block
-controls provide keyboard and touch alternatives to dragging. Add task focuses its name;
+or pointer cancellation discards the gesture; pending saves disable changes. Delete or
+Backspace removes an explicitly selected block only when focus is on the bar/chart, never
+while typing in inputs or using assignment menus. Announce removal and return focus to the
+chart without automatically selecting/deleting another block. Explicit block controls
+remain available for touch and keyboard alternatives to dragging. Add task focuses its name;
 populated-row removal confirms. Phone charts scroll horizontally, retain sticky labels and
 never cause page overflow. Headers allow native horizontal swipe scrolling. Read-only
 comparison opens Revised and retains accessible full-range labels and staffing/effort text.

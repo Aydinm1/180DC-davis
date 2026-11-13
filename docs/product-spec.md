@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-12
+**Last updated:** 2026-11-13
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -631,15 +631,22 @@ Configuration freezes at the first saved draft or reveal; existing activity/uplo
 history prevents workflow conversion. No real Week 4 content is populated automatically.
 
 Students use Instructions / Workspace with ten simulated project weeks, each Monday–Sunday
-without calendar dates. New activities use format 2: green bars snap to 70 day positions.
+without calendar dates. Workspace uses a compact header, wide chart with a unified plan/brief/zoom toolbar
+and grouped explanation/submission footer. Project brief opens a side panel (full-width
+on phones). Revealing the disruption opens its brief;
+closing it preserves all work. Local Overview / Weeks / Days zoom defaults to Weeks and
+changes only presentation, preserving scheduled days and unsaved input.
+New activities use format 2: green bars snap to 70 day positions.
 Drag empty space to create a bar, its body to move, or its ends to resize across weeks.
 A task may have separate blocks; overlapping/adjacent blocks merge. Exact start/end controls
 and explicit Add scheduled block / Remove block make dragging optional. All starter tasks,
 bars, consultants and hours are editable/removable. Keep 30-task and 200-character limits.
 
 Each task selects one or more fictional Consultant 1–5 roles and one positive total-effort
-hours estimate (up to two decimal places), independent of calendar duration. The selected
-task editor holds these fields; rows summarize staffing/effort. Admin starters may leave
+hours estimate (up to two decimal places), independent of calendar duration. Consultant
+selection and estimated hours are edited directly in each task row; no task window opens
+when a row is added. Exact schedule controls are secondary row actions. Delete/Backspace
+removes a selected bar with chart/bar focus, while normal form-field deletion is preserved. Admin starters may leave
 staffing/hours unset. Drafts may be incomplete. Locking the original or submitting requires
 every task to have a name, at least one scheduled day, consultants and estimated hours.
 There are no dependencies, milestones, capacity rules or automatic scheduling.

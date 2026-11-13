@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-12
+**Last updated:** 2026-11-13
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,35 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Rebuild schedule presentation as an integrated task table/timeline with unified
+  toolbar, modal brief, anchored range editing, quiet metadata and in-table task creation.
+  Nine schedule entries pass, including realistic 13-task desktop/phone fixtures, long
+  names, incomplete tasks, focus restoration, drag/cancel, conflicts, review and previews.
+  All 133 unit/docs checks, lint/typecheck, production build and diff checks pass.
+  Code-only commit/push/deployment authorized; no migration required.
+
+- [x] Refine Gantt bar proportions to 24px visible fills with 44px interaction areas,
+  tighter corners and grid insets. Nine local schedule entries verify dimensions and
+  desktop/phone dragging, resizing, deletion, saves and review; 133 unit/docs checks,
+  lint, build TypeScript, Webpack production build and diff checks pass. No release authorized.
+
+- [x] Remove repeated task names from editable Gantt bars, retaining accessible labels
+  and left-column names. All 133 unit/docs checks, lint/typecheck, Webpack build and diff
+  checks pass. No release authorized.
+
+- [x] Recompose schedule assignments as a compact wide planning workspace with expandable
+  brief, inline consultant chips and Overview/Weeks/Days zoom. Nine local schedule entries
+  pass with desktop/phone editing, zoom retaining input, disclosure/reveal, deletion, saves
+  and review. All 133 unit/docs checks, lint/typecheck, Webpack build and diff checks pass.
+  Fixtures cleaned; no schema changes or release authorized.
+
+- [x] Simplify Gantt editing to inline Task / Assigned / Est. hours columns, row consultant
+  pickers and task actions; remove the automatic task panel and support Delete/Backspace
+  for selected blocks without changing form-field typing. Nine schedule entries pass with
+  desktop/phone persistence, selection, keyboard deletion, failed/stale saves and review.
+  All 133 unit/docs checks, lint, typecheck, Webpack build and diff checks pass. Fixtures
+  cleaned. No schema changes; commit/push/deployment require separate authorization.
 
 - [x] Upgrade schedule planning to versioned day-level Gantt bars, consultant assignment
   and effort estimates while preserving legacy work. Nine schedule, 13 Storage, 14 program,

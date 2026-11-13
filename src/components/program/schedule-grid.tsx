@@ -1,5 +1,5 @@
 'use client';
-import {useId} from 'react';
+import {useId,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';
 import type {ScheduleRow,ScheduleTask,ScheduleFormat,DayScheduleRow} from '@/lib/schedules/types';
 import {ScheduleGantt} from './schedule-gantt';
@@ -16,6 +16,6 @@ function WeekScheduleGrid({rows,onChange,disabled=false,label='Project schedule'
  </div>;
 }
 
-export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedule',formatVersion=1}:{rows:ScheduleTask[];onChange?:(rows:ScheduleTask[])=>void;disabled?:boolean;label?:string;formatVersion?:ScheduleFormat}){
- return formatVersion===2?<ScheduleGantt rows={rows as DayScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>:<WeekScheduleGrid rows={rows as ScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>;
+export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedule',formatVersion=1,toolbar}:{toolbar?:ReactNode;rows:ScheduleTask[];onChange?:(rows:ScheduleTask[])=>void;disabled?:boolean;label?:string;formatVersion?:ScheduleFormat}){
+ return formatVersion===2?<ScheduleGantt toolbar={toolbar} rows={rows as DayScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>:<>{toolbar}<WeekScheduleGrid rows={rows as ScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/></>;
 }

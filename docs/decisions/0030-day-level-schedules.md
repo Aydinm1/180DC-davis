@@ -19,7 +19,9 @@ No existing task JSON, submission timestamp, feedback or original is backfilled.
 
 Use a native pointer-based editor with local gesture previews, day snapping, automatic edge
 scrolling and cancellation. Merge neighboring/overlapping task blocks. Exact range forms,
-explicit block actions and consultant/hour inputs provide equivalent keyboard/touch editing.
+explicit block actions and inline consultant/hour inputs provide equivalent keyboard/touch
+editing. Metadata belongs in task rows; exact schedule controls are secondary row actions.
+Selected blocks support Delete/Backspace with bar/chart focus, preserving form-field typing.
 Hours describe total effort, not duration or per-consultant allocation. No chart dependency,
 calendar arithmetic, resource capacity or scheduling engine is introduced.
 

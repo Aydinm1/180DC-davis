@@ -22,7 +22,7 @@ export async function AssignmentContent({ assignment, weekNumber, enrollmentId, 
 }) {
   if(assignment.workflow==='schedule') {
     const initial=await readSchedule(assignment.id,preview||browse);
-    return <main className="pb-20"><PageContainer className="py-9"><div className="mx-auto max-w-6xl"><Link href={weekHref} className="action-link inline-flex min-h-11 items-center text-sm font-bold text-action">← Week {weekNumber}</Link><header className="mt-5 max-w-3xl"><p className="text-sm font-semibold text-brand-deep">Week {weekNumber} · Individual schedule planning</p><h1 className="mt-3 break-words text-3xl font-bold sm:text-4xl">{assignment.title}</h1><p className="mt-3 text-sm text-ink-soft">Due {assignment.dueLabel}</p></header><SchedulePlanning key={assignment.id} assignmentId={assignment.id} initial={initial} preview={preview} browse={browse}/></div></PageContainer></main>;
+    return <main className="pb-12"><div className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 lg:px-8"><SchedulePlanning key={assignment.id} assignmentId={assignment.id} initial={initial} preview={preview} browse={browse} heading={{title:assignment.title,weekNumber,dueLabel:assignment.dueLabel,weekHref}}/></div></main>;
   }
   if(assignment.workflow==='investigation') {
     const initial=await readInvestigation(assignment.id,preview||browse);

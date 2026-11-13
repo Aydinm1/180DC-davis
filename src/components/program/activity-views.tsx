@@ -6,8 +6,8 @@ import { AssignmentBrief } from './assignment-brief';
 
 export type ActivityView = 'instructions' | 'workspace';
 
-export function ActivityViewNav({ value, onChange }: { value: ActivityView; onChange: (value: ActivityView) => void }) {
-  return <nav aria-label="Assignment views" className="sticky top-0 z-10 mb-8 flex gap-6 border-b border-border bg-canvas">
+export function ActivityViewNav({ value, onChange, compact=false }: { value: ActivityView; onChange: (value: ActivityView) => void; compact?:boolean }) {
+  return <nav aria-label="Assignment views" className={`${compact?'mb-4':'sticky top-0 z-10 mb-8'} flex gap-6 border-b border-border bg-canvas`}>
     {(['instructions', 'workspace'] as const).map(view => <button key={view} type="button" aria-current={value === view ? 'page' : undefined}
       onClick={() => onChange(view)} className={`min-h-12 border-b-2 px-1 text-sm font-bold ${value === view ? 'border-action text-action' : 'border-transparent text-ink-soft hover:text-ink'}`}>{view==='instructions'?'Instructions':'Workspace'}</button>)}
   </nav>;

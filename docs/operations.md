@@ -1,11 +1,51 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-12
+**Last updated:** 2026-11-13
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
+
+## Integrated schedule workspace verification
+
+Local verification (2026-11-13): nine schedule entries pass, including browser checks at
+1280px and 390px with 13-task fixtures, long names, multiple consultants, decimal hours,
+separate blocks and an added unscheduled task. Covered inline editing, anchored controls,
+Escape/focus restoration, mouse/touch dragging, pointer cancellation, zoom, save/reload,
+stale/network recovery, disruption dialog, immutable review and zero-write previews.
+Desktop/phone screenshots were inspected; disposable fixtures were cleaned. All 133
+unit/documentation tests, lint, typecheck, Webpack production build and diff checks pass.
+This supersedes the earlier disclosure/chip presentation; no schema changes are required.
+Code-only commit/push/deployment authorized. No hosted migration or real assignment changes
+are required for this release.
+
+## Gantt bar proportions
+
+Local verification (2026-11-12): nine schedule entries pass with browser assertions that
+visible fills are 24px and pointer targets remain 44px. Desktop/phone drag, resize, Delete,
+save/reload and review remain functional. Screenshots were inspected and fixtures cleaned.
+All 133 unit/docs checks, lint, build TypeScript, Webpack build and diff checks pass. The
+visual refinement has no schema changes and remains local pending release authorization.
+
+## Planning canvas verification
+
+Local verification (2026-11-12): nine schedule entries pass after the wide-canvas redesign,
+including 1280px/390px zoom controls, input retention across zoom, disclosure/reveal,
+inline editing, Delete behavior, saves/conflicts, preview and review. All 133 unit/docs
+checks, lint/typecheck, Webpack production build and diff checks pass. Desktop/phone
+screenshots were inspected and fixtures cleaned. No database change is required; the
+redesign and preceding inline editor polish remain local pending a code-only release.
+
+## Inline Gantt editing verification
+
+Local verification (2026-11-12): nine schedule entries pass after moving consultant
+selection and estimated hours into task rows. Desktop/phone checks cover native popovers,
+inline saves/reloads, Delete-key block removal without repeated/typing deletions, touch/
+mouse scheduling, stale/network recovery, admin setup, comparison and zero-write previews.
+All 133 unit/docs checks, lint, typecheck, Webpack production build and diff checks pass.
+Screenshots were inspected; disposable fixtures were cleaned. This presentation change
+has no schema changes and remains local until a separately authorized code-only release.
 
 ## Day-level schedule planning
 

@@ -5,6 +5,11 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Rebuilt the schedule workspace around one task table and timeline: unified plan/brief/
+  zoom toolbar, accessible brief drawer, inline consultants/hours, in-table task creation,
+  anchored schedule controls, quieter day/week grid and grouped submission footer. Unlabeled
+  24px bars retain 44px interaction targets and scoped Delete/Backspace support.
+
 - Added day-level schedule planning with draggable/resizable bars, multiple consultant
   assignments and total task effort estimates. Preserved legacy schedules and immutable
   originals/history; added explicit upgrades for unstarted draft configurations.
