@@ -639,7 +639,7 @@ New activities use format 2: green bars snap to 70 day positions.
 Drag empty space to create a bar, its body to move, or its ends to resize across weeks.
 A task may have separate blocks; overlapping/adjacent blocks merge. Exact start/end controls
 and explicit Add scheduled block / Remove block make dragging optional. All starter tasks,
-bars, consultants and hours are editable/removable. Keep 30-task and 200-character limits.
+bars, consultants and hours are editable/removable. Keep the 200-character task-name limit; task count has no fixed ceiling.
 
 Each task selects one or more fictional Consultant 1–5 roles and one positive total-effort
 hours estimate (up to two decimal places), independent of calendar duration. Consultant
@@ -722,3 +722,9 @@ Incomplete reference drafts may be saved; removal requires confirmation and expl
 Review Example renders the private schedules and allocation alongside written guidance;
 any attached PDF remains available by protected download. Member, Viewer and preview
 payloads never receive this reference. Existing reference RLS and live admin checks apply.
+
+Schedule task creation has no fixed row-count ceiling, including legacy schedules and private
+examples. Keep existing name, day/block and staffing validation. Saved data remains bounded
+by existing RPC byte limits (200 KB participant operations, 1 MB configuration/reference
+operations); validators also reject a task array exceeding 1 MB. Add task is disabled only
+while editing is otherwise unavailable, not because a task count was reached.

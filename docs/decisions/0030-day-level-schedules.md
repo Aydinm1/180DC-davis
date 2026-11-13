@@ -46,3 +46,6 @@ Real assignments are never configured, upgraded or published automatically.
 
 ADR 0031 extends this with an advisory resource-allocation view derived from existing
 hours, consultants and scheduled days; no enforced capacity rule is added.
+
+The task-count ceiling is removed by migration 202611130003; byte-size bounds and per-task
+validation remain the protection against oversized data. Existing records are not rewritten.

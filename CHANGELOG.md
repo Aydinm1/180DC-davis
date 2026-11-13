@@ -5,6 +5,16 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Aligned task-reorder indicators with the actual before/after drop position, including the end of the chart.
+
+- Kept empty days between nearby Gantt bars clickable, so filling a gap merges the blocks.
+
+- Removed the 30-task ceiling from schedules and example plans while retaining bounded
+  saved-data size and per-task validation.
+
+- Slowed Gantt drag edge scrolling and narrowed its activation area for more precise
+  short task scheduling, without acceleration.
+
 - Added private, independently saved example schedules to grading references, with
   original/revised plans and resource allocation. Moved Project brief into a text tab.
 

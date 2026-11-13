@@ -7,6 +7,21 @@
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
 
+## Schedule task-count removal
+
+Apply `202611130003_schedule_task_count.sql` before releasing uncapped task creation.
+It removes row-count checks from both schedule validators and updates the mutation error
+text, keeping existing byte limits and all per-task/authorization/version checks. No stored
+plans or references are rewritten. Local migration applied directly through psql because
+older local receipts remain incomplete. Hosted migration applied after explicit approval
+on 2026-11-13; receipt, 60-task validation and retained request-size limit verified.
+
+Local verification (2026-11-13): ten schedule entries pass, including 31-row persistence,
+32nd task creation on desktop/phone, saved-data size rejection and existing schedule/reference
+flows. The release also includes slower edge scrolling, clickable gaps and accurate task
+insertion indicators. Ten schedule entries, 139 unit/docs tests, lint, typecheck, generated
+types and production build pass. Fixtures cleaned; commit/push/deployment authorized.
+
 ## Private schedule grading examples and text brief
 
 Apply `202611130002_schedule_grading_examples.sql` after the pending client-call migration

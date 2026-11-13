@@ -738,8 +738,8 @@ ordered inclusive ranges within days 1–70, unique consultant numbers 1–5 and
 hours. Overlapping/adjacent blocks must be merged. Valid hours are positive finite values,
 up to two decimal places, within the client-safe cents bound (90071992547409.91).
 Configure permits unset staffing/effort; reveal/submit require both on every task.
-Participant request JSON is capped at 200 KB to accommodate the full 30-task/70-day
-limits, including Unicode labels; configuration retains its existing 1 MB cap.
+Participant request JSON remains capped at 200 KB, including Unicode labels and
+70-day scheduling; configuration retains its existing 1 MB cap. Task count itself is uncapped.
 
 Private format-aware validation is applied during configuration, all participant writes
 and snapshot-checked insertion. Student writes must match the saved format as well as
@@ -768,3 +768,9 @@ Incomplete reference drafts may be saved; removal requires confirmation and expl
 Review Example renders the private schedules and allocation alongside written guidance;
 any attached PDF remains available by protected download. Member, Viewer and preview
 payloads never receive this reference. Existing reference RLS and live admin checks apply.
+
+Schedule task creation has no fixed row-count ceiling, including legacy schedules and private
+examples. Keep existing name, day/block and staffing validation. Saved data remains bounded
+by existing RPC byte limits (200 KB participant operations, 1 MB configuration/reference
+operations); validators also reject a task array exceeding 1 MB. Add task is disabled only
+while editing is otherwise unavailable, not because a task count was reached.

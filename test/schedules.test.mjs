@@ -29,3 +29,9 @@ test('day schedules require valid ranges, consultants and total effort at comple
  assert.equal(scheduleRowsError([{...day,hours:0.29}],true,2),undefined);
  assert.equal(scheduleInputError('configure',{version:0,content:{formatVersion:2,overview:'Instructions',scenario:'Original',disruption:'Change',starter:[starter]}}),undefined);
 });
+
+test('task count is not capped at thirty for day or legacy schedules',()=>{
+ const rows=Array.from({length:60},(_,i)=>({id:`00000000-0000-4000-8000-${String(i).padStart(12,'0')}`,name:'Task '+i,weeks:[1]}));
+ assert.equal(scheduleRowsError(rows,true),undefined);
+ assert.equal(scheduleRowsError(rows.map(({id,name})=>({id,name,blocks:[{id:'00000000-0000-4000-8000-000000000099',start:1,end:2}],consultants:[1],hours:1})),true,2),undefined);
+});

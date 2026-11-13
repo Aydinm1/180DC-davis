@@ -11,7 +11,7 @@ export type ScheduleActivity = {workflow:NonNullable<Assignment['workflow']>;con
  run?:{version:number;working:ScheduleTask[];original?:ScheduleTask[]|null;revised?:ScheduleTask[]|null;explanation:string;savedAt?:string|null;revealedAt?:string|null}|null;attempts:ScheduleAttempt[]};
 export type ScheduleAction = 'configure'|'draft'|'reveal'|'submit';
 export function scheduleRowsError(value:unknown,complete=false,formatVersion:ScheduleFormat=1,requireStaff=complete):string|undefined {
- if(!Array.isArray(value)||value.length>30||complete&&!value.length)return 'Use 1–30 tasks before proceeding.';
+ if(!Array.isArray(value)||complete&&!value.length)return 'Add at least one task before proceeding.';
  const ids=new Set<string>();
  for(const row of value){
   if(!row||typeof row.id!=='string'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(row.id)||ids.has(row.id.toLowerCase()))return 'Task IDs must be unique.';

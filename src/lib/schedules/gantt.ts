@@ -18,3 +18,16 @@ export function changeBlock(block:ScheduleBlock,kind:'move'|'start'|'end',delta:
 export function upgradeRows(rows:ScheduleRow[],newId:()=>string):DayScheduleRow[]{
  return rows.map(row=>({id:row.id,name:row.name,consultants:[],hours:null,blocks:mergeBlocks(row.weeks.map(week=>({id:newId(),start:(week-1)*7+1,end:week*7})))}));
 }
+
+// Preserve empty cells between nearby blocks instead of letting enlarged grab targets cover them.
+export function blockGeometry(block:ScheduleBlock,blocks:ScheduleBlock[],dayWidth:number){
+ const actualLeft=(block.start-1)*dayWidth+1,fillWidth=(block.end-block.start+1)*dayWidth-2;
+ const padding=Math.max(0,(44-fillWidth)/2);
+ let left=actualLeft-padding,right=actualLeft+fillWidth+padding;
+ for(const neighbor of blocks){
+  if(neighbor.id===block.id)continue;
+  if(neighbor.end<block.start&&(block.start-neighbor.end-1)*dayWidth<44)left=Math.max(left,(block.start-1)*dayWidth);
+  if(neighbor.start>block.end&&(neighbor.start-block.end-1)*dayWidth<44)right=Math.min(right,block.end*dayWidth);
+ }
+ return {left,width:right-left,fillLeft:actualLeft-left,fillWidth};
+}

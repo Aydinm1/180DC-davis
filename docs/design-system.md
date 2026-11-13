@@ -93,7 +93,9 @@ changes no scheduled data, and is disabled during drag/save. The chart scrolls w
 bounded height with sticky headers and task labels. No calendar, dependencies, milestones,
 automatic capacity enforcement or extra explanatory copy is introduced.
 
-Pointer dragging creates/moves/resizes bars with day snapping and edge scrolling. Escape
+Pointer dragging creates/moves/resizes bars with day snapping and gentle edge scrolling.
+Use a 24px edge zone and a constant 90px/second speed based on animation timestamps;
+there is no acceleration near or beyond the edge. Escape
 or pointer cancellation discards the gesture; pending saves disable changes. Delete or
 Backspace removes an explicitly selected block only when focus is on the bar/chart, never
 while typing in inputs or using assignment menus. Announce removal and return focus to the
@@ -485,9 +487,13 @@ read-only transition. Preview clearly labels its local-only behavior.
 Gantt direct editing: all five consultant selections display All. Task titles use a single-line
 inline field; the desktop title-column separator resizes by pointer or arrow keys (200–600px).
 Task drag handles reorder the saved row array; Up/Down keys provide an alternative.
+The insertion line follows the hovered row’s upper/lower half and can sit below the last
+row, including over Add task; dropping uses that same insertion position.
 Rows expose direct confirmed deletion. Exact date controls are a keyboard-focusable Set dates
 alternative, without a permanent row-actions menu. Programmatic deletion focus does not draw
-an outline around the chart. Single-day blocks keep a minimum 44px grab width; moving a block
+an outline around the chart. Single-day blocks normally keep a minimum 44px grab width. Near neighboring blocks,
+shrink the horizontal grab area to keep intervening empty days fully clickable; clicking
+a gap fills it and merges adjacent blocks. Empty editable cells use a crosshair cursor; moving a block
 vertically transfers its stable ID to the destination task, retaining that task's staffing/hours.
 
 The consultant picker includes All consultants, with an indeterminate checkbox for partial
@@ -527,3 +533,9 @@ Incomplete reference drafts may be saved; removal requires confirmation and expl
 Review Example renders the private schedules and allocation alongside written guidance;
 any attached PDF remains available by protected download. Member, Viewer and preview
 payloads never receive this reference. Existing reference RLS and live admin checks apply.
+
+Schedule task creation has no fixed row-count ceiling, including legacy schedules and private
+examples. Keep existing name, day/block and staffing validation. Saved data remains bounded
+by existing RPC byte limits (200 KB participant operations, 1 MB configuration/reference
+operations); validators also reject a task array exceeding 1 MB. Add task is disabled only
+while editing is otherwise unavailable, not because a task count was reached.

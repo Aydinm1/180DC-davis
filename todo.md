@@ -10,6 +10,23 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Align task-reorder insertion feedback with before/after placement and the final row.
+  Local browser regression verifies the bottom indicator and saved ordering.
+
+- [x] Keep gaps between nearby schedule bars clickable; browser regression verifies
+  Monday/Wednesday gap filling and merging. Ten schedule entries, 139 unit/docs tests,
+  lint, typecheck and production build pass. Commit/push/deployment authorized.
+
+- [x] Remove fixed task-count ceilings from UI and validators, retaining saved-data byte
+  limits. Ten local schedule entries verify 31-row persistence, 32nd-row creation, oversized
+  request rejection and existing flows; 138 unit/docs checks, lint, generated-type checks
+  and production build pass. Hosted migration applied and verified after approval; release authorized.
+
+- [x] Reduce drag edge scrolling to a steady 90px/second in a narrower 24px zone.
+  Ten schedule entries pass, including sustained speed bounds, resize/cancel and desktop/
+  phone regressions; 137 unit/docs checks, lint and production build pass.
+  Commit/push/deployment authorized.
+
 - [x] Add private admin-authored schedule examples to grading references and move Project
   brief into a text tab. Ten schedule entries pass with desktop/phone authoring, review,
   allocation, feedback retention, privacy and stale/retry saves. Existing grading DB tests
