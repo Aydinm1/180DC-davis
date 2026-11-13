@@ -5,6 +5,9 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added All consultants selection and clearer schedule resize grips; replaced blue block
+  focus rectangles with a green outline on the visible bar.
+
 - Simplified Gantt row controls, added task reordering and title-column resizing, and made
   single-day blocks easier to grab and move between tasks.
 

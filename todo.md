@@ -10,6 +10,11 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Add consultant select-all and clearer bar resize grips with green focus styling.
+  Nine schedule entries pass, including desktop/phone selection, resizing, focus and
+  persistence. All 133 unit/docs checks, lint and production build pass. Local only;
+  code-only commit/push/deployment authorized; no migration required.
+
 - [x] Polish direct Gantt interaction: All consultants, row reordering, resizable titles,
   inline name input, direct deletion, larger single-day targets and cross-task bar dragging.
   Nine schedule entries pass with desktop/phone drag, keyboard, persistence and review;

@@ -682,3 +682,8 @@ Rows expose direct confirmed deletion. Exact date controls are a keyboard-focusa
 alternative, without a permanent row-actions menu. Programmatic deletion focus does not draw
 an outline around the chart. Single-day blocks keep a minimum 44px grab width; moving a block
 vertically transfers its stable ID to the destination task, retaining that task's staffing/hours.
+
+The consultant picker includes All consultants, with an indeterminate checkbox for partial
+selection. Selecting it assigns all five; clearing it clears the selection. Schedule blocks
+use green focus/selection on the visible fill rather than a blue rectangle around the hit
+area. Visible white endpoint grips on hover/selection indicate horizontal resizing.
