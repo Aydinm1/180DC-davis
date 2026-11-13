@@ -645,7 +645,7 @@ bars, consultants and hours are editable/removable. Keep 30-task and 200-charact
 Each task selects one or more fictional Consultant 1–5 roles and one positive total-effort
 hours estimate (up to two decimal places), independent of calendar duration. Consultant
 selection and estimated hours are edited directly in each task row; no task window opens
-when a row is added. Exact schedule controls are secondary row actions. Delete/Backspace
+when a row is added. Exact schedule controls are available through a keyboard-focusable Set dates action. Delete/Backspace
 removes a selected bar with chart/bar focus, while normal form-field deletion is preserved. Admin starters may leave
 staffing/hours unset. Drafts may be incomplete. Locking the original or submitting requires
 every task to have a name, at least one scheduled day, consultants and estimated hours.
@@ -674,3 +674,11 @@ roster, enrollment, active cohort and publication rules apply to every operation
 preview uses configured content without writes; Viewer practice uses fictional scenario,
 starter and disruption with only the real common instructions. See
 [ADR 0029](decisions/0029-schedule-planning.md).
+
+Gantt direct editing: all five consultant selections display All. Task titles use a single-line
+inline field; the desktop title-column separator resizes by pointer or arrow keys (200–600px).
+Task drag handles reorder the saved row array; Up/Down keys provide an alternative.
+Rows expose direct confirmed deletion. Exact date controls are a keyboard-focusable Set dates
+alternative, without a permanent row-actions menu. Programmatic deletion focus does not draw
+an outline around the chart. Single-day blocks keep a minimum 44px grab width; moving a block
+vertically transfers its stable ID to the destination task, retaining that task's staffing/hours.

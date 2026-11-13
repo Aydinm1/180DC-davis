@@ -5,6 +5,9 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Simplified Gantt row controls, added task reordering and title-column resizing, and made
+  single-day blocks easier to grab and move between tasks.
+
 - Rebuilt the schedule workspace around one task table and timeline: unified plan/brief/
   zoom toolbar, accessible brief drawer, inline consultants/hours, in-table task creation,
   anchored schedule controls, quieter day/week grid and grouped submission footer. Unlabeled

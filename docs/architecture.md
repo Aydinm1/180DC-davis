@@ -571,9 +571,9 @@ The server derives the permitted format from frozen configuration, rejecting mis
 clients. No broader workspace payload receives private schedules. Legacy configuration
 upgrade is an explicit reviewed draft edit, not a backfill. See ADR 0030.
 
-Gantt task metadata is edited inline. Consultant/action popovers use the native top layer
+Gantt task metadata is edited inline. Consultant popovers use the native top layer
 so horizontal chart overflow does not clip them; scroll/resize dismiss detached popovers.
-Only explicit row schedule editing opens exact range controls. Delete/Backspace handlers
+A focusable Set dates alternative opens exact range controls. Delete/Backspace handlers
 are scoped to editable chart/bar focus and explicit block IDs; input/menu typing and
 read-only comparisons cannot delete blocks. This presentation change requires no schema
 or operation changes.
@@ -585,3 +585,11 @@ anchored top-layer popover. Shared grids accept a client toolbar slot so plan na
 and zoom live together in editing and comparison. Brief visibility and zoom are local state. The Gantt measures available width using
 ResizeObserver, retains horizontal day position across zoom, and uses the current day
 scale for pointer calculations. No schedule schema or server operation changes are needed.
+
+Gantt direct editing: all five consultant selections display All. Task titles use a single-line
+inline field; the desktop title-column separator resizes by pointer or arrow keys (200–600px).
+Task drag handles reorder the saved row array; Up/Down keys provide an alternative.
+Rows expose direct confirmed deletion. Exact date controls are a keyboard-focusable Set dates
+alternative, without a permanent row-actions menu. Programmatic deletion focus does not draw
+an outline around the chart. Single-day blocks keep a minimum 44px grab width; moving a block
+vertically transfers its stable ID to the destination task, retaining that task's staffing/hours.

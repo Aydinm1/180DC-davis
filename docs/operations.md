@@ -7,6 +7,16 @@
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
 
+## Direct schedule controls verification
+
+Local verification (2026-11-13): nine schedule entries pass after title resizing, row
+reordering, All-consultant labels, direct deletion and larger/cross-row block dragging.
+Desktop/phone checks retain saves, conflicts, original locking, review and zero-write
+previews. Pointer row reorder and block transfer, keyboard reordering/width changes,
+inline names and All display are covered. Fixtures cleaned; screenshots inspected.
+Unit/docs, lint, typecheck and production build pass. Code-only release authorized; no
+hosted migration or real assignment changes are needed.
+
 ## Integrated schedule workspace verification
 
 Local verification (2026-11-13): nine schedule entries pass, including browser checks at

@@ -77,11 +77,11 @@ explanation and save/submit actions in one footer.
 
 Day-level schedules use one aligned table/timeline with a sticky two-tier Week 1–10 /
 Monday–Sunday header. Desktop rows are 48px; metadata columns are Task 240px, Consultants
-128px and Hours 80px. Task names expand on focus for full editing. Phones use a 180px sticky
+128px and Hours 80px. Task names stay single-line while editing; drag the title-column divider for more room. Phones use a 180px sticky
 column, stacking consultant/hour controls beneath task names in taller rows. Consultant
 selectors show C1, C3 and open labeled Consultant 1–5 checkboxes; hours edit inline.
-Add task is the last table row. Task actions retain confirmed Delete task and Edit schedule,
-which opens anchored exact block controls rather than a detached section below the chart.
+Add task is the last table row. A direct delete button confirms removal. Keyboard users
+can focus Set dates for exact block controls; do not add a permanent task-actions menu.
 
 Use one green bar color, faint day lines, stronger week boundaries and subtle weekend
 shading. Task names stay in the left column, never repeated inside bars. Visible fills are
@@ -481,3 +481,11 @@ sit above long comparison content. Keep the scenario above the form and bound fo
 Label references as one possible approach, not an answer key. Fields have visible labels,
 radio options have generous targets, errors retain input, and Finish confirms the final
 read-only transition. Preview clearly labels its local-only behavior.
+
+Gantt direct editing: all five consultant selections display All. Task titles use a single-line
+inline field; the desktop title-column separator resizes by pointer or arrow keys (200–600px).
+Task drag handles reorder the saved row array; Up/Down keys provide an alternative.
+Rows expose direct confirmed deletion. Exact date controls are a keyboard-focusable Set dates
+alternative, without a permanent row-actions menu. Programmatic deletion focus does not draw
+an outline around the chart. Single-day blocks keep a minimum 44px grab width; moving a block
+vertically transfers its stable ID to the destination task, retaining that task's staffing/hours.

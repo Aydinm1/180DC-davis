@@ -10,6 +10,12 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Polish direct Gantt interaction: All consultants, row reordering, resizable titles,
+  inline name input, direct deletion, larger single-day targets and cross-task bar dragging.
+  Nine schedule entries pass with desktop/phone drag, keyboard, persistence and review;
+  133 unit/docs checks, lint, production build TypeScript and diff checks pass.
+  Code-only commit/push/deploy authorized; no migration required.
+
 - [x] Rebuild schedule presentation as an integrated task table/timeline with unified
   toolbar, modal brief, anchored range editing, quiet metadata and in-table task creation.
   Nine schedule entries pass, including realistic 13-task desktop/phone fixtures, long
