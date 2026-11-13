@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added day-level schedule planning with draggable/resizable bars, multiple consultant
+  assignments and total task effort estimates. Preserved legacy schedules and immutable
+  originals/history; added explicit upgrades for unstarted draft configurations.
+
 - Added reusable Individual schedule planning: editable partially scheduled ten-week grids,
   persistent drafts, private disruption reveal, locked original and reviewed revised-plan
   snapshots. Added admin setup, historical comparison and zero-write preview/practice

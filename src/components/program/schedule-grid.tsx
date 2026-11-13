@@ -1,8 +1,9 @@
 'use client';
 import {useId} from 'react';
 import {Button} from '@/components/ui/button';
-import type {ScheduleRow} from '@/lib/schedules/types';
-export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedule'}:{rows:ScheduleRow[];onChange?:(rows:ScheduleRow[])=>void;disabled?:boolean;label?:string}){
+import type {ScheduleRow,ScheduleTask,ScheduleFormat,DayScheduleRow} from '@/lib/schedules/types';
+import {ScheduleGantt} from './schedule-gantt';
+function WeekScheduleGrid({rows,onChange,disabled=false,label='Project schedule'}:{rows:ScheduleRow[];onChange?:(rows:ScheduleRow[])=>void;disabled?:boolean;label?:string}){
  const editable=!!onChange,gridId=useId();
  function addTask(){const id=crypto.randomUUID();onChange?.([...rows,{id,name:'',weeks:[]}]);requestAnimationFrame(()=>document.getElementById(`${gridId}-${id}`)?.focus());}
  function toggle(id:string,week:number){onChange?.(rows.map(r=>r.id===id?{...r,weeks:r.weeks.includes(week)?r.weeks.filter(w=>w!==week):[...r.weeks,week].sort((a,b)=>a-b)}:r));}
@@ -13,4 +14,8 @@ export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedu
   </tbody></table>{!rows.length?<p className="p-4 text-sm text-ink-soft">No tasks added.</p>:null}</div>
   {editable?<Button variant="secondary" className="mt-4" disabled={disabled||rows.length>=30} onClick={addTask}>+ Add task</Button>:null}
  </div>;
+}
+
+export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedule',formatVersion=1}:{rows:ScheduleTask[];onChange?:(rows:ScheduleTask[])=>void;disabled?:boolean;label?:string;formatVersion?:ScheduleFormat}){
+ return formatVersion===2?<ScheduleGantt rows={rows as DayScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>:<WeekScheduleGrid rows={rows as ScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>;
 }

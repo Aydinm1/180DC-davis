@@ -1,6 +1,6 @@
 # ADR 0029: Schedule planning with private disruptions and immutable comparisons
 
-**Status:** Accepted
+**Status:** Accepted; day-level presentation and versioned rows extended by ADR 0030
 **Date:** 2026-11-12
 
 ## Context

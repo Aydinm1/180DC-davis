@@ -68,15 +68,22 @@ participants; avoid persistent explanatory paragraphs.
 
 ### Schedule planning
 
-Use the existing focused Instructions / Workspace composition. Ten simulated-week columns
-use one green selected state with a visible check and pressed semantics. Editable names
-and + Add task use ordinary controls; adding focuses the new task name and populated-row
-removal confirms. The semantic table
-has sticky task labels, minimum 44px cells and a labeled/focusable horizontal phone scroller.
-Read-only grids retain accessible Scheduled/Not scheduled text. Local Original/Revised
-buttons retain mounted grids and edit state; Revised opens first in review. Show only
-essential locked/preview state, save actions and actionable errors. Admin setup sections
-are Instructions / Original scenario / Private disruption / Starting schedule.
+Use the existing Instructions / Workspace composition. Day-level schedules have grouped
+Week 1–10 headers with 70 Monday–Sunday columns and a sticky task-name column. Use one green
+bar color, clear selected-bar outlines, move/resize cursors and inclusive week/day labels.
+Rows summarize consultant assignments and total effort; one compact selected-task editor
+shows consultant checkboxes, hours and exact block start/end controls. Do not add separate
+calendar, resource-capacity or milestone interfaces.
+
+Pointer dragging creates/moves/resizes bars with day snapping and edge scrolling. Escape
+or pointer cancellation discards the gesture; pending saves disable changes. Explicit block
+controls provide keyboard and touch alternatives to dragging. Add task focuses its name;
+populated-row removal confirms. Phone charts scroll horizontally, retain sticky labels and
+never cause page overflow. Headers allow native horizontal swipe scrolling. Read-only
+comparison opens Revised and retains accessible full-range labels and staffing/effort text.
+Legacy format-1 schedules keep their existing week-cell presentation. Activity setup uses
+Instructions / Original scenario / Private disruption / Starting schedule; published or
+started settings are read-only. Keep copy limited to essential state and recovery actions.
 
 ### Interface copy
 

@@ -7,6 +7,34 @@
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
 
+## Day-level schedule planning
+
+Apply `202611120002_day_level_schedules.sql` before releasing the day-level editor. New
+Schedule planning setups default to day bars. Admins author the original/disruption and
+starter rows using the same Gantt controls; consultant/hour fields may remain for students.
+Existing week-based activities remain unchanged. For an unpublished activity with no work,
+use **Upgrade to day-level planning**, inspect expanded full-week bars, then save explicitly.
+Never upgrade a real assignment or publish content as part of a migration/release.
+
+`npm run test:schedules` with a matching production localhost build covers legacy/day
+persistence and desktop/phone interactions. Use disposable fixtures only. Hosted migration,
+real assignment edits, commit/push and deployment require separate approval.
+
+Local verification (2026-11-12): nine schedule entries pass with 1280px/390px browser
+coverage. Confirmed creation/move/resize, cross-week blocks, edge scrolling, Escape and
+pointer/touch cancellation, exact controls, staffing/hours, draft/reload/stale/network
+recovery, original locking, reviewed snapshots, explicit legacy setup upgrades and
+write-free previews. The maximum 30-task/35-block Unicode request persists under the
+200 KB bound. Thirteen Storage, 14 program, eight Viewer and four security-schema entries
+also pass; 133 unit/docs checks, lint/typecheck, generated types, Webpack build and diff
+checks pass. Screenshots were inspected and disposable fixtures cleaned. This is local
+fixture evidence, not physical-phone or real Google acceptance. Migration 202611120002
+was applied to hosted Supabase on 2026-11-12 after separate approval. Its receipt,
+format column/constraint, private helper, four RLS table boundaries and three RPC boundaries
+were verified. Scoped pre/post schedule counts and fingerprints match (no configured
+schedule activities or participant work existed). Commit/push/deployment are authorized;
+real configuration/upgrades and signed-in acceptance remain separate.
+
 ## Schedule activity setup
 
 Apply `202611120001_schedule_planning.sql` before releasing the new code; no environment

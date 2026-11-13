@@ -625,6 +625,7 @@ export type Database = {
           created_at: string
           enrollment_id: string
           explanation: string
+          format_version: number
           original: Json
           revised: Json
           submission_id: string
@@ -634,6 +635,7 @@ export type Database = {
           created_at?: string
           enrollment_id: string
           explanation: string
+          format_version?: number
           original: Json
           revised: Json
           submission_id: string
@@ -643,6 +645,7 @@ export type Database = {
           created_at?: string
           enrollment_id?: string
           explanation?: string
+          format_version?: number
           original?: Json
           revised?: Json
           submission_id?: string
@@ -978,6 +981,15 @@ export type Database = {
       }
       valid_schedule: {
         Args: { complete: boolean; rows: Json }
+        Returns: boolean
+      }
+      valid_schedule_format: {
+        Args: {
+          complete: boolean
+          p_format: number
+          require_staff: boolean
+          rows: Json
+        }
         Returns: boolean
       }
     }

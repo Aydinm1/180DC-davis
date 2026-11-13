@@ -559,3 +559,14 @@ operations; local state advances only after confirmed reads. Preview/practice ac
 remain local, with fictional Viewer content and zero real mutations. Ordinary text
 submission records retain existing queue, review and completion behavior; a dedicated
 renderer displays immutable schedule snapshots. See ADR 0029.
+
+The schedule grid dispatches by explicit format version. Missing versions use the retained
+week renderer; format 2 uses a dependency-free pointer-based Gantt editor with shared pure
+range/migration helpers. Pointer previews stay local and commit only on pointer-up; Escape
+and cancellation discard them. Exact form controls provide equivalent non-drag editing.
+Only gesture-active frames drive edge scrolling; listeners/frames clean up on exit.
+
+Config/run/review interfaces carry format metadata, and snapshots retain their own version.
+The server derives the permitted format from frozen configuration, rejecting mismatched
+clients. No broader workspace payload receives private schedules. Legacy configuration
+upgrade is an explicit reviewed draft edit, not a backfill. See ADR 0030.

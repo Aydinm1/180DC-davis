@@ -10,6 +10,15 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Upgrade schedule planning to versioned day-level Gantt bars, consultant assignment
+  and effort estimates while preserving legacy work. Nine schedule, 13 Storage, 14 program,
+  eight Viewer and four security-schema entries pass locally, including desktop/phone,
+  touch/mouse/cancel/scroll, stale/network saves, maximum Unicode payloads, upgrades,
+  immutable comparisons and zero-write previews. All 133 unit/docs checks, generated types,
+  lint, typecheck, Webpack build and diff checks pass. Fixtures cleaned. Hosted migration
+  202611120002 applied and verified after explicit approval; commit/push/deployment
+  authorized. Real assignment configuration and upgrades remain separate.
+
 - [x] Implement reusable Individual schedule planning: editable starter/ten-week grid,
   private disruption reveal and locked original, persistent drafts, reviewed snapshots,
   setup/preview/privacy and local regression/browser validation. Eight schedule, 14 program,

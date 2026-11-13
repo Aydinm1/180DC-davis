@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+- [ADR 0030: Versioned day-level schedules](0030-day-level-schedules.md)
+
 - [ADR 0029: Schedule planning](0029-schedule-planning.md)
 
 - [ADR 0028: Manual attendance projection to Monday](0028-manual-monday-attendance-sync.md)

@@ -730,3 +730,20 @@ Student writes check both configuration and working-state versions. The shared
 transaction gate serializes drafts/reveal/submission/review; stale versions
 raise recoverable conflicts. Returning enrollments and test status retain their existing
 cohort/count rules. Existing workflow records and historical submissions are not rewritten.
+
+Migration `202611120002_day_level_schedules.sql` adds explicit format-2 configuration and
+submission snapshot metadata, keeping missing versions as format 1. Existing row JSON,
+feedback and timestamps are not rewritten. Day-level rows store stable task/block UUIDs,
+ordered inclusive ranges within days 1–70, unique consultant numbers 1–5 and nullable draft
+hours. Overlapping/adjacent blocks must be merged. Valid hours are positive finite values,
+up to two decimal places, within the client-safe cents bound (90071992547409.91).
+Configure permits unset staffing/effort; reveal/submit require both on every task.
+Participant request JSON is capped at 200 KB to accommodate the full 30-task/70-day
+limits, including Unicode labels; configuration retains its existing 1 MB cap.
+
+Private format-aware validation is applied during configuration, all participant writes
+and snapshot-checked insertion. Student writes must match the saved format as well as
+configuration/run versions. Snapshot format metadata is checked against immutable config
+and returned by narrow reads/review. No direct grants or eligibility broadening is added.
+Upgrades require a draft week and no existing work/upload/submission history, cannot revert
+format 2 to 1, and never mutate a participant's stored original. See ADR 0030.

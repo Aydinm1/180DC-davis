@@ -630,25 +630,37 @@ partially scheduled starter while the week is draft. Publishing requires saved v
 Configuration freezes at the first saved draft or reveal; existing activity/upload/submission
 history prevents workflow conversion. No real Week 4 content is populated automatically.
 
-Students use Instructions / Workspace with exactly ten simulated project weeks, independent
-of GAP week numbering. All starter tasks/cells are editable and removable. Add up to 30
-tasks, each with a stable ID, 200-character name and any selection of weeks 1–10. Cells
-toggle one green color with keyboard/touch support; dates, dependencies and multiple
-colors are not included. Save draft persists incomplete work across devices. Failures or
-version conflicts preserve local input rather than silently overwriting another save.
+Students use Instructions / Workspace with ten simulated project weeks, each Monday–Sunday
+without calendar dates. New activities use format 2: green bars snap to 70 day positions.
+Drag empty space to create a bar, its body to move, or its ends to resize across weeks.
+A task may have separate blocks; overlapping/adjacent blocks merge. Exact start/end controls
+and explicit Add scheduled block / Remove block make dragging optional. All starter tasks,
+bars, consultants and hours are editable/removable. Keep 30-task and 200-character limits.
 
-Save original & reveal disruption requires at least one task and a name/scheduled week
-for every task, confirms locking, then atomically freezes the original and copies it to
-an editable revised plan. The private disruption is unavailable before that operation.
-Students switch Original / Revised without losing edits, explain changes in up to 2,000
-characters and Submit revised plan. Only final submission enters Awaiting review; reveal
-and drafts do not affect completion or queue counts. Admin approval is required.
+Each task selects one or more fictional Consultant 1–5 roles and one positive total-effort
+hours estimate (up to two decimal places), independent of calendar duration. The selected
+task editor holds these fields; rows summarize staffing/effort. Admin starters may leave
+staffing/hours unset. Drafts may be incomplete. Locking the original or submitting requires
+every task to have a name, at least one scheduled day, consultants and estimated hours.
+There are no dependencies, milestones, capacity rules or automatic scheduling.
 
-Each attempt preserves both grids and explanation. Admin Submitted work defaults to
-Revised, with Original comparison and existing reference/feedback/review-next controls.
-Replacement and requested revisions edit the revised plan only; the original remains
-frozen. Completed schedules are read-only. Historical attempts retain their own snapshots.
-Generic text/link/file submissions and manual credit cannot bypass the activity.
+Save draft persists across devices. Conflicts/failures retain local input. Save original &
+reveal disruption confirms locking, atomically freezes the original (including staffing and
+effort), and creates an editable revised copy. The disruption remains private until success.
+Only Submit revised plan enters Awaiting review; drafts/reveal never affect counts.
+Explanations remain bounded to 2,000 characters and completion requires admin approval.
+
+Every attempt preserves both schedules, consultants, hours and explanation. Admin review
+opens Revised first and retains feedback, references, history and review-next behavior.
+Revisions alter the revised copy only; original/earlier attempts remain unchanged.
+Completed attempts stay read-only. Generic text/link/file submissions and manual credit
+cannot bypass the exercise.
+
+Existing records without a format version remain format 1, with their whole-week editor,
+originals and submissions intact. Unpublished, unstarted configurations may explicitly
+upgrade: expand each selected week to Monday–Sunday, merge connected blocks, preserve task
+IDs and leave consultant/hour fields unset for review before saving. Work/history prevents
+conversion. New setups default to day-level planning; no real assignments are upgraded.
 
 Test participants retain separate work without official-count inflation. Current identity,
 roster, enrollment, active cohort and publication rules apply to every operation. Admin
