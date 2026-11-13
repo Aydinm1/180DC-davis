@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {Button} from '@/components/ui/button';
 import {ActivityViewNav,BriefReader,type ActivityView} from './activity-views';
 import {AssignmentBrief} from './assignment-brief';
+import type {ScheduleDisplay} from './schedule-gantt';
 import {ScheduleGrid} from './schedule-grid';
 import {ScheduleComparison} from './schedule-comparison';
 import {saveSchedule} from '@/lib/schedules/actions';
@@ -15,6 +16,7 @@ export function SchedulePlanning({assignmentId,initial,preview=false,browse=fals
  const [briefOpen,setBriefOpen]=useState(false),briefDialog=useRef<HTMLDialogElement>(null);
  useEffect(()=>{const dialog=briefDialog.current;if(briefOpen&&!dialog?.open)dialog?.showModal();if(!briefOpen&&dialog?.open)dialog.close();},[briefOpen]);
  const [activity,setActivity]=useState(source),[view,setView]=useState<ActivityView>(source.run||source.attempts.length?'workspace':'instructions');
+ const [display,setDisplay]=useState<ScheduleDisplay>({view:'timeline',week:1});
  const [plan,setPlan]=useState<'original'|'revised'>(source.run?.revealedAt?'revised':'original');
  const [rows,setRows]=useState<ScheduleTask[]>(source.run?.revised??source.run?.working??source.starter??[]),[explanation,setExplanation]=useState(source.run?.explanation??'');
  const [saved,setSaved]=useState(JSON.stringify({rows:source.run?.revised??source.run?.working??source.starter??[],explanation:source.run?.explanation??''}));
@@ -40,7 +42,7 @@ export function SchedulePlanning({assignmentId,initial,preview=false,browse=fals
  <div hidden={view!=='instructions'}><BriefReader instructions={activity.overview??''}/><Button className="mt-6" onClick={()=>setView('workspace')}>Open workspace →</Button></div>
  <div hidden={view!=='workspace'}>{!activity.scenario?<p className="text-sm">Your schedule activity is being prepared.</p>:<>
  {current&&!editing?<section className="space-y-5"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-bold">{current.status==='completed'?'Complete':current.status==='revision_requested'?'Revision requested':'Awaiting review'}</h2>{current.status!=='completed'?<Button variant="secondary" onClick={()=>setEditing(true)}>Revise submission</Button>:null}</div>{current.feedback?<p className="whitespace-pre-wrap rounded-lg bg-surface-subtle p-4 text-sm leading-7">{current.feedback}</p>:null}<ScheduleComparison key={current.id} snapshot={current}/></section>:<>
- <div hidden={plan!=='original'}><ScheduleGrid formatVersion={activity.formatVersion??1} rows={revealed?activity.run?.original??[]:rows} onChange={revealed?undefined:setRows} disabled={pending} label="Original schedule" toolbar={toolbar}/></div><div hidden={plan!=='revised'||!revealed}><ScheduleGrid formatVersion={activity.formatVersion??1} rows={rows} onChange={setRows} disabled={pending} label="Revised schedule" toolbar={toolbar}/></div>
+ <div hidden={plan!=='original'}><ScheduleGrid display={display} onDisplayChange={setDisplay} formatVersion={activity.formatVersion??1} rows={revealed?activity.run?.original??[]:rows} onChange={revealed?undefined:setRows} disabled={pending} planLabel="Original plan" label="Original schedule" toolbar={toolbar}/></div><div hidden={plan!=='revised'||!revealed}><ScheduleGrid display={display} onDisplayChange={setDisplay} formatVersion={activity.formatVersion??1} rows={rows} onChange={setRows} disabled={pending} planLabel="Revised plan" label="Revised schedule" toolbar={toolbar}/></div>
  <div className="mt-4 rounded-lg border border-border bg-surface p-4 sm:flex sm:items-end sm:justify-between sm:gap-6">{revealed?<label className="min-w-0 flex-1 block text-sm font-semibold">What changed and why?<textarea value={explanation} maxLength={2000} disabled={pending} rows={2} className="mt-2 block w-full max-w-2xl rounded-lg border border-border p-3 text-base font-normal leading-7" onChange={e=>setExplanation(e.target.value)}/><span className="mt-2 block text-xs text-ink-soft">{Array.from(explanation).length} / 2,000 characters</span></label>:null}
  <div className="mt-4 flex shrink-0 flex-wrap justify-end gap-3 sm:ml-auto"><Button variant="secondary" disabled={pending||!dirty} onClick={()=>act('draft')}>{pending?'Saving…':'Save draft'}</Button>{revealed?<Button disabled={pending} onClick={()=>act('submit')}>Submit revised plan</Button>:<Button disabled={pending} onClick={()=>act('reveal')}>Save original &amp; reveal disruption</Button>}</div></div>
  </>}

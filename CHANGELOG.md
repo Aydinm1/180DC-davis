@@ -5,6 +5,12 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Keep allocation view and week selected when comparing Original/Revised plans, with
+  explicit plan headings and independent original/revised totals.
+
+- Added a weekly Resource allocation tab to day-level schedules, with consultant totals,
+  five-hour capacity warnings, incomplete-task notices and task breakdowns.
+
 - Added All consultants selection and clearer schedule resize grips; replaced blue block
   focus rectangles with a green outline on the visible bar.
 

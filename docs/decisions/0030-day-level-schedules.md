@@ -43,3 +43,6 @@ The application maintains two bounded formats rather than silently translating h
 work. Admin review selects the renderer from each immutable snapshot. A backward-compatible
 migration must precede new production code, with normal separate release authorization.
 Real assignments are never configured, upgraded or published automatically.
+
+ADR 0031 extends this with an advisory resource-allocation view derived from existing
+hours, consultants and scheduled days; no enforced capacity rule is added.

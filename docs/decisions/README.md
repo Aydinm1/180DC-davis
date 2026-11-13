@@ -105,3 +105,5 @@ do not override a later source-of-truth update and superseding ADR.
 - [ADR 0005: Explicit GAP enrollment approval](0005-explicit-gap-enrollment.md)
 - [ADR 0006: Monday-ready enrollment foundation](0006-monday-ready-enrollment-foundation.md)
 - [ADR 0007: Bring authentication into P5](0007-authentication-in-p5.md)
+
+- [ADR 0031: Derived schedule resource allocation](0031-schedule-resource-allocation.md)

@@ -10,6 +10,16 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Preserve allocation view/week across original/revised switches and label each plan.
+  Nine schedule entries pass on desktop/phone, verifying independent frozen/revised totals,
+  same-week comparisons and retained admin feedback. 136 unit/docs checks, lint, production
+  build and typecheck pass. Code-only commit/push/deploy authorized; no migration required.
+
+- [x] Add derived weekly Resource allocation alongside Timeline, with five-hour advisory
+  warnings, task breakdowns and incomplete-task visibility. Nine schedule entries and
+  136 unit/docs checks pass, including desktop/phone warnings, input retention and zero
+  allocation writes; lint and production build pass. Code-only commit/push/deploy authorized; no migration required.
+
 - [x] Add consultant select-all and clearer bar resize grips with green focus styling.
   Nine schedule entries pass, including desktop/phone selection, resizing, focus and
   persistence. All 133 unit/docs checks, lint and production build pass. Local only;

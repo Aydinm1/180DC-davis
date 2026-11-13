@@ -91,7 +91,7 @@ Default Weeks uses compact day columns; Days expands to 44px cells and full week
 Overview fits ten weeks when space permits. Zoom retains horizontal day position and input,
 changes no scheduled data, and is disabled during drag/save. The chart scrolls within its
 bounded height with sticky headers and task labels. No calendar, dependencies, milestones,
-resource-capacity interface or extra explanatory copy is introduced.
+automatic capacity enforcement or extra explanatory copy is introduced.
 
 Pointer dragging creates/moves/resizes bars with day snapping and edge scrolling. Escape
 or pointer cancellation discards the gesture; pending saves disable changes. Delete or
@@ -494,3 +494,15 @@ The consultant picker includes All consultants, with an indeterminate checkbox f
 selection. Selecting it assigns all five; clearing it clears the selection. Schedule blocks
 use green focus/selection on the visible fill rather than a blue rectangle around the hit
 area. Visible white endpoint grips on hover/selection indicate horizontal resizing.
+
+Resource allocation is a sibling tab to Timeline inside the chart toolbar. Keep plan and
+brief actions available; hide timeline zoom while allocation is selected. Use wrapping
+W1–W10 buttons, five responsive consultant cards (one column on phones), green utilization
+bars and red over-capacity text. Indicators include text, never color alone. Preserve chart
+scroll/zoom and input when switching tabs. Include a concise calculation explanation and
+expandable task breakdown; unfinished tasks receive a visible omitted-task count.
+
+Original and Revised share the selected Timeline/Resource allocation view and allocation
+week. Allocation headings name the displayed plan. Original totals derive from the frozen
+original after reveal; Revised totals derive from current revised rows. The same view/week
+continuity applies in read-only submission comparisons, without modifying either snapshot.

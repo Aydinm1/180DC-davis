@@ -593,3 +593,13 @@ Rows expose direct confirmed deletion. Exact date controls are a keyboard-focusa
 alternative, without a permanent row-actions menu. Programmatic deletion focus does not draw
 an outline around the chart. Single-day blocks keep a minimum 44px grab width; moving a block
 vertically transfers its stable ID to the destination task, retaining that task's staffing/hours.
+
+Schedule allocation is a pure client-side projection in `src/lib/schedules/allocation.ts`.
+The shared day-level grid offers both timeline and allocation views, so setup, participant
+work and immutable review use the same calculation. It reads only already-authorized rows;
+there are no new server operations, database fields or writes from view/week switching.
+
+Original and Revised share the selected Timeline/Resource allocation view and allocation
+week. Allocation headings name the displayed plan. Original totals derive from the frozen
+original after reveal; Revised totals derive from current revised rows. The same view/week
+continuity applies in read-only submission comparisons, without modifying either snapshot.

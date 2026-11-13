@@ -649,7 +649,7 @@ when a row is added. Exact schedule controls are available through a keyboard-fo
 removes a selected bar with chart/bar focus, while normal form-field deletion is preserved. Admin starters may leave
 staffing/hours unset. Drafts may be incomplete. Locking the original or submitting requires
 every task to have a name, at least one scheduled day, consultants and estimated hours.
-There are no dependencies, milestones, capacity rules or automatic scheduling.
+There are no dependencies, milestones, enforced capacity limits or automatic scheduling.
 
 Save draft persists across devices. Conflicts/failures retain local input. Save original &
 reveal disruption confirms locking, atomically freezes the original (including staffing and
@@ -687,3 +687,18 @@ The consultant picker includes All consultants, with an indeterminate checkbox f
 selection. Selecting it assigns all five; clearing it clears the selection. Schedule blocks
 use green focus/selection on the visible fill rather than a blue rectangle around the hit
 area. Visible white endpoint grips on hover/selection indicate horizontal resizing.
+
+Day-level schedules include Timeline / Resource allocation tabs in setup, member work,
+preview and read-only comparisons. Allocation uses current unsaved rows or the displayed
+immutable snapshot. For each task, divide total effort equally among assigned consultants
+and distinct scheduled days, including weekends, then total each of ten simulated weeks.
+Show Consultant 1–5 cards, a 5-hour weekly capacity, overload warnings, remaining hours,
+week overload indicators and an expandable task breakdown. Warnings never block saves,
+reveal, submission or completion. Exclude tasks missing hours/staffing/days with an explicit
+incomplete-task count; zero allocated hours must not imply those tasks are fully planned.
+Legacy format-1 schedules have no consultant/hour allocation view. See ADR 0031.
+
+Original and Revised share the selected Timeline/Resource allocation view and allocation
+week. Allocation headings name the displayed plan. Original totals derive from the frozen
+original after reveal; Revised totals derive from current revised rows. The same view/week
+continuity applies in read-only submission comparisons, without modifying either snapshot.
