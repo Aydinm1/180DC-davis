@@ -2,7 +2,7 @@ export type InvestigationHint = { id: string; title: string; optional: boolean; 
 export type InvestigationStage = { id: string; title: string; hints: InvestigationHint[] };
 export type InvestigationConfig = { overview: string; workbookUrl: string; acceptedNames: string[]; gradingGuidance: string; stages: (Omit<InvestigationStage,'hints'> & { hints: (InvestigationHint & { body: string })[] })[] };
 export type Investigation = {
- workflow: 'standard'|'guided'|'cases'|'investigation'; configVersion: number;
+ workflow: 'standard'|'guided'|'cases'|'investigation'|'schedule'; configVersion: number;
  overview: string | null; workbookUrl: string | null; stages: InvestigationStage[]; config?: InvestigationConfig | null;
  run?: { version: number; name: string; reason: string; savedAt: string | null } | null;
  submission?: { id: string; status: 'submitted'|'revision_requested'|'completed'; feedback: string | null; updatedAt: string; submittedAt: string; name: string; reason: string } | null;

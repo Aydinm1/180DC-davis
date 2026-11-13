@@ -5,6 +5,11 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added reusable Individual schedule planning: editable partially scheduled ten-week grids,
+  persistent drafts, private disruption reveal, locked original and reviewed revised-plan
+  snapshots. Added admin setup, historical comparison and zero-write preview/practice
+  without configuring real Week 4 content or changing existing submissions.
+
 - Added selected-week **Sync to Monday** for official Present attendance, with private
   enrollment links, live admin authorization, check-only retries and partial-failure details.
   Test participants and other board columns remain excluded.

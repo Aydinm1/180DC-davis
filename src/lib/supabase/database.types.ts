@@ -619,6 +619,130 @@ export type Database = {
         }
         Relationships: []
       }
+      schedule_attempts: {
+        Row: {
+          assignment_id: string
+          created_at: string
+          enrollment_id: string
+          explanation: string
+          original: Json
+          revised: Json
+          submission_id: string
+        }
+        Insert: {
+          assignment_id: string
+          created_at?: string
+          enrollment_id: string
+          explanation: string
+          original: Json
+          revised: Json
+          submission_id: string
+        }
+        Update: {
+          assignment_id?: string
+          created_at?: string
+          enrollment_id?: string
+          explanation?: string
+          original?: Json
+          revised?: Json
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_attempts_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_configs"
+            referencedColumns: ["assignment_id"]
+          },
+        ]
+      }
+      schedule_configs: {
+        Row: {
+          assignment_id: string
+          content: Json
+          version: number
+        }
+        Insert: {
+          assignment_id: string
+          content: Json
+          version?: number
+        }
+        Update: {
+          assignment_id?: string
+          content?: Json
+          version?: number
+        }
+        Relationships: []
+      }
+      schedule_receipts: {
+        Row: {
+          actor_id: string
+          payload: Json
+          request_id: string
+          result: Json
+        }
+        Insert: {
+          actor_id: string
+          payload: Json
+          request_id: string
+          result: Json
+        }
+        Update: {
+          actor_id?: string
+          payload?: Json
+          request_id?: string
+          result?: Json
+        }
+        Relationships: []
+      }
+      schedule_runs: {
+        Row: {
+          assignment_id: string
+          enrollment_id: string
+          explanation: string
+          id: string
+          original: Json | null
+          revealed_at: string | null
+          revised: Json | null
+          saved_at: string | null
+          version: number
+          working: Json
+        }
+        Insert: {
+          assignment_id: string
+          enrollment_id: string
+          explanation?: string
+          id?: string
+          original?: Json | null
+          revealed_at?: string | null
+          revised?: Json | null
+          saved_at?: string | null
+          version?: number
+          working: Json
+        }
+        Update: {
+          assignment_id?: string
+          enrollment_id?: string
+          explanation?: string
+          id?: string
+          original?: Json | null
+          revealed_at?: string | null
+          revised?: Json | null
+          saved_at?: string | null
+          version?: number
+          working?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_runs_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_configs"
+            referencedColumns: ["assignment_id"]
+          },
+        ]
+      }
       submission_requests: {
         Row: {
           actor_id: string
@@ -830,7 +954,18 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      resolve_submission_target_before_schedule: {
+        Args: { p_assignment: string }
+        Returns: Database["public"]["Tables"]["submission_targets"]["Row"]
+        SetofOptions: {
+          from: "*"
+          to: "submission_targets"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       save_week_before_teams: { Args: { p_data: Json }; Returns: string }
+      schedule_enrollment: { Args: { p_assignment: string }; Returns: string }
       submission_gate: { Args: never; Returns: undefined }
       team_file_upload_impl: {
         Args: {
@@ -840,6 +975,10 @@ export type Database = {
           p_intent?: string
         }
         Returns: Json
+      }
+      valid_schedule: {
+        Args: { complete: boolean; rows: Json }
+        Returns: boolean
       }
     }
     Enums: {
@@ -1836,6 +1975,15 @@ export type Database = {
         }
         Returns: Json
       }
+      mutate_schedule: {
+        Args: {
+          p_action: string
+          p_assignment: string
+          p_data: Json
+          p_request: string
+        }
+        Returns: Json
+      }
       my_team: { Args: { p_enrollment: string }; Returns: Json }
       read_assignment_team_briefs: {
         Args: { p_assignment: string; p_team?: string }
@@ -1854,6 +2002,10 @@ export type Database = {
         Returns: Json
       }
       read_investigation: {
+        Args: { p_assignment: string; p_preview?: boolean }
+        Returns: Json
+      }
+      read_schedule: {
         Args: { p_assignment: string; p_preview?: boolean }
         Returns: Json
       }
@@ -1898,6 +2050,7 @@ export type Database = {
         }
       }
       save_program_week: { Args: { p_data: Json }; Returns: string }
+      schedule_review: { Args: { p_submission: string }; Returns: Json }
       set_assignment_completion: {
         Args: {
           p_action: string

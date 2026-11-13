@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -621,3 +621,37 @@ eight saved answers. Admins can open each participant's read-only responses, one
 a time, beside the reference approach; no grade, feedback or completion mutation is added.
 Official/test scope and search/filter context persist when returning. Existing Standard and Team workflows remain
 unchanged. See [ADR 0023](decisions/0023-individual-case-exercises.md).
+
+## Individual schedule planning
+
+**Schedule planning · Individual** is assignment-scoped and reusable across weeks/cohorts.
+Admins configure formatted instructions, an original scenario, private disruption and a
+partially scheduled starter while the week is draft. Publishing requires saved valid setup.
+Configuration freezes at the first saved draft or reveal; existing activity/upload/submission
+history prevents workflow conversion. No real Week 4 content is populated automatically.
+
+Students use Instructions / Workspace with exactly ten simulated project weeks, independent
+of GAP week numbering. All starter tasks/cells are editable and removable. Add up to 30
+tasks, each with a stable ID, 200-character name and any selection of weeks 1–10. Cells
+toggle one green color with keyboard/touch support; dates, dependencies and multiple
+colors are not included. Save draft persists incomplete work across devices. Failures or
+version conflicts preserve local input rather than silently overwriting another save.
+
+Save original & reveal disruption requires at least one task and a name/scheduled week
+for every task, confirms locking, then atomically freezes the original and copies it to
+an editable revised plan. The private disruption is unavailable before that operation.
+Students switch Original / Revised without losing edits, explain changes in up to 2,000
+characters and Submit revised plan. Only final submission enters Awaiting review; reveal
+and drafts do not affect completion or queue counts. Admin approval is required.
+
+Each attempt preserves both grids and explanation. Admin Submitted work defaults to
+Revised, with Original comparison and existing reference/feedback/review-next controls.
+Replacement and requested revisions edit the revised plan only; the original remains
+frozen. Completed schedules are read-only. Historical attempts retain their own snapshots.
+Generic text/link/file submissions and manual credit cannot bypass the activity.
+
+Test participants retain separate work without official-count inflation. Current identity,
+roster, enrollment, active cohort and publication rules apply to every operation. Admin
+preview uses configured content without writes; Viewer practice uses fictional scenario,
+starter and disruption with only the real common instructions. See
+[ADR 0029](decisions/0029-schedule-planning.md).

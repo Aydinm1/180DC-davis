@@ -12,7 +12,7 @@ export function AssignmentCompletionAction({row}: {row: AdminSubmissionRow}) {
   const router = useRouter();
   const [busy, startTransition] = useTransition();
   const [error, setError] = useState('');
-  if (row.team || row.submission || row.assignment.workflow==='investigation') return <span className="text-ink-faint">Await submission</span>;
+  if (row.team || row.submission || (row.assignment.workflow==='investigation'||row.assignment.workflow==='schedule')) return <span className="text-ink-faint">Await submission</span>;
   const credit = row.completionCredit;
   const active = state.cohorts.some(cohort=>cohort.id===row.enrollment.cohortId && cohort.state==='active');
 

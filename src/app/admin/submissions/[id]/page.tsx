@@ -1,3 +1,4 @@
+import {readScheduleReview} from '@/lib/schedules/data';
 import type { Metadata } from "next";
 import { AdminSubmissionReview } from "@/components/admin/admin-submission-review";
 import { readWorkspace } from '@/lib/supabase/data';
@@ -16,5 +17,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
   const assignment=state.weeks.flatMap(assignmentsForWeek).find(a=>a.id===submission?.assignmentId);
   const project=assignment?.workflow==='guided'&&submission?.teamId?await readGuidedProject(assignment.id,submission.teamId):undefined;
   const investigationEntries=assignment?.workflow==='investigation'?await Promise.all(state.submissions.filter(s=>s.assignmentId===assignment.id&&s.enrollmentId===submission?.enrollmentId).map(async s=>[s.id,await readInvestigationReview(s.id)] as const)):[];
-  return <AdminSubmissionReview key={id} submissionId={id} reference={reference} project={project?{...project,teams:undefined}:undefined} investigations={Object.fromEntries(investigationEntries)} />;
+  const scheduleEntries=assignment?.workflow==='schedule'?await Promise.all(state.submissions.filter(s=>s.assignmentId===assignment.id&&s.enrollmentId===submission?.enrollmentId).map(async s=>[s.id,await readScheduleReview(s.id)] as const)):[];
+  return <AdminSubmissionReview key={id} submissionId={id} reference={reference} project={project?{...project,teams:undefined}:undefined} schedules={Object.fromEntries(scheduleEntries)} investigations={Object.fromEntries(investigationEntries)} />;
 }

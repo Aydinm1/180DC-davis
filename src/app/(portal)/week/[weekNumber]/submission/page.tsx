@@ -28,7 +28,7 @@ export default async function SubmissionReviewPage({ params, searchParams }: Sub
   const selected = (await searchParams).assignment;
   const assignment = selected === undefined ? detail.assignments[0] : detail.assignments.find((item) => item.id === selected);
   if (!assignment) notFound();
-  if (assignment.workflow==='cases') redirect(`/week/${weekNumber}/assignments/${assignment.id}`);
+  if (assignment.workflow==='cases'||assignment.workflow==='schedule') redirect(`/week/${weekNumber}/assignments/${assignment.id}`);
 
   const attempts = assignment.attempts;
 

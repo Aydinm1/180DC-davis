@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+- [ADR 0029: Schedule planning](0029-schedule-planning.md)
+
 - [ADR 0028: Manual attendance projection to Monday](0028-manual-monday-attendance-sync.md)
 
 - [ADR 0027: Private PDF reading during grading](0027-private-admin-pdf-reader.md)
@@ -19,7 +21,7 @@
 - [ADR 0020: Admin-assigned teams and shared submission targets](0020-admin-assigned-team-submissions.md)
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 **Source of truth for:** Durable decision history and ADR format
 
 Create an ADR for decisions that materially affect architecture, schema, security,

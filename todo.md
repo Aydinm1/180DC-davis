@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,15 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Implement reusable Individual schedule planning: editable starter/ten-week grid,
+  private disruption reveal and locked original, persistent drafts, reviewed snapshots,
+  setup/preview/privacy and local regression/browser validation. Eight schedule, 14 program,
+  eight Viewer, nine Team, 13 Storage, nine Guided, seven case, nine investigation and four
+  security-schema entries pass locally; 129 unit/docs checks, generated types, lint,
+  typecheck, Webpack build and diff checks pass. Fixtures cleaned. Hosted migration
+  202611120001 applied and verified after explicit approval; commit/push/deployment
+  authorized. Real Week 4 configuration/publication remains separate.
 
 - [x] Add selected-week manual attendance sync to Monday checkboxes using private
   enrollment mappings, live admin checks, official-only Present records, check-only

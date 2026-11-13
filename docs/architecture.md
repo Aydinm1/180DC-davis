@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -543,3 +543,19 @@ rechecks each participant before mutation. Three bounded workers set only Week N
 per-item results preserve successes, skip existing checks and support safe retries.
 No public endpoint accepts arbitrary board items, columns or attendance.
 See [ADR 0028](decisions/0028-manual-monday-attendance-sync.md).
+
+### Schedule planning
+
+`src/lib/schedules/` owns private user-scoped loading and typed configure/draft/reveal/submit
+operations. It follows the existing activity boundary without exposing structured state
+in broad member/admin workspace loaders. AssignmentContent loads schedule state only
+for that workflow; admin setup receives explicit preview configuration and review loads
+only the current participant’s attempt snapshots. The member legacy submission URL
+redirects to the activity so replacement cannot open a generic upload/text editor.
+
+The shared grid serves setup/edit/read-only comparison. Instructions/workspace and
+Original/Revised panes remain mounted. Request IDs are reused for unchanged failed
+operations; local state advances only after confirmed reads. Preview/practice actions
+remain local, with fictional Viewer content and zero real mutations. Ordinary text
+submission records retain existing queue, review and completion behavior; a dedicated
+renderer displays immutable schedule snapshots. See ADR 0029.

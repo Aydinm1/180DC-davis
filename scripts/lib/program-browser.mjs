@@ -1,3 +1,4 @@
+import {showReview} from './review-workspace.mjs';
 import assert from 'node:assert/strict';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -101,7 +102,7 @@ export async function verifyProgramBrowser({appUrl, fixture, jarFor, admin, ok, 
       const enrollment=ok(await admin.from('cohort_enrollments').select('id').eq('cohort_id',cohort).eq('person_id',learner.personId).single()).id;
       const submission=ok(await admin.from('submissions').select('id').eq('enrollment_id',enrollment).eq('is_current',true).single()).id;
       await page.goto(`${appUrl}/admin/submissions/${submission}?cohort=${cohort}`);
-      await page.getByLabel('Request revision',{exact:true}).check();
+      await showReview(page);await page.getByLabel('Request revision',{exact:true}).check();
       await page.getByLabel(/Feedback \(/).fill('Add a second source.');
       await page.getByRole('button',{name:'Save review',exact:true}).click();
       await page.getByText('Review saved.',{exact:true}).waitFor();

@@ -1,4 +1,6 @@
 "use client";
+import {ScheduleComparison} from '@/components/program/schedule-comparison';
+import type {ScheduleSnapshot} from '@/lib/schedules/types';
 
 import { useEffect, useId, useState, useTransition } from "react";
 import Link from "next/link";
@@ -37,7 +39,7 @@ function ViewAttempt({ attempt, announce, historical=false, fill=false }: { hist
   </> : <button className={className} type="button" onClick={() => announce("This fictional preview file is not available to download.")}>Download original file</button>;
 }
 
-export function AdminSubmissionReview({ submissionId, reference, project, investigations={} }: { submissionId: string; reference?: GradingReference; project?: GuidedProject; investigations?:Record<string,InvestigationReview|undefined> }) {
+export function AdminSubmissionReview({ submissionId, reference, project, investigations={},schedules={} }: { submissionId: string; reference?: GradingReference; project?: GuidedProject; schedules?:Record<string,ScheduleSnapshot|undefined>;investigations?:Record<string,InvestigationReview|undefined> }) {
   const workspace = useAdminWorkspace();
   const router = useRouter();
   const params = useSearchParams();
@@ -101,9 +103,9 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
     <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-2"><h2 className="text-sm font-semibold">Submitted work</h2>{history.length?<button type="button" aria-pressed={showHistory} className="min-h-11 text-sm font-semibold text-action" onClick={()=>setShowHistory(v=>!v)}>{showHistory?'← Current submission':`History (${history.length})`}</button>:null}</div>
     <div hidden={showHistory} className={`min-h-0 flex-1 ${isPdf?'':'overflow-y-auto p-5'}`}>
       {submission.payload.type==='file'&&!isPdf?<p className="mb-4 break-all text-sm font-semibold">{submission.payload.originalFilename}</p>:null}
-      <ViewAttempt attempt={submission} announce={setMessage} fill={isPdf}/>
+      {schedules[submission.id]?<ScheduleComparison snapshot={schedules[submission.id]!}/>:<ViewAttempt attempt={submission} announce={setMessage} fill={isPdf}/>}
     </div>
-    <div hidden={!showHistory} className="min-h-0 flex-1 overflow-y-auto p-5"><h3 className="mb-4 text-base font-semibold">Previous submissions</h3><ol className="space-y-5">{history.map(attempt=><li key={attempt.id} className="border-b border-border pb-5 last:border-0"><p className="font-semibold">{submissionDisplayName(attempt)}</p><p className="mt-1 text-xs text-ink-soft">{formatSubmissionTime(attempt.submittedAt)} · {attempt.status.replace('_',' ')}</p>{attempt.feedback?<p className="mt-2 text-sm leading-6 text-ink-soft">{attempt.feedback}</p>:null}<div className="mt-3"><ViewAttempt attempt={attempt} announce={setMessage} historical/></div>{investigations[attempt.id]?<div className="mt-4"><InvestigationHintSnapshot reference={investigations[attempt.id]!}/></div>:null}</li>)}</ol></div>
+    <div hidden={!showHistory} className="min-h-0 flex-1 overflow-y-auto p-5"><h3 className="mb-4 text-base font-semibold">Previous submissions</h3><ol className="space-y-5">{history.map(attempt=><li key={attempt.id} className="border-b border-border pb-5 last:border-0"><p className="font-semibold">{submissionDisplayName(attempt)}</p><p className="mt-1 text-xs text-ink-soft">{formatSubmissionTime(attempt.submittedAt)} · {attempt.status.replace('_',' ')}</p>{attempt.feedback?<p className="mt-2 text-sm leading-6 text-ink-soft">{attempt.feedback}</p>:null}<div className="mt-3">{schedules[attempt.id]?<ScheduleComparison snapshot={schedules[attempt.id]!}/>:<ViewAttempt attempt={attempt} announce={setMessage} historical/>}</div>{investigations[attempt.id]?<div className="mt-4"><InvestigationHintSnapshot reference={investigations[attempt.id]!}/></div>:null}</li>)}</ol></div>
   </section>;
   const review=<section aria-label="Review tools" className="flex h-full min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface">
     <div role="tablist" aria-label="Review tools" className="flex shrink-0 border-b border-border px-3">{tabs.map(value=><button type="button" role="tab" key={value} id={`${toolsId}-${value}`} aria-controls={`${toolsId}-${value}-panel`} aria-selected={tool===value} tabIndex={tool===value?0:-1} onClick={()=>selectTool(value)} onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const i=tabs.indexOf(value);const next=e.key==='Home'?tabs[0]:e.key==='End'?tabs[2]:tabs[(i+(e.key==='ArrowRight'?1:2))%3];selectTool(next);document.getElementById(`${toolsId}-${next}`)?.focus();}}} className={`min-h-12 border-b-2 px-4 text-sm font-semibold ${tool===value?'border-action text-action':'border-transparent text-ink-soft hover:text-ink'}`}>{value==='feedback'?'Feedback':value==='rubric'?'Rubric':'Example'}</button>)}</div>

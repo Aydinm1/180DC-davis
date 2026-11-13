@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -707,3 +707,26 @@ existing private Monday item links limited to that account/board. The optional e
 selector narrows rechecks; it never broadens cohort/week or official scope. Anonymous and
 authenticated callers have no execute grant. No attendance code/history is returned, and
 no new table or stored export timestamp is added.
+
+### Private schedule planning
+
+Migration `202611120001_schedule_planning.sql` adds the `schedule` workflow (Individual
+only) and private `schedule_configs`, `schedule_runs`, `schedule_attempts` and
+`schedule_receipts`. RLS is enabled with no direct anon/authenticated/service grants.
+Configs are keyed by assignment; runs are unique per assignment/enrollment with optimistic
+version, working/original/revised JSON rows, explanation and database save/reveal times.
+Attempt snapshots reference ordinary submissions with a deferred FK so the structured
+snapshot and graded text attempt commit atomically. Receipts bind actor/request to exact
+operation payload/result; replays recheck current authorization before returning.
+
+Read/mutate RPCs use empty search paths and live identity/roster/enrollment gates. Reads
+redact unrevealed disruption and all real Viewer scenario/state. Configure requires draft
+Individual mode and no participant/upload/submission history. Reveal locks the original
+once. Every graded attempt must have a matching private snapshot; triggers reject generic
+submissions/manual credit, guard workflow conversion and publication readiness. Storage
+intent eligibility and submission-target resolution deny schedule uploads, including
+prepared-upload finalization. Admin-only schedule_review exposes immutable comparisons.
+Student writes check both configuration and working-state versions. The shared
+transaction gate serializes drafts/reveal/submission/review; stale versions
+raise recoverable conflicts. Returning enrollments and test status retain their existing
+cohort/count rules. Existing workflow records and historical submissions are not rewritten.

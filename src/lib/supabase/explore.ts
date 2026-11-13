@@ -42,7 +42,7 @@ export const readExplore = cache(async (requestedId?: string) => {
     if (!w) return {id:r.id,cohortId:r.cohort_id,weekNumber:r.week_number,title:r.title,publicationState:'draft'};
     return {id:w.id,cohortId:w.cohort_id,weekNumber:w.week_number,title:w.title,description:w.description,publicationState:'published',slidesUrl:w.slides_url ?? undefined,
       resources:resources.data.filter(a=>a.week_id===w.id).map(a=>({id:a.id,title:a.title,description:a.description ?? undefined,type:a.resource_type as Resource['type'],url:a.url,sortOrder:a.sort_order})),
-      assignments:assignments.data.filter(a=>a.week_id===w.id).map(a=>{ const d=documents.find(d=>d.assignment_id===a.id);return {id:a.id,workflow:a.workflow as 'standard'|'guided'|'cases'|'investigation',submissionMode:a.submission_mode as 'individual'|'team',weekNumber:w.week_number,title:a.title,instructions:a.instructions,summary:a.summary ?? undefined,instructionsFormat:a.instructions_format as 'plain'|'markdown',dueAt:a.due_at,document:d?{id:d.id,name:d.original_filename}:undefined};})};
+      assignments:assignments.data.filter(a=>a.week_id===w.id).map(a=>{ const d=documents.find(d=>d.assignment_id===a.id);return {id:a.id,workflow:a.workflow as 'standard'|'guided'|'cases'|'investigation'|'schedule',submissionMode:a.submission_mode as 'individual'|'team',weekNumber:w.week_number,title:a.title,instructions:a.instructions,summary:a.summary ?? undefined,instructionsFormat:a.instructions_format as 'plain'|'markdown',dueAt:a.due_at,document:d?{id:d.id,name:d.original_filename}:undefined};})};
   });
   return {user,cohorts,cohort,weeks};
 });

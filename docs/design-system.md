@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -65,6 +65,18 @@ Place a quiet **Sync to Monday** action inside the selected week’s attendance 
 only in Official participants. Disable conflicting controls while syncing. Show concise
 checked/already-checked counts and an optional Sync details disclosure for unresolved
 participants; avoid persistent explanatory paragraphs.
+
+### Schedule planning
+
+Use the existing focused Instructions / Workspace composition. Ten simulated-week columns
+use one green selected state with a visible check and pressed semantics. Editable names
+and + Add task use ordinary controls; adding focuses the new task name and populated-row
+removal confirms. The semantic table
+has sticky task labels, minimum 44px cells and a labeled/focusable horizontal phone scroller.
+Read-only grids retain accessible Scheduled/Not scheduled text. Local Original/Revised
+buttons retain mounted grids and edit state; Revised opens first in review. Show only
+essential locked/preview state, save actions and actionable errors. Admin setup sections
+are Instructions / Original scenario / Private disruption / Starting schedule.
 
 ### Interface copy
 

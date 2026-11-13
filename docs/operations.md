@@ -1,11 +1,43 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-12
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
+
+## Schedule activity setup
+
+Apply `202611120001_schedule_planning.sql` before releasing the new code; no environment
+variables or dependencies are added. Save an Individual assignment in a draft week, open
+Activity setup → Schedule planning, author Instructions / Original scenario / Private
+disruption, and add/schedule the starting tasks. Save schedule activity independently,
+then publish through normal week controls. Do not publish the disruption in common
+instructions. Setup freezes once participants save or reveal. No real Week 4 content,
+cohort, schedule, scenario or submission is configured by the migration.
+
+Run `npm run test:schedules` against local Supabase with GAP_TEST_APP_URL pointing to a
+matching production-mode localhost build for setup/member/review/preview browser checks.
+Fixtures are disposable and scoped; never run them against hosted data. Include existing
+upload, Guided project, case, investigation, Viewer and program regressions, generated
+types, security-schema checks, unit/docs, lint/typecheck and production build. Hosted
+migration, real content setup, commit/push and deployment require separate authorization.
+See [ADR 0029](decisions/0029-schedule-planning.md).
+
+Local verification (2026-11-12): eight schedule entries pass, including 1280px/390px
+setup, preset editing, keyboard toggles/new-task focus, failed-save/lost-response retry,
+original/revised comparison, feedback/revision history and complete zero-write previews.
+Fourteen program, eight Viewer, nine Team, 13 Storage, nine Guided, seven case and nine
+investigation entries pass with browser coverage; four schema security checks pass.
+All 129 unit/documentation checks, lint, typecheck, generated-type consistency, Webpack
+production build and diff checks pass. Disposable fixture cleanup completed. Program's
+phone harness now opens the existing Review pane before entering feedback. These results
+use local fixture identities, not real Google acceptance. After separate release approval,
+migration `202611120001` was applied to hosted Supabase on 2026-11-12. Its receipt, four
+private RLS tables, three restricted RPCs, four triggers and two workflow constraints were
+verified. No schedule assignments were configured. Commit/push and deployment are
+authorized; real scenario setup/publication and signed-in acceptance remain separate.
 
 ## Private PDF reader
 
