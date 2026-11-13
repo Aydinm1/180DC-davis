@@ -70,9 +70,9 @@ participants; avoid persistent explanatory paragraphs.
 
 Schedule assignments use a compact title/deadline header and non-sticky Instructions /
 Workspace tabs inside a wide (up to 1600px) canvas. One chart toolbar combines Original /
-Revised, Project brief and Overview / Weeks / Days zoom. Project brief opens an accessible
-modal side panel on desktop and full-width dialog on phones; successful disruption reveal
-opens it automatically. Dismissal restores focus and retains work. Group the revised-plan
+Revised and Overview / Weeks / Days zoom, with Timeline / Resource allocation / Project brief
+tabs. Project brief displays text in the workspace; successful disruption reveal selects it.
+Switching tabs retains work. Group the revised-plan
 explanation and save/submit actions in one footer.
 
 Day-level schedules use one aligned table/timeline with a sticky two-tier Week 1–10 /
@@ -83,7 +83,7 @@ selectors show C1, C3 and open labeled Consultant 1–5 checkboxes; hours edit i
 Add task is the last table row. A direct delete button confirms removal. Keyboard users
 can focus Set dates for exact block controls; do not add a permanent task-actions menu.
 
-Use one green bar color, faint day lines, stronger week boundaries and subtle weekend
+Use green task bars and dark-yellow client-call bars, faint day lines, stronger week boundaries and subtle weekend
 shading. Task names stay in the left column, never repeated inside bars. Visible fills are
 24px tall with 44px interaction areas; selection outlines follow the fill. Resize handles
 appear on hover, selection or keyboard focus. Preserve accessible task/range labels.
@@ -506,3 +506,24 @@ Original and Revised share the selected Timeline/Resource allocation view and al
 week. Allocation headings name the displayed plan. Original totals derive from the frozen
 original after reveal; Revised totals derive from current revised rows. The same view/week
 continuity applies in read-only submission comparisons, without modifying either snapshot.
+
+Day-level starter tasks may have optional `category: "client_call"`, set by the admin
+Client call toggle while configuration remains editable. These task bars use dark yellow
+(#9b6b16), with a phone marker so color is not the only distinction. Missing category stays
+green. Saved original/revised plans and attempt snapshots preserve the category. Participant
+operations must preserve the admin-authored category for each starter task ID; new student
+tasks cannot declare one. This adds no new scheduling constraint or capacity behavior.
+
+Schedule Project brief is an in-page text tab beside Timeline and Resource allocation,
+not a drawer or modal. Successful reveal selects it; unsaved rows/explanation persist.
+Original scenario is always available, with disruption text included only after reveal.
+Existing legacy schedule activities use a Timeline / Project brief switch.
+
+Day-level Schedule planning assignments support an admin-only example schedule in Grading
+reference. Admins create original/revised plans, optionally copy original to revised, enter
+an explanation and use the same consultant/hour/allocation controls. Save example schedule
+is independent of rubric text and PDFs, with its own optimistic version and retry safety.
+Incomplete reference drafts may be saved; removal requires confirmation and explicit save.
+Review Example renders the private schedules and allocation alongside written guidance;
+any attached PDF remains available by protected download. Member, Viewer and preview
+payloads never receive this reference. Existing reference RLS and live admin checks apply.

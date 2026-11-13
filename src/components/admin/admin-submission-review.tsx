@@ -118,7 +118,7 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
         <label htmlFor="admin-feedback" className="mt-5 block text-sm font-semibold">Feedback {status==='revision_requested'?'(required)':'(optional)'}</label><textarea id="admin-feedback" rows={6} value={feedback} onChange={e=>{setFeedback(e.target.value);setMessage('');}} className="mt-2 w-full rounded-lg border border-border-strong p-3 text-base leading-7" placeholder="Add feedback…"/>
       </div>
       <div role="tabpanel" tabIndex={0} id={`${toolsId}-rubric-panel`} aria-labelledby={`${toolsId}-rubric`} hidden={tool!=='rubric'} className="h-full overflow-y-auto [overflow-wrap:anywhere]"><GradingReferenceContent reference={reference} kind="rubric" editHref={editHref}/></div>
-      <div role="tabpanel" tabIndex={0} id={`${toolsId}-example-panel`} aria-labelledby={`${toolsId}-example`} hidden={tool!=='example'} className={`h-full ${reference?.document?'overflow-hidden':'overflow-y-auto'} [overflow-wrap:anywhere]`}><GradingReferenceContent reference={reference} kind="example" editHref={editHref} loadPdf={exampleOpened}/></div>
+      <div role="tabpanel" tabIndex={0} id={`${toolsId}-example-panel`} aria-labelledby={`${toolsId}-example`} hidden={tool!=='example'} className={`h-full ${reference?.document&&!reference?.scheduleExample?'overflow-hidden':'overflow-y-auto'} [overflow-wrap:anywhere]`}><GradingReferenceContent reference={reference} kind="example" editHref={editHref} loadPdf={exampleOpened}/></div>
     </div>
     <footer className="shrink-0 border-t border-border bg-surface p-4">
       {message?<p role="status" className={`mb-3 text-sm font-semibold ${message==='Review saved.'?'text-success-text':'text-danger-text'}`}>{message}</p>:null}

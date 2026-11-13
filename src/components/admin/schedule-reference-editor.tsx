@@ -1,0 +1,19 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {ScheduleGrid} from '@/components/program/schedule-grid';
+import type {ScheduleDisplay} from '@/components/program/schedule-gantt';
+import type {ScheduleSnapshot,ScheduleTask} from '@/lib/schedules/types';
+import {saveScheduleGradingExample} from '@/lib/grading/actions';
+export function ScheduleReferenceEditor({assignmentId,initial,version=0,starter=[],onDirty}:{assignmentId:string;initial?:ScheduleSnapshot;version?:number;starter?:ScheduleTask[];onDirty:(id:string,dirty:boolean)=>void}){
+ const [example,setExample]=useState<ScheduleSnapshot|null>(initial??null),[baseline,setBaseline]=useState(JSON.stringify(initial??null)),[savedVersion,setSavedVersion]=useState(version),[plan,setPlan]=useState<'original'|'revised'>('original'),[display,setDisplay]=useState<ScheduleDisplay>({view:'timeline',week:1}),[saving,setSaving]=useState(false),[message,setMessage]=useState('');
+ const router=useRouter(),dirty=JSON.stringify(example)!==baseline;
+ useEffect(()=>{onDirty(`schedule-reference-${assignmentId}`,dirty||saving);return()=>onDirty(`schedule-reference-${assignmentId}`,false);},[assignmentId,dirty,saving,onDirty]);
+ async function save(){setSaving(true);try{const r=await saveScheduleGradingExample(assignmentId,example,savedVersion);if('error'in r)return setMessage(r.error);setSavedVersion(r.version);setBaseline(JSON.stringify(example));setMessage('Example schedule saved.');router.refresh();}catch{setMessage('Could not confirm the save. Your example is retained; retry.');}finally{setSaving(false);}}
+ return <section aria-label="Example schedule editor" className="space-y-4 border-t border-border pt-5"><div className="flex items-center justify-between gap-3"><h3 className="font-semibold">Example schedule</h3>{example?<button type="button" disabled={saving} className="min-h-11 text-sm font-semibold text-danger-text" onClick={()=>{if(window.confirm('Remove this example schedule? Save to confirm removal.'))setExample(null);}}>Remove example schedule</button>:null}</div>
+ {example?<><Button variant="secondary" disabled={saving||!example.original.length} onClick={()=>{if(!example.revised.length||window.confirm('Replace the revised example with a copy of the original example?')){setExample({...example,revised:structuredClone(example.original)});setPlan('revised');}}}>Copy original to revised</Button><ScheduleGrid rows={example[plan]} formatVersion={2} canClassifyTasks disabled={saving} display={display} onDisplayChange={setDisplay} planLabel={plan==='original'?'Example original plan':'Example revised plan'} label="Example schedule" onChange={rows=>setExample({...example,[plan]:rows})} toolbar={<nav aria-label="Example schedule plan" className="flex gap-1">{(['original','revised'] as const).map(p=><button type="button" key={p} aria-pressed={plan===p} className={`min-h-9 rounded-md px-3 text-sm font-semibold ${plan===p?'bg-success-bg text-action':'hover:bg-surface-subtle'}`} onClick={()=>setPlan(p)}>{p==='original'?'Original plan':'Revised plan'}</button>)}</nav>}/>
+ <label className="block text-sm font-semibold">Example explanation<textarea aria-label="Example schedule explanation" disabled={saving} rows={3} maxLength={2000} value={example.explanation} className="mt-2 block w-full rounded-md border border-border p-3 text-base font-normal" onChange={e=>setExample({...example,explanation:e.target.value})}/></label></>:<Button variant="secondary" disabled={saving} onClick={()=>{const rows=starter.filter(r=>'blocks'in r);setExample({formatVersion:2,original:structuredClone(rows),revised:structuredClone(rows),explanation:''});}}>Create example schedule</Button>}
+ <Button disabled={!dirty||saving} onClick={save}>{saving?'Saving…':'Save example schedule'}</Button>{message?<p role="status" className="text-sm">{message}</p>:null}
+ </section>;
+}

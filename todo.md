@@ -10,6 +10,17 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Add private admin-authored schedule examples to grading references and move Project
+  brief into a text tab. Ten schedule entries pass with desktop/phone authoring, review,
+  allocation, feedback retention, privacy and stale/retry saves. Existing grading DB tests
+  pass (browser cases separately covered by schedule suite); 137 unit/docs tests, lint,
+  generated-type checks and production build pass. Hosted migrations applied and verified after approval; commit/push/deployment authorized.
+
+- [x] Add admin-authored dark-yellow client-call task markers. Nine local schedule entries
+  pass, covering setup/save/reload, rendering, snapshots and forged-marker rejection.
+  All 136 unit/docs checks, lint, generated-type consistency and production build pass.
+  Hosted client-call migration applied and verified after approval; commit/push/deployment authorized. Real configuration remains separate.
+
 - [x] Preserve allocation view/week across original/revised switches and label each plan.
   Nine schedule entries pass on desktop/phone, verifying independent frozen/revised totals,
   same-week comparisons and retained admin feedback. 136 unit/docs checks, lint, production

@@ -580,8 +580,7 @@ or operation changes.
 
 Schedule presentation receives a small assignment heading DTO rather than a second
 workspace loader. Its compact navigation is opt-in; other activity navigation is unchanged.
-The brief uses a native modal dialog with focus restoration; exact range controls use an
-anchored top-layer popover. Shared grids accept a client toolbar slot so plan navigation
+The brief is an in-page tab; exact range controls use an anchored top-layer popover. Shared grids accept a client toolbar slot so plan navigation
 and zoom live together in editing and comparison. Brief visibility and zoom are local state. The Gantt measures available width using
 ResizeObserver, retains horizontal day position across zoom, and uses the current day
 scale for pointer calculations. No schedule schema or server operation changes are needed.
@@ -603,3 +602,24 @@ Original and Revised share the selected Timeline/Resource allocation view and al
 week. Allocation headings name the displayed plan. Original totals derive from the frozen
 original after reveal; Revised totals derive from current revised rows. The same view/week
 continuity applies in read-only submission comparisons, without modifying either snapshot.
+
+Day-level starter tasks may have optional `category: "client_call"`, set by the admin
+Client call toggle while configuration remains editable. These task bars use dark yellow
+(#9b6b16), with a phone marker so color is not the only distinction. Missing category stays
+green. Saved original/revised plans and attempt snapshots preserve the category. Participant
+operations must preserve the admin-authored category for each starter task ID; new student
+tasks cannot declare one. This adds no new scheduling constraint or capacity behavior.
+
+Schedule Project brief is an in-page text tab beside Timeline and Resource allocation,
+not a drawer or modal. Successful reveal selects it; unsaved rows/explanation persist.
+Original scenario is always available, with disruption text included only after reveal.
+Existing legacy schedule activities use a Timeline / Project brief switch.
+
+Day-level Schedule planning assignments support an admin-only example schedule in Grading
+reference. Admins create original/revised plans, optionally copy original to revised, enter
+an explanation and use the same consultant/hour/allocation controls. Save example schedule
+is independent of rubric text and PDFs, with its own optimistic version and retry safety.
+Incomplete reference drafts may be saved; removal requires confirmation and explicit save.
+Review Example renders the private schedules and allocation alongside written guidance;
+any attached PDF remains available by protected download. Member, Viewer and preview
+payloads never receive this reference. Existing reference RLS and live admin checks apply.

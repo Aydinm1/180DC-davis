@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import {ScheduleReferenceEditor} from './schedule-reference-editor';
+import {ScheduleComparison} from '@/components/program/schedule-comparison';
+import type {ScheduleTask} from '@/lib/schedules/types';
 import { useRouter } from 'next/navigation';
 import {PdfPreview} from './pdf-preview';
 import { Button } from '@/components/ui/button';
@@ -71,8 +74,8 @@ function ExamplePdf({ reference, onDirty }: { reference: GradingReference; onDir
   </section>;
 }
 
-export function GradingReferenceEditor({ assignmentId, initial, persisted, onDirty, expanded = false }: {
-  assignmentId: string; initial?: GradingReference; persisted: boolean; onDirty: (id: string, dirty: boolean) => void; expanded?: boolean;
+export function GradingReferenceEditor({ assignmentId, initial, persisted, onDirty, expanded = false, scheduleStarter }: {
+  assignmentId: string; initial?: GradingReference; persisted: boolean; onDirty: (id: string, dirty: boolean) => void; expanded?: boolean; scheduleStarter?:ScheduleTask[];
 }) {
   const [source, setSource] = useState(initial ?? emptyReference(assignmentId));
   const [rubric, setRubric] = useState(source.rubric), [example, setExample] = useState(source.example);
@@ -104,6 +107,7 @@ export function GradingReferenceEditor({ assignmentId, initial, persisted, onDir
       </fieldset>
       <div className="flex flex-wrap items-center gap-4"><Button disabled={!dirty || saving} onClick={save}>{saving ? 'Saving reference…' : 'Save grading reference'}</Button>{dirty ? <span className="text-sm text-warning-text">Unsaved reference text</span> : null}</div>
       {message ? <p role="status" className="text-sm">{message}</p> : null}
+      {scheduleStarter!==undefined?<ScheduleReferenceEditor assignmentId={assignmentId} initial={initial?.scheduleExample} version={initial?.scheduleVersion} starter={scheduleStarter} onDirty={onDirty}/>:null}
       <ExamplePdf reference={source} onDirty={setPdfDirty} />
     </div>}
   </details>;
@@ -113,6 +117,7 @@ export function GradingReferenceContent({reference,kind,editHref,loadPdf=false}:
   const text=kind==='rubric'?reference?.rubric:reference?.example;
   const document=kind==='example'?reference?.document:undefined;
   const edit=<Link href={editHref} className="inline-flex min-h-11 items-center text-sm font-semibold text-action">{reference?'Edit reference →':'Add grading reference →'}</Link>;
+  if(kind==='example'&&reference?.scheduleExample)return <div className="p-4"><div className="flex justify-end">{edit}</div>{text?.trim()?<AssignmentBrief instructions={text} format="markdown"/>:null}<ScheduleComparison snapshot={reference.scheduleExample}/>{document?<a download href={`/api/grading-examples/${document.id}/download`} className="inline-flex min-h-11 items-center font-semibold text-action">Download example PDF</a>:null}</div>;
   if(document)return <div className="flex h-full min-h-0 flex-col">
     <div className="shrink-0 px-4 pt-2">{text?.trim()?<details className="border-b border-border"><summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold">Written example</summary><div className="max-h-40 overflow-y-auto pb-4"><AssignmentBrief instructions={text} format="markdown"/></div></details>:null}<div className="flex justify-end">{edit}</div></div>
     <div className="min-h-0 flex-1">{loadPdf?<PdfPreview resource={{kind:'example',id:document.id,name:document.name}} fill/>:null}</div>

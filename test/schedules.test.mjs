@@ -20,7 +20,7 @@ test('schedule operations require bounded content, versions and submission expla
 
 test('day schedules require valid ranges, consultants and total effort at completion',()=>{
  const day={id:row.id,name:'Research',blocks:[{id:'00000000-0000-4000-8000-000000000002',start:2,end:5}],consultants:[1,3],hours:8.25};
- assert.equal(scheduleRowsError([day],true,2),undefined);
+ assert.equal(scheduleRowsError([day],true,2),undefined);assert.equal(scheduleRowsError([{...day,category:'client_call'}],true,2),undefined);assert.ok(scheduleRowsError([{...day,category:'red'}],true,2));assert.ok(scheduleRowsError([{...day,category:null}],true,2));
  const starter={...day,consultants:[],hours:null};
  assert.equal(scheduleRowsError([starter],true,2,false),undefined);
  assert.ok(scheduleRowsError([starter],true,2));

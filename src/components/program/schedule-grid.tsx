@@ -1,5 +1,5 @@
 'use client';
-import {useId,type ReactNode} from 'react';
+import {useId,useState,type ReactNode} from 'react';
 import {Button} from '@/components/ui/button';
 import type {ScheduleRow,ScheduleTask,ScheduleFormat,DayScheduleRow} from '@/lib/schedules/types';
 import {ScheduleGantt,type ScheduleDisplay} from './schedule-gantt';
@@ -16,6 +16,9 @@ function WeekScheduleGrid({rows,onChange,disabled=false,label='Project schedule'
  </div>;
 }
 
-export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedule',formatVersion=1,toolbar,display,onDisplayChange,planLabel}:{display?:ScheduleDisplay;onDisplayChange?:(display:ScheduleDisplay)=>void;planLabel?:string;toolbar?:ReactNode;rows:ScheduleTask[];onChange?:(rows:ScheduleTask[])=>void;disabled?:boolean;label?:string;formatVersion?:ScheduleFormat}){
- return formatVersion===2?<ScheduleGantt display={display} onDisplayChange={onDisplayChange} planLabel={planLabel} toolbar={toolbar} rows={rows as DayScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>:<>{toolbar}<WeekScheduleGrid rows={rows as ScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/></>;
+export function ScheduleGrid({rows,onChange,disabled=false,label='Project schedule',formatVersion=1,toolbar,display,onDisplayChange,planLabel,canClassifyTasks=false,brief}:{brief?:ReactNode;canClassifyTasks?:boolean;display?:ScheduleDisplay;onDisplayChange?:(display:ScheduleDisplay)=>void;planLabel?:string;toolbar?:ReactNode;rows:ScheduleTask[];onChange?:(rows:ScheduleTask[])=>void;disabled?:boolean;label?:string;formatVersion?:ScheduleFormat}){
+ const [localView,setLocalView]=useState<'timeline'|'brief'>('timeline'),id=useId();
+ const legacyView=display?.view??localView;
+ function choose(view:'timeline'|'brief'){if(onDisplayChange)onDisplayChange({view,week:display?.week??1});else setLocalView(view);}
+ return formatVersion===2?<ScheduleGantt brief={brief} canClassifyTasks={canClassifyTasks} display={display} onDisplayChange={onDisplayChange} planLabel={planLabel} toolbar={toolbar} rows={rows as DayScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/>:<>{toolbar}{brief?<><div role="tablist" aria-label="Planning view" className="my-3 flex gap-2">{(['timeline','brief'] as const).map(v=><button type="button" role="tab" key={v} id={`${id}-${v}`} aria-selected={legacyView===v} aria-controls={`${id}-${v}-panel`} onClick={()=>choose(v)} className={`min-h-11 rounded-md px-3 text-sm font-semibold ${legacyView===v?'bg-success-bg text-action':'hover:bg-surface-subtle'}`}>{v==='timeline'?'Timeline':'Project brief'}</button>)}</div><div role="tabpanel" aria-labelledby={`${id}-brief`} id={`${id}-brief-panel`} hidden={legacyView!=='brief'} className="p-5">{brief}</div></>:null}<div role="tabpanel" aria-labelledby={brief?`${id}-timeline`:undefined} id={`${id}-timeline-panel`} hidden={!!brief&&legacyView==='brief'}><WeekScheduleGrid rows={rows as ScheduleRow[]} onChange={onChange} disabled={disabled} label={label}/></div></>;
 }

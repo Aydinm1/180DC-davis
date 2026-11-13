@@ -5,6 +5,12 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added private, independently saved example schedules to grading references, with
+  original/revised plans and resource allocation. Moved Project brief into a text tab.
+
+- Added an admin Client call toggle for dark-yellow schedule tasks, retained in member
+  plans and submission history with server-enforced admin ownership of the marker.
+
 - Keep allocation view and week selected when comparing Original/Revised plans, with
   explicit plan headings and independent original/revised totals.
 

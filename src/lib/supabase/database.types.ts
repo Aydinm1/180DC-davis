@@ -1165,6 +1165,8 @@ export type Database = {
           example: string
           file_version: number
           rubric: string
+          schedule_example: Json | null
+          schedule_version: number
           text_version: number
           updated_at: string
         }
@@ -1173,6 +1175,8 @@ export type Database = {
           example?: string
           file_version?: number
           rubric?: string
+          schedule_example?: Json | null
+          schedule_version?: number
           text_version?: number
           updated_at?: string
         }
@@ -1181,6 +1185,8 @@ export type Database = {
           example?: string
           file_version?: number
           rubric?: string
+          schedule_example?: Json | null
+          schedule_version?: number
           text_version?: number
           updated_at?: string
         }
@@ -2051,6 +2057,8 @@ export type Database = {
           example: string
           file_version: number
           rubric: string
+          schedule_example: Json | null
+          schedule_version: number
           text_version: number
           updated_at: string
         }
@@ -2062,6 +2070,10 @@ export type Database = {
         }
       }
       save_program_week: { Args: { p_data: Json }; Returns: string }
+      save_schedule_grading_example: {
+        Args: { p_assignment: string; p_example: Json; p_version: number }
+        Returns: Json
+      }
       schedule_review: { Args: { p_submission: string }; Returns: Json }
       set_assignment_completion: {
         Args: {

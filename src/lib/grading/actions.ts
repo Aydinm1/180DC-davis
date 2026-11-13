@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { storageServer, readBounded } from '@/lib/uploads/server';
 import { fileError } from '@/lib/uploads/format';
 import { inspectFile } from '@/lib/uploads/inspect';
-import { isUuid, referenceError, type GradingReference, type ExampleResult, type ExampleDocument } from './types';
+import { isUuid, referenceError, scheduleReferenceError, type GradingReference, type ExampleResult, type ExampleDocument } from './types';
 
 const unavailable = 'Example PDF storage is unavailable. Retry; your reference text can still be saved separately.';
 function outcome(data: unknown): ExampleResult {
@@ -97,4 +97,14 @@ export async function removeExample(assignmentId: string, version: number): Prom
     revalidatePath('/admin', 'layout');
     return { version: Number(r.data.version) };
   } catch { return { error: 'Could not remove example. Please retry.' }; }
+}
+
+export async function saveScheduleGradingExample(assignmentId:string,example:unknown,version:number):Promise<{version:number}|{error:string}>{
+ await requireUser(true);
+ if(!isUuid(assignmentId)||!Number.isSafeInteger(version)||version<0)return {error:'Reload before saving.'};
+ const invalid=scheduleReferenceError(example);if(invalid)return {error:invalid};
+ try{const db=await createClient();const r=await db.rpc('save_schedule_grading_example',{p_assignment:assignmentId,p_example:example as import('@/lib/supabase/database.types').Json,p_version:version});
+ if(r.error)return {error:r.error.code==='40001'?'Another admin changed this schedule. Your edits are retained; copy them before reloading.':'Could not save the example schedule. Your edits are retained; retry.'};
+ revalidatePath('/admin','layout');return {version:(r.data as {version:number}).version};
+ }catch{return {error:'Could not confirm the save. Your edits are retained; retry.'};}
 }

@@ -747,3 +747,24 @@ configuration/run versions. Snapshot format metadata is checked against immutabl
 and returned by narrow reads/review. No direct grants or eligibility broadening is added.
 Upgrades require a draft week and no existing work/upload/submission history, cannot revert
 format 2 to 1, and never mutate a participant's stored original. See ADR 0030.
+
+Day-level starter tasks may have optional `category: "client_call"`, set by the admin
+Client call toggle while configuration remains editable. These task bars use dark yellow
+(#9b6b16), with a phone marker so color is not the only distinction. Missing category stays
+green. Saved original/revised plans and attempt snapshots preserve the category. Participant
+operations must preserve the admin-authored category for each starter task ID; new student
+tasks cannot declare one. This adds no new scheduling constraint or capacity behavior.
+
+Schedule Project brief is an in-page text tab beside Timeline and Resource allocation,
+not a drawer or modal. Successful reveal selects it; unsaved rows/explanation persist.
+Original scenario is always available, with disruption text included only after reveal.
+Existing legacy schedule activities use a Timeline / Project brief switch.
+
+Day-level Schedule planning assignments support an admin-only example schedule in Grading
+reference. Admins create original/revised plans, optionally copy original to revised, enter
+an explanation and use the same consultant/hour/allocation controls. Save example schedule
+is independent of rubric text and PDFs, with its own optimistic version and retry safety.
+Incomplete reference drafts may be saved; removal requires confirmation and explicit save.
+Review Example renders the private schedules and allocation alongside written guidance;
+any attached PDF remains available by protected download. Member, Viewer and preview
+payloads never receive this reference. Existing reference RLS and live admin checks apply.

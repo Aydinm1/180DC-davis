@@ -7,6 +7,35 @@
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
 been configured or verified.
 
+## Private schedule grading examples and text brief
+
+Apply `202611130002_schedule_grading_examples.sql` after the pending client-call migration
+before releasing the example editor. It adds nullable private example JSON, an independent
+version and an admin-only save RPC; existing references start empty. It neither creates
+participant work nor configures a real assignment. Admins author this under Grading
+reference → Example schedule; Save example schedule is independent of text/PDF saves.
+
+Local verification (2026-11-13): ten schedule entries pass, including desktop/phone authoring,
+private Example review/allocation, text brief tabs, failure/input retention and reference
+authorization/version/retry checks. Existing grading DB regressions pass; their standalone
+HTTP/browser cases were skipped, while the schedule suite covers the new browser paths.
+137 unit/docs tests, lint, generated types and production build pass. Fixtures were cleaned
+and screenshots inspected. No hosted migrations or release performed.
+
+## Client-call schedule styling
+
+Before releasing the Client call toggle, apply `202611130001_schedule_client_calls.sql`.
+It extends JSON validation and enforces admin-authored categories in participant operations;
+no stored rows are rewritten. Existing missing categories remain ordinary green tasks.
+Configuration still requires a draft week without participant activity. No real assignments
+are marked automatically. Hosted migration and release require separate authorization.
+
+Local verification (2026-11-13): nine schedule/browser entries, 136 unit/docs tests, lint,
+generated-type consistency and production build pass. Admin toggle/save/reload, dark-yellow
+member rendering, immutable history and forged marker rejection are covered. Fixtures
+cleaned. The local CLI found older applied functions without migration receipts; only the
+new migration was applied directly through local psql, leaving unrelated receipts untouched.
+
 ## Direct schedule controls verification
 
 Local verification (2026-11-13): nine schedule entries pass after title resizing, row
@@ -1470,3 +1499,9 @@ change. For production-build program checks, set
 development action manifest. A transient Teams confirmation timeout passed on rerun.
 The separate legacy enrollment harness could not start without its labeled disposable
 PostgreSQL container (`GAP_TEST_CONTAINER`); it was not redirected to the live local DB.
+
+Release verification (2026-11-13): hosted migrations 202611130001 and 202611130002 applied
+after explicit approval. Existing grading text/PDF metadata, schedule runs and attempts
+retained matching counts/fingerprints. New columns, admin-only RPC grants, retained RLS,
+participant marker checks and migration receipts verified. Commit/push/deployment authorized;
+no real assignment setup or example answer was populated.

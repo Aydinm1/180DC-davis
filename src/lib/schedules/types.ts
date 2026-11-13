@@ -1,7 +1,7 @@
 import type { Assignment, SubmissionStatus } from '@/lib/program/types';
 export type ScheduleRow = {id:string;name:string;weeks:number[]};
 export type ScheduleBlock = {id:string;start:number;end:number};
-export type DayScheduleRow = {id:string;name:string;blocks:ScheduleBlock[];consultants:number[];hours:number|null};
+export type DayScheduleRow = {category?:'client_call';id:string;name:string;blocks:ScheduleBlock[];consultants:number[];hours:number|null};
 export type ScheduleTask = ScheduleRow|DayScheduleRow;
 export type ScheduleFormat = 1|2;
 export type ScheduleConfig = {overview:string;scenario:string;disruption:string;formatVersion?:ScheduleFormat;starter:ScheduleTask[]};
@@ -39,7 +39,8 @@ export function scheduleInputError(action:unknown,value:unknown):string|undefine
 
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function dayRowError(row:DayScheduleRow,complete:boolean,requireStaff:boolean):string|undefined {
- if(Object.keys(row).some(k=>!['id','name','blocks','consultants','hours'].includes(k)))return 'Invalid task fields.';
+ if(Object.keys(row).some(k=>!['id','name','blocks','consultants','hours','category'].includes(k)))return 'Invalid task fields.';
+ if(row.category!==undefined&&row.category!=='client_call')return 'Invalid task category.';
  if(!Array.isArray(row.blocks)||row.blocks.length>35||complete&&!row.blocks.length)return 'Schedule each task within the ten project weeks.';
  const ids=new Set<string>();let previousEnd=-1;
  for(const block of row.blocks){

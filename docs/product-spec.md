@@ -632,9 +632,8 @@ history prevents workflow conversion. No real Week 4 content is populated automa
 
 Students use Instructions / Workspace with ten simulated project weeks, each Monday–Sunday
 without calendar dates. Workspace uses a compact header, wide chart with a unified plan/brief/zoom toolbar
-and grouped explanation/submission footer. Project brief opens a side panel (full-width
-on phones). Revealing the disruption opens its brief;
-closing it preserves all work. Local Overview / Weeks / Days zoom defaults to Weeks and
+and grouped explanation/submission footer. Project brief is a text tab. Revealing the disruption selects the brief;
+switching back preserves all work. Local Overview / Weeks / Days zoom defaults to Weeks and
 changes only presentation, preserving scheduled days and unsaved input.
 New activities use format 2: green bars snap to 70 day positions.
 Drag empty space to create a bar, its body to move, or its ends to resize across weeks.
@@ -702,3 +701,24 @@ Original and Revised share the selected Timeline/Resource allocation view and al
 week. Allocation headings name the displayed plan. Original totals derive from the frozen
 original after reveal; Revised totals derive from current revised rows. The same view/week
 continuity applies in read-only submission comparisons, without modifying either snapshot.
+
+Day-level starter tasks may have optional `category: "client_call"`, set by the admin
+Client call toggle while configuration remains editable. These task bars use dark yellow
+(#9b6b16), with a phone marker so color is not the only distinction. Missing category stays
+green. Saved original/revised plans and attempt snapshots preserve the category. Participant
+operations must preserve the admin-authored category for each starter task ID; new student
+tasks cannot declare one. This adds no new scheduling constraint or capacity behavior.
+
+Schedule Project brief is an in-page text tab beside Timeline and Resource allocation,
+not a drawer or modal. Successful reveal selects it; unsaved rows/explanation persist.
+Original scenario is always available, with disruption text included only after reveal.
+Existing legacy schedule activities use a Timeline / Project brief switch.
+
+Day-level Schedule planning assignments support an admin-only example schedule in Grading
+reference. Admins create original/revised plans, optionally copy original to revised, enter
+an explanation and use the same consultant/hour/allocation controls. Save example schedule
+is independent of rubric text and PDFs, with its own optimistic version and retry safety.
+Incomplete reference drafts may be saved; removal requires confirmation and explicit save.
+Review Example renders the private schedules and allocation alongside written guidance;
+any attached PDF remains available by protected download. Member, Viewer and preview
+payloads never receive this reference. Existing reference RLS and live admin checks apply.

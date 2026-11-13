@@ -107,3 +107,7 @@ do not override a later source-of-truth update and superseding ADR.
 - [ADR 0007: Bring authentication into P5](0007-authentication-in-p5.md)
 
 - [ADR 0031: Derived schedule resource allocation](0031-schedule-resource-allocation.md)
+
+- [ADR 0032: Admin-authored client-call markers](0032-schedule-client-call-markers.md)
+
+- [ADR 0033: Private schedule grading examples](0033-private-schedule-grading-examples.md)
