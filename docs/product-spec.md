@@ -704,7 +704,8 @@ continuity applies in read-only submission comparisons, without modifying either
 
 Day-level starter tasks may have optional `category: "client_call"`, set by the admin
 Client call toggle while configuration remains editable. These task bars use dark yellow
-(#9b6b16), with a phone marker so color is not the only distinction. Missing category stays
+(#9b6b16), with an accessible Client call description rather than a visible phone icon
+in member/read-only rows. Missing category stays
 green. Saved original/revised plans and attempt snapshots preserve the category. Participant
 operations must preserve the admin-authored category for each starter task ID; new student
 tasks cannot declare one. This adds no new scheduling constraint or capacity behavior.

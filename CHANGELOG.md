@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Removed phone icons and tooltips from member/read-only schedule rows; client calls retain dark-yellow bars.
+
 - Aligned task-reorder indicators with the actual before/after drop position, including the end of the chart.
 
 - Kept empty days between nearby Gantt bars clickable, so filling a gap merges the blocks.

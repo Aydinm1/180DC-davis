@@ -515,7 +515,7 @@ continuity applies in read-only submission comparisons, without modifying either
 
 Day-level starter tasks may have optional `category: "client_call"`, set by the admin
 Client call toggle while configuration remains editable. These task bars use dark yellow
-(#9b6b16), with a phone marker so color is not the only distinction. Missing category stays
+(#9b6b16), with an accessible Client call label. Missing category stays
 green. Saved original/revised plans and attempt snapshots preserve the category. Participant
 operations must preserve the admin-authored category for each starter task ID; new student
 tasks cannot declare one. This adds no new scheduling constraint or capacity behavior.
@@ -539,3 +539,7 @@ examples. Keep existing name, day/block and staffing validation. Saved data rema
 by existing RPC byte limits (200 KB participant operations, 1 MB configuration/reference
 operations); validators also reject a task array exceeding 1 MB. Add task is disabled only
 while editing is otherwise unavailable, not because a task count was reached.
+
+Member and read-only Gantt task labels omit phone icons and their tooltips. Dark-yellow
+bars identify client calls; the task’s accessible description retains Client call for
+assistive technology. Editable admin setup retains its Client call toggle.

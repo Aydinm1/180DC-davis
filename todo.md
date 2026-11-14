@@ -10,6 +10,10 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Remove member/read-only client-call icons while preserving bar colors, accessible
+  descriptions and admin controls. 139 unit/docs checks, lint and production build pass.
+  Commit/push/deployment authorized; no migration required.
+
 - [x] Align task-reorder insertion feedback with before/after placement and the final row.
   Local browser regression verifies the bottom indicator and saved ordering.
 
