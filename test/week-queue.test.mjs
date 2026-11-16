@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {buildWeekQueue,selectQueueWeek} from '../src/lib/program/week-queue.ts';
+import {buildReviewQueue,selectReviewWeek,buildWeekQueue,selectQueueWeek} from '../src/lib/program/week-queue.ts';
 const assignment=id=>({id,title:id,instructions:'Work',dueAt:'2026-12-01T00:00:00Z',weekNumber:1});
 const enrollment=(id,isTest=false)=>({id,personId:id,cohortId:'cohort',participationStatus:'enrolled',advancementStatus:'pending',isTest});
 const state={people:[{id:'a',fullName:'A'},{id:'b',fullName:'B'},{id:'test',fullName:'Test'}],cohorts:[],approvedMembers:[],enrollments:[enrollment('a'),enrollment('b'),enrollment('test',true)],weeks:[{id:'week',cohortId:'cohort',weekNumber:1,title:'Workshop',publicationState:'published',assignments:[assignment('one'),assignment('two')]}],submissions:[]};
@@ -32,4 +32,14 @@ test('review counts represent current received submissions, not completion, peop
  assert.deepEqual(result.assignments.map(a=>[a.received,a.awaiting]),[[2,1],[1,0]]);
  const testQueue=buildWeekQueue(s,'cohort','week',now,'test');assert.equal(testQueue.received,1);assert.equal(testQueue.awaiting,1);
  const empty=buildWeekQueue({...state,enrollments:[]},'cohort','week',now);assert.equal(empty.received,0);assert.equal(empty.awaiting,0);
+});
+
+test('all-week inbox includes every published week but excludes drafts, other cohorts and test work',()=>{
+ const s={...state,weeks:[...state.weeks,{...state.weeks[0],id:'week2',weekNumber:2,assignments:[assignment('three')]},{...state.weeks[0],id:'draft',publicationState:'draft',assignments:[assignment('secret')]},{...state.weeks[0],id:'other',cohortId:'other',assignments:[assignment('outside')]}],submissions:[attempt('first','a','one','submitted'),attempt('next','b','three','submitted'),attempt('old','b','three','submitted',false),attempt('test','test','three','submitted'),attempt('hidden','a','secret','submitted')]};
+ const inbox=buildReviewQueue(s,'cohort','all',now);
+ assert.equal(inbox.awaiting,2);assert.equal(inbox.received,2);assert.equal(inbox.participants,2);assert.equal(inbox.rows.length,6);
+ assert.deepEqual(inbox.weeks.map(w=>w.week.id),['week','week2']);assert.deepEqual(inbox.assignments.map(a=>a.assignment.id),['one','two','three']);
+ assert.equal(buildReviewQueue(s,'cohort','week',now).awaiting,1);assert.equal(buildReviewQueue(s,'cohort','all',now,'test').awaiting,1);
+ assert.equal(buildReviewQueue(s,'other','all',now).participants,0);
+ assert.equal(selectReviewWeek(s,'cohort'),undefined);assert.equal(selectReviewWeek(s,'cohort','all'),undefined);assert.equal(selectReviewWeek(s,'cohort',null,'one').id,'week');assert.equal(selectReviewWeek(s,'cohort','week2').id,'week2');
 });

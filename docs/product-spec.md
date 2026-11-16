@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-13
+**Last updated:** 2026-11-16
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -75,16 +75,16 @@ private content. Existing favicon remains unchanged.
 
 ### Week-first admin overview
 
-The review overview defaults to the latest published week with assignments and All
-assignments. A compact week panel leads with received-submission and awaiting-review
-counts, followed by ordered assignment rows with their received/awaiting counts and
-drill-down. Do not show participant completion percentages, advancement, promotion or
+The review overview defaults to All weeks and All assignments in the selected cohort.
+It combines current submissions from published weeks, with compact per-week received/awaiting
+counts and week drill-down. A selected week retains ordered assignment summaries and
+assignment drill-down. Draft weeks remain excluded. Do not show participant completion percentages, advancement, promotion or
 cohort-outcome summaries on the review page; outcome management remains in Members.
 Received counts include one current attempt per enrolled person × assignment, regardless
 of review status, not retained historical attempts. All submissions excludes missing work;
 Not submitted is a separate filter for outstanding obligations. Official counts exclude
 test enrollments; test views show only test submissions, identified by the selected Test scope.
-Week, assignment when selected,
+Week (including All weeks), assignment when selected,
 status, name/email search and audience persist through review/back/next navigation.
 No work awaiting review does not mean week completion; this is a calculation rule, not
 persistent explanatory UI copy. Empty queues say “No submissions awaiting review.” Search and status controls sit

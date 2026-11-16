@@ -6,7 +6,7 @@ import { AssignmentBrief } from '@/components/program/assignment-brief';
 import { saveGuidedProjectSafely as saveGuidedProject } from '@/lib/guided/client';
 import { pendingDirectionRequest, projectProgressLabel, projectQuestion } from '@/lib/guided/admin-progress';
 import { useLocalSearchParams } from '@/lib/navigation/local-query';
-import { selectQueueWeek } from '@/lib/program/week-queue';
+import { selectReviewWeek } from '@/lib/program/week-queue';
 import type { GuidedProject, GuidedTeam, DirectionRequest, Research } from '@/lib/guided/types';
 import { useAdminWorkspace } from './admin-workspace';
 
@@ -57,8 +57,8 @@ function TeamRequest({entry,team,proposal,weekNumber,onDecided}:{entry:ProjectIn
 
 export function ProjectDirectionRequests({entries}:{entries:ProjectInboxEntry[]}) {
  const workspace=useAdminWorkspace(),params=useLocalSearchParams(),[message,setMessage]=useState('');
- const week=selectQueueWeek(workspace,workspace.selectedCohortId,params.get('week'),params.get('assignment'));
- const filtered=entries.filter(e=>e.cohortId===workspace.selectedCohortId&&e.weekId===week?.id&&(!params.get('assignment')||e.assignmentId===params.get('assignment')));
+ const week=selectReviewWeek(workspace,workspace.selectedCohortId,params.get('week'),params.get('assignment'));
+ const filtered=entries.filter(e=>e.cohortId===workspace.selectedCohortId&&(!week||e.weekId===week.id)&&(!params.get('assignment')||e.assignmentId===params.get('assignment')));
  if(!filtered.length)return null;
  const test=params.get('audience')==='test';
  const teams=filtered.flatMap(entry=>(entry.project.teams??[]).filter(team=>team.isTest===test&&team.members>0).map(team=>({entry,team,proposal:pendingDirectionRequest(team),weekNumber:workspace.weeks.find(w=>w.id===entry.weekId)?.weekNumber})));

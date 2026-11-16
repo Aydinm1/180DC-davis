@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-13
+**Last updated:** 2026-11-16
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -623,3 +623,8 @@ Incomplete reference drafts may be saved; removal requires confirmation and expl
 Review Example renders the private schedules and allocation alongside written guidance;
 any attached PDF remains available by protected download. Member, Viewer and preview
 payloads never receive this reference. Existing reference RLS and live admin checks apply.
+
+Review queue scope uses `week=all` for the cohort inbox, defaulting there when neither
+a week nor an assignment bookmark is supplied. The shared published-week projection
+feeds overview and review-next navigation, preserving cohort, assignment, status, search
+and audience; assignment-only legacy bookmarks continue to resolve their owning week.

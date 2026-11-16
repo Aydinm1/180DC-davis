@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/ui/container";
 import { StateMessage } from "@/components/ui/state-message";
 import { filterSubmissionRows, getNextAwaitingSubmission, type AdminQueueFilter } from "@/lib/program/admin";
-import { buildWeekQueue } from '@/lib/program/week-queue';
+import { buildReviewQueue } from '@/lib/program/week-queue';
 
 import { formatSubmissionTime } from "@/lib/program/state";
 import { submissionDisplayName, validateReviewFeedback } from "@/lib/program/submission";
@@ -69,14 +69,15 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
   const currentSubmission = submission;
   const history = workspace.submissions.filter((item) => (team?item.teamId===team.id:item.enrollmentId === submission.enrollmentId) && item.assignmentId === submission.assignmentId && !item.isCurrent).toSorted((a, b) => b.submittedAt.localeCompare(a.submittedAt));
   const assignment = assignmentsForWeek(week).find((item) => item.id === submission.assignmentId);
-  const weekWide = params.get('week') === week.id && !params.has('assignment');
-  const allRows = buildWeekQueue(workspace,workspace.selectedCohortId,week.id,new Date(),enrollment.isTest?'test':'official').rows;
+  const allWeeks=params.get('week')==='all';
+  const weekWide = (allWeeks||params.get('week') === week.id) && !params.has('assignment');
+  const allRows = buildReviewQueue(workspace,workspace.selectedCohortId,allWeeks?'all':week.id,new Date(),enrollment.isTest?'test':'official').rows;
   const requestedFilter = params.get('status');
   const queueFilter: AdminQueueFilter = ['awaiting_review','revision_requested','missing','complete','all'].includes(requestedFilter??'') ? requestedFilter as AdminQueueFilter : 'awaiting_review';
   const queueRows = filterSubmissionRows(weekWide ? allRows : allRows.filter(r=>r.assignment.id===submission.assignmentId),queueFilter,params.get('q')??'');
   const nextSubmission = getNextAwaitingSubmission(queueRows, submission.id);
   const backParams = new URLSearchParams(params.toString());
-  backParams.set("cohort", workspace.selectedCohortId); backParams.set("week", week.id);
+  backParams.set("cohort", workspace.selectedCohortId); backParams.set("week", allWeeks?'all':week.id);
   if (weekWide) backParams.delete('assignment'); else backParams.set("assignment", submission.assignmentId);
   if (enrollment.isTest) backParams.set('audience','test'); else backParams.delete('audience');
   const backHref = `/admin?${backParams.toString()}#submissions`;

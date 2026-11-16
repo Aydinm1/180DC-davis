@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-13
+**Last updated:** 2026-11-16
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,11 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Default review inbox to All weeks, preserving scoped filters, review navigation
+  and official/test separation. Five activity/browser entries pass without skips at
+  desktop/phone widths, including cross-week Save & review next. 140 unit/docs checks,
+  lint, typecheck and production build pass. Commit/push/deployment authorized; no migration required.
 
 - [x] Remove member/read-only client-call icons while preserving bar colors, accessible
   descriptions and admin controls. 139 unit/docs checks, lint and production build pass.

@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-13
+**Last updated:** 2026-11-16
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -421,8 +421,8 @@ descriptive filenames.
 
 ## Accessibility baseline
 
-Admin overview is a week-first review inbox: one restrained bordered panel, week/scope
-header, compact received/awaiting submission counts and ordered assignment counts,
+Admin overview defaults to an All weeks inbox: one restrained bordered panel, week/scope
+header, compact combined and per-week received/awaiting counts. Week drill-down shows ordered assignment counts,
 then an integrated queue toolbar. Remove repeated week descriptions and completion heroes.
 Summary counts use Montserrat at body size (14px), not a separate oversized display line.
 Numbers inherit their labels' font/weight; awaiting-review phrases and filter labels use
@@ -543,3 +543,6 @@ while editing is otherwise unavailable, not because a task count was reached.
 Member and read-only Gantt task labels omit phone icons and their tooltips. Dark-yellow
 bars identify client calls; the task’s accessible description retains Client call for
 assistive technology. Editable admin setup retains its Client call toggle.
+
+The All weeks queue labels each obligation with its week on desktop and phone. Keep
+per-week summaries compact rather than expanding every assignment across every week.

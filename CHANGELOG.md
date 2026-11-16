@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Added a default All weeks review inbox with per-week counts and cross-week Save & review next navigation.
+
 - Removed phone icons and tooltips from member/read-only schedule rows; client calls retain dark-yellow bars.
 
 - Aligned task-reorder indicators with the actual before/after drop position, including the end of the chart.

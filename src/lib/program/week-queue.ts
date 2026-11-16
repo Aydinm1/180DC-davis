@@ -19,3 +19,13 @@ export function buildWeekQueue(state: AdminWorkspaceState, cohortId: string, wee
  const complete=assignments.length ? participants.filter(e=>assignments.every(a=>a.rows.some(r=>r.memberEnrollmentIds.includes(e.id) && r.state==='completed'))).length : 0;
  return {assignments,rows,received:rows.filter(r=>r.submission).length,awaiting:rows.filter(r=>r.state==='submitted').length,participants:participants.length,complete,rate:assignments.length && participants.length ? complete/participants.length : undefined};
 }
+
+// Missing scope opens the cohort inbox; assignment-only bookmarks keep their original week.
+export function selectReviewWeek(state:AdminWorkspaceState,cohortId:string,weekId?:string|null,assignmentId?:string|null){
+ return weekId==='all'||(!weekId&&!assignmentId)?undefined:selectQueueWeek(state,cohortId,weekId,assignmentId);
+}
+export function buildReviewQueue(state:AdminWorkspaceState,cohortId:string,weekId:string,now:Date,audience:'official'|'test'='official'){
+ const weeks=state.weeks.filter(w=>w.cohortId===cohortId&&w.publicationState==='published'&&(weekId==='all'||w.id===weekId)).toSorted((a,b)=>a.weekNumber-b.weekNumber).map(week=>({week,...buildWeekQueue(state,cohortId,week.id,now,audience)}));
+ const rows=weeks.flatMap(w=>w.rows);
+ return {weeks,rows,assignments:weeks.flatMap(w=>w.assignments),received:rows.filter(r=>r.submission).length,awaiting:rows.filter(r=>r.state==='submitted').length,participants:state.enrollments.filter(e=>e.cohortId===cohortId&&e.participationStatus==='enrolled'&&!!e.isTest===(audience==='test')).length};
+}
