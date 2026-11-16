@@ -422,7 +422,8 @@ descriptive filenames.
 ## Accessibility baseline
 
 Admin overview defaults to an All weeks inbox: one restrained bordered panel, week/scope
-header, compact combined and per-week received/awaiting counts. Week drill-down shows ordered assignment counts,
+header and compact combined received/awaiting counts, without a per-week summary list.
+Week drill-down shows ordered assignment counts,
 then an integrated queue toolbar. Remove repeated week descriptions and completion heroes.
 Summary counts use Montserrat at body size (14px), not a separate oversized display line.
 Numbers inherit their labels' font/weight; awaiting-review phrases and filter labels use
@@ -544,5 +545,5 @@ Member and read-only Gantt task labels omit phone icons and their tooltips. Dark
 bars identify client calls; the task’s accessible description retains Client call for
 assistive technology. Editable admin setup retains its Client call toggle.
 
-The All weeks queue labels each obligation with its week on desktop and phone. Keep
-per-week summaries compact rather than expanding every assignment across every week.
+The All weeks queue labels each obligation with its week on desktop and phone. Use
+the Week dropdown for drill-down; do not repeat week-by-week summaries above the queue.

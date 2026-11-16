@@ -10,6 +10,10 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Remove the All weeks breakdown while preserving the combined queue and week filter.
+  140 unit/docs checks, lint and production build pass; browser expectation updated.
+  Commit/push/deployment authorized; no migration required.
+
 - [x] Default review inbox to All weeks, preserving scoped filters, review navigation
   and official/test separation. Five activity/browser entries pass without skips at
   desktop/phone widths, including cross-week Save & review next. 140 unit/docs checks,

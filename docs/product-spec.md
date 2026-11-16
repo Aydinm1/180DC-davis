@@ -76,8 +76,8 @@ private content. Existing favicon remains unchanged.
 ### Week-first admin overview
 
 The review overview defaults to All weeks and All assignments in the selected cohort.
-It combines current submissions from published weeks, with compact per-week received/awaiting
-counts and week drill-down. A selected week retains ordered assignment summaries and
+It combines current submissions from published weeks with one compact received/awaiting
+summary, without a per-week breakdown. The week dropdown narrows the queue. A selected week retains ordered assignment summaries and
 assignment drill-down. Draft weeks remain excluded. Do not show participant completion percentages, advancement, promotion or
 cohort-outcome summaries on the review page; outcome management remains in Members.
 Received counts include one current attempt per enrolled person × assignment, regardless

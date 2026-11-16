@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Removed the per-week breakdown from the All weeks review inbox, retaining its combined counts and week filter.
+
 - Added a default All weeks review inbox with per-week counts and cross-week Save & review next navigation.
 
 - Removed phone icons and tooltips from member/read-only schedule rows; client calls retain dark-yellow bars.
