@@ -17,7 +17,7 @@ import { AdminCaseProgress } from './admin-case-progress';
 const filters: {value:AdminQueueFilter;label:string}[]=[{value:'awaiting_review',label:'Awaiting review'},{value:'revision_requested',label:'Revisions requested'},{value:'complete',label:'Complete'},{value:'all',label:'All submissions'},{value:'missing',label:'Not submitted'}];
 const control='min-h-11 rounded-lg border border-border-strong bg-surface px-3 text-sm';
 function Owner({row}:{row:AdminSubmissionRow}){
- return <><p className="font-bold">{row.team?.name??row.person?.fullName}</p>{row.team?<details className="mt-1 text-xs text-ink-soft"><summary className="min-h-11 cursor-pointer">{row.members.length} teammates</summary><ul>{row.members.map(m=><li key={m.id}>{m.fullName}</li>)}</ul></details>:<p className="mt-1 break-all text-xs text-ink-soft">{row.person?.email}</p>}</>;
+ return <><p className="font-bold">{row.swapGroup?.name??row.team?.name??row.person?.fullName}</p>{row.team||row.swapGroup?<details className="mt-1 text-xs text-ink-soft"><summary className="min-h-11 cursor-pointer">{row.members.length} participants</summary><ul>{row.members.map(m=><li key={m.id}>{m.fullName}</li>)}</ul></details>:<p className="mt-1 break-all text-xs text-ink-soft">{row.person?.email}</p>}</>;
 }
 export function AdminOverview({projectEntries=[]}:{projectEntries?:ProjectInboxEntry[]}){
  const state=useAdminWorkspace(),params=useLocalSearchParams();

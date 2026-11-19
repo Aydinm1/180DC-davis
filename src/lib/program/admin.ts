@@ -35,6 +35,7 @@ export type AdminWorkspaceState = {
   weeks: readonly AdminWeek[];
   submissions: readonly SubmissionAttempt[];
   teams?: readonly CohortTeam[];
+  swapGroups?: readonly {id:string;assignmentId:string;name:string;isTest:boolean;enrollmentIds:readonly string[]}[];
   caseProgress?: readonly { assignmentId: string; enrollmentId: string; answered: number; completedAt?: string }[];
   completionCredits?: readonly AssignmentCompletion[];
 };
@@ -175,18 +176,20 @@ export function getSubmissionRows({ state, cohortId, weekId, assignmentId, now, 
   const assignments = assignmentsForWeek(week);
   const assignment = assignmentId ? assignments.find((item) => item.id === assignmentId) : assignments[0];
   if (!assignment) return [];
-  const owners = assignment.submissionMode==='team'
+  const owners = assignment.workflow==='slide_swap'
+    ? (state.swapGroups??[]).filter(g=>g.assignmentId===assignment.id&&g.isTest===(audience==='test')).flatMap(swapGroup=>{const members=enrollments.filter(e=>swapGroup.enrollmentIds.includes(e.id));return members.length?[{enrollment:members[0],team:undefined,swapGroup,memberEnrollmentIds:members.map(e=>e.id)}]:[];})
+    : assignment.submissionMode==='team'
     ? (state.teams??[]).filter(t=>t.cohortId===cohortId&&t.isTest===(audience==='test')).flatMap(team=>{
       const members=enrollments.filter(e=>team.enrollmentIds.includes(e.id));
-      return members.length?[{enrollment:members[0],team,memberEnrollmentIds:members.map(e=>e.id)}]:[];
+      return members.length?[{enrollment:members[0],team,swapGroup:undefined,memberEnrollmentIds:members.map(e=>e.id)}]:[];
     })
-    : enrollments.map(enrollment=>({enrollment,team:undefined,memberEnrollmentIds:[enrollment.id]}));
-  return owners.map(({enrollment,team,memberEnrollmentIds}) => {
+    : enrollments.map(enrollment=>({enrollment,team:undefined,swapGroup:undefined,memberEnrollmentIds:[enrollment.id]}));
+  return owners.map(({enrollment,team,swapGroup,memberEnrollmentIds}) => {
     const person = state.people.find((item) => item.id === enrollment.personId);
-    const submission = state.submissions.find((item) => item.assignmentId === assignment.id && (team?item.teamId===team.id:item.enrollmentId === enrollment.id) && item.isCurrent);
-    const completionCredit = !team ? state.completionCredits?.find(credit => credit.assignmentId === assignment.id && credit.enrollmentId === enrollment.id) : undefined;
+    const submission = state.submissions.find((item) => item.assignmentId === assignment.id && (swapGroup?item.swapGroupId===swapGroup.id:team?item.teamId===team.id:item.enrollmentId === enrollment.id) && item.isCurrent);
+    const completionCredit = !team&&!swapGroup ? state.completionCredits?.find(credit => credit.assignmentId === assignment.id && credit.enrollmentId === enrollment.id) : undefined;
     return {
-      team,ownerKey:team?.id??enrollment.id,memberEnrollmentIds,
+      team,swapGroup,ownerKey:swapGroup?.id??team?.id??enrollment.id,memberEnrollmentIds,
       members:memberEnrollmentIds.flatMap(id=>{const e=enrollments.find(e=>e.id===id);const p=state.people.find(p=>p.id===e?.personId);return p?[p]:[];}),
       enrollment,
       assignment,

@@ -111,3 +111,5 @@ do not override a later source-of-truth update and superseding ADR.
 - [ADR 0032: Admin-authored client-call markers](0032-schedule-client-call-markers.md)
 
 - [ADR 0033: Private schedule grading examples](0033-private-schedule-grading-examples.md)
+
+- [ADR 0034 — Slide Swap](0034-slide-swap.md)

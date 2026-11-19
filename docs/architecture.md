@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-16
+**Last updated:** 2026-11-18
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -628,3 +628,24 @@ Review queue scope uses `week=all` for the cohort inbox, defaulting there when n
 a week nor an assignment bookmark is supplied. The shared published-week projection
 feeds overview and review-next navigation, preserving cohort, assignment, status, search
 and audience; assignment-only legacy bookmarks continue to resolve their owning week.
+
+## Slide Swap boundaries
+
+Slide Swap is an assignment-specific Individual activity under `src/lib/slide-swap/`.
+Its private loader/typed actions and narrow RPCs handle setup, deck readiness and proof.
+The existing activity editor, member Instructions/Workspace and PDF reader are reused.
+Only finalized proof enters normal shared submission/review history; the new group owner
+is separate from cohort teams. Member loaders explicitly scope group IDs to the current
+enrollment, even when an admin is testing the member portal. Admin review loads frozen
+stories/decks only for the selected submission/history. Generic published content contains
+no private story, asset path or partner state.
+
+ID-only `/api/slide-swap/assets/[id]/{pdf,image,download}` endpoints use live authorization,
+user-scoped Storage fetches and bounded bytes with private/no-store, nosniff and same-origin
+headers. Existing submission download/image routes delegate swap proof through an authorized
+asset lookup. PDF.js is lazy on clients and external on the server, with the matching
+server inspection worker included in tracing. Student PDFs do not enable forms or scripting.
+Google Slides and Canva URLs are validated at both application and database boundaries,
+stored privately, and opened directly in a new tab with noopener/noreferrer. GAP does not
+fetch, embed, inspect permissions or cache remote slide content; file endpoints exclude
+link assets. The same all-ready unlock supports mixed link/PDF groups.

@@ -1,3 +1,4 @@
+import {readSwapSettings} from '@/lib/slide-swap/data';
 import {readSchedule} from '@/lib/schedules/data';
 import { readCaseExercise } from '@/lib/cases/data';
 import { caseTemplate } from '@/lib/cases/content';
@@ -16,14 +17,15 @@ export default async function AdminWeekPage({ params }: { params: Promise<{ id: 
   const { state } = await readWorkspace(true);
   const week = state.weeks.find(w => w.id === id);
   const assignments = week ? assignmentsForWeek(week) : [];
-  const [references, guidedEntries, caseEntries, investigationEntries, teamBriefEntries, scheduleEntries] = await Promise.all([
+  const [references, guidedEntries, caseEntries, investigationEntries, teamBriefEntries, scheduleEntries,swapEntries] = await Promise.all([
     readGradingReferences(assignments.map(a => a.id)),
     Promise.all(assignments.map(async a => [a.id, await readGuidedProject(a.id)])),
     Promise.all(assignments.map(async a => [a.id, await readCaseExercise(a.id, true)])),
     Promise.all(assignments.map(async a => [a.id, await readInvestigation(a.id, true)])),
     Promise.all(assignments.filter(a=>a.submissionMode==='team'&&(!a.workflow||a.workflow==='standard')).map(async a=>[a.id,await readTeamBriefs(a.id)])),
     Promise.all(assignments.map(async a=>[a.id,await readSchedule(a.id,true)])),
+    Promise.all(assignments.map(async a=>[a.id,await readSwapSettings(a.id)])),
   ]);
   const guided = Object.fromEntries(guidedEntries), cases = Object.fromEntries(caseEntries);
-  return <AdminWeekEditor key={id} weekId={id} references={references} guided={guided} cases={cases} caseTemplate={caseTemplate} investigations={Object.fromEntries(investigationEntries)} investigationTemplate={investigationTemplate} schedules={Object.fromEntries(scheduleEntries)} teamBriefs={Object.fromEntries(teamBriefEntries)} />;
+  return <AdminWeekEditor key={id} weekId={id} references={references} guided={guided} cases={cases} caseTemplate={caseTemplate} investigations={Object.fromEntries(investigationEntries)} investigationTemplate={investigationTemplate} swaps={Object.fromEntries(swapEntries)} schedules={Object.fromEntries(scheduleEntries)} teamBriefs={Object.fromEntries(teamBriefEntries)} />;
 }

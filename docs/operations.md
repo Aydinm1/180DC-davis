@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-13
+**Last updated:** 2026-11-18
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -1520,3 +1520,43 @@ after explicit approval. Existing grading text/PDF metadata, schedule runs and a
 retained matching counts/fingerprints. New columns, admin-only RPC grants, retained RLS,
 participant marker checks and migration receipts verified. Commit/push/deployment authorized;
 no real assignment setup or example answer was populated.
+
+## Slide Swap release and cleanup
+
+Apply `202611170001_slide_swap.sql`, then `202611180001_slide_swap_links.sql` before code
+using Slide Swap goes live. The latter adds private Google Slides/Canva link readiness;
+it does not fetch external decks, require OAuth credentials, or change existing files.
+The initial migration adds assignment-specific shared ownership and private story/deck/proof storage without touching
+existing teams/submissions. Local implementation does not configure or publish real Week 5.
+Hosted migrations `202611170001` and `202611180001` were approved and applied on
+2026-11-18. Verified both receipts, private-table RLS, member/anonymous/service RPC grants,
+the private 20 MB bucket allowlist and the link/file source constraint. No presentation
+groups were created. Commit/push/deployment is authorized; real Week 5 setup/publication
+remains a separate action.
+
+`npm run test:slide-swap` uses disposable local fixtures; `GAP_TEST_APP_URL` enables desktop/
+phone acceptance against the matching production-mode build. Never point fixtures at hosted
+services. `npm run db:clean:slide-swap` is local-only: service claims expired/abandoned intents,
+removes only their immutable paths through Storage API, then acknowledges success. Failures
+remain retryable; ready decks/proofs are excluded. Hosted scheduling is not configured.
+
+PDF inspection uses the pinned PDF.js server package/worker, a ten-second parse timeout,
+five-page requirement and existing 20 MB cap. Check worker loading in production builds.
+
+Local Slide Swap verification (2026-11-17): six entries pass without skips, including
+1280px/390px real five-page PDF upload/rendering/page navigation, two-page rejection,
+photo review, one-at-a-time setup, trio selection, preview simulation with zero writes,
+withdrawal and protected endpoint headers/access. Existing teams: nine entries pass without
+skips, including HTTP and desktop/phone checks. Storage: ten pass, three app/browser checks
+not enabled in that run; program: eight pass, six app/browser checks not enabled; guided:
+eight pass, one browser check not enabled. Schema security: four pass. 142 unit/docs checks,
+lint, typecheck, generated types and Webpack production build pass. Real Google acceptance,
+hosted migration, production setup and release remain unperformed.
+
+Local link-option verification (2026-11-18): seven Slide Swap entries pass without skips,
+including Google Slides/Canva readiness, duplicate receipts, expected-ID conflicts, link
+replacement by PDF, mixed trio unlock, no pre-unlock partner URL, admin link review and
+1280px/390px link rendering. Browser checks also cover invalid-link input retention, real
+link saving, existing PDF upload/inspection/reading and shared photo grading. Four schema
+security checks and 143 unit/docs checks pass, with lint, typecheck, generated types and
+Webpack production build. No external Google/Canva deck was requested or changed.

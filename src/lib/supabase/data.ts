@@ -13,12 +13,13 @@ export const readWorkspace = cache(async (admin = true) => {
   const user = await requireUser(admin);
   const db = await createClient();
   const { people, roster, cohorts, enrollments, weeks, resources, assignments, submissions, documents,
-    activity, teamRows, memberships, completionCredits, caseProgress } = await readWorkspaceRows(db, admin);
+    activity, teamRows, memberships, completionCredits, caseProgress,swapGroups,swapMembers } = await readWorkspaceRows(db, admin);
   const teams: CohortTeam[] = teamRows.data.map(t=>({id:t.id,cohortId:t.cohort_id,name:t.name,isTest:t.is_test,version:t.version,locked:t.locked,enrollmentIds:memberships.data.filter(m=>m.team_id===t.id).map(m=>m.enrollment_id)}));
   const state: AdminWorkspaceState = {
     caseProgress:caseProgress.data.map(p=>({assignmentId:p.assignment_id,enrollmentId:p.enrollment_id,answered:p.answered,completedAt:p.completed_at??undefined})),
     completionCredits: completionCredits.data.map(r=>({id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id,grantedAt:r.granted_at,grantedBy:r.granted_by})),
     teams,
+    swapGroups:swapGroups.data.map(g=>({id:g.id,assignmentId:g.assignment_id,name:g.name,isTest:g.is_test,enrollmentIds:swapMembers.data.filter(m=>m.group_id===g.id).map(m=>m.enrollment_id)})),
     people: (people.data ?? []).map(r => ({ id:r.id,email:r.email,fullName:r.full_name })),
     approvedMembers: (roster.data ?? []).map(r => ({ id:r.id,personId:r.person_id,email:r.email,fullName:r.full_name,role:r.role,active:r.active,lastActiveAt:activity.data.find(a=>a.person_id===r.person_id)?.last_active_at })),
     cohorts: (cohorts.data ?? []).map(r => ({ id:r.id,quarter:r.quarter,year:r.year,startsOn:r.starts_on,endsOn:r.ends_on,state:r.state })),
@@ -26,13 +27,13 @@ export const readWorkspace = cache(async (admin = true) => {
     weeks: (weeks.data ?? []).map((r): AdminWeek => {
       const weekAssignments = assignments.data.filter(a => a.week_id === r.id).map(a => {
         const document = documents.data.find(d => d.assignment_id === a.id);
-        return { id:a.id,workflow:a.workflow as 'standard'|'guided'|'cases'|'investigation'|'schedule',submissionMode:a.submission_mode as 'individual'|'team',weekNumber:r.week_number,title:a.title,instructions:a.instructions,summary:a.summary ?? undefined,instructionsFormat:a.instructions_format as 'plain' | 'markdown',dueAt:a.due_at,document:document ? { id:document.id,name:document.original_filename } : undefined };
+        return { id:a.id,workflow:a.workflow as 'standard'|'guided'|'cases'|'investigation'|'schedule'|'slide_swap',submissionMode:a.submission_mode as 'individual'|'team',weekNumber:r.week_number,title:a.title,instructions:a.instructions,summary:a.summary ?? undefined,instructionsFormat:a.instructions_format as 'plain' | 'markdown',dueAt:a.due_at,document:document ? { id:document.id,name:document.original_filename } : undefined };
       });
       return { id:r.id,cohortId:r.cohort_id,weekNumber:r.week_number,title:r.title,description:r.description,publicationState:r.published?'published':'draft',slidesUrl:r.slides_url ?? undefined,
         resources:(resources.data ?? []).filter(a => a.week_id === r.id).map(a => ({ id:a.id,title:a.title,description:a.description ?? undefined,type:a.resource_type as Resource['type'],url:a.url,sortOrder:a.sort_order })),
         assignments:weekAssignments };
     }),
-    submissions:(submissions.data ?? []).map((r): SubmissionAttempt => ({ id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id ?? undefined,targetId:r.target_id,teamId:r.team_id ?? undefined,participantEnrollmentIds:teams.find(t=>t.id===r.team_id)?.enrollmentIds,submittedByName:people.data.find(p=>p.id===r.submitted_by)?.full_name,status:r.status,submittedAt:r.submitted_at,updatedAt:r.updated_at,isCurrent:r.is_current,feedback:r.feedback ?? undefined,reviewedAt:r.reviewed_at ?? undefined,reviewedByUserId:r.reviewed_by ?? undefined,supersedesSubmissionId:r.supersedes_submission_id ?? undefined,
+    submissions:(submissions.data ?? []).map((r): SubmissionAttempt => ({ id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id ?? undefined,targetId:r.target_id,teamId:r.team_id ?? undefined,swapGroupId:r.swap_group_id??undefined,participantEnrollmentIds:r.swap_group_id?swapMembers.data.filter(m=>m.group_id===r.swap_group_id).map(m=>m.enrollment_id):teams.find(t=>t.id===r.team_id)?.enrollmentIds,submittedByName:people.data.find(p=>p.id===r.submitted_by)?.full_name,status:r.status,submittedAt:r.submitted_at,updatedAt:r.updated_at,isCurrent:r.is_current,feedback:r.feedback ?? undefined,reviewedAt:r.reviewed_at ?? undefined,reviewedByUserId:r.reviewed_by ?? undefined,supersedesSubmissionId:r.supersedes_submission_id ?? undefined,
       payload:r.submission_type==='text' ? { type:'text',submittedText:r.submitted_text! } : r.submission_type==='link' ? { type:'link',submittedUrl:r.submitted_url! } : { type:'file',filePath:r.file_path!,originalFilename:r.original_filename!,mimeType:r.mime_type ?? undefined } })),
   };
   return { user, state };
@@ -53,14 +54,14 @@ export const readMember = cache(async () => {
       const document = rows.documents.find(d => d.assignment_id === a.id);
       const progress=rows.caseProgress.find(p=>p.assignment_id===a.id);
       const credit = rows.completionCredits.find(credit=>credit.assignment_id===a.id);
-      return { id:a.id,workflow:a.workflow as 'standard'|'guided'|'cases'|'investigation'|'schedule',caseProgress:progress?{answered:progress.answered,completedAt:progress.completed_at??undefined}:undefined,completionCredit:credit?{id:credit.id,grantedAt:credit.granted_at}:undefined,submissionMode:a.submission_mode as 'individual'|'team',team:a.submission_mode==='team'?team:undefined,weekNumber:r.week_number,title:a.title,instructions:a.instructions,summary:a.summary ?? undefined,instructionsFormat:a.instructions_format as 'plain' | 'markdown',dueAt:a.due_at,document:document ? { id:document.id,name:document.original_filename } : undefined };
+      return { id:a.id,workflow:a.workflow as 'standard'|'guided'|'cases'|'investigation'|'schedule'|'slide_swap',caseProgress:progress?{answered:progress.answered,completedAt:progress.completed_at??undefined}:undefined,completionCredit:credit?{id:credit.id,grantedAt:credit.granted_at}:undefined,submissionMode:a.submission_mode as 'individual'|'team',team:a.submission_mode==='team'?team:undefined,weekNumber:r.week_number,title:a.title,instructions:a.instructions,summary:a.summary ?? undefined,instructionsFormat:a.instructions_format as 'plain' | 'markdown',dueAt:a.due_at,document:document ? { id:document.id,name:document.original_filename } : undefined };
     });
     if (r.published && full) return { id:r.id,cohortId:r.cohort_id,weekNumber:r.week_number,title:full.title,description:full.description,publicationState:'published',slidesUrl:full.slides_url ?? undefined,
       resources:rows.resources.filter(a => a.week_id===r.id).map(a => ({ id:a.id,title:a.title,description:a.description ?? undefined,type:a.resource_type as Resource['type'],url:a.url,sortOrder:a.sort_order })),
       assignments };
     return { id:r.id,cohortId:r.cohort_id,weekNumber:r.week_number,title:r.title,publicationState:'draft' };
   });
-  const submissions: SubmissionAttempt[] = rows.submissions.map(r => ({ id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id ?? undefined,targetId:r.target_id,teamId:r.team_id ?? undefined,participantEnrollmentIds:r.team_id===team?.id?team?.members.map(m=>m.enrollmentId):undefined,submittedByName:team?.members.find(m=>m.personId===r.submitted_by)?.name ?? (r.enrollment_id===e?.id?user.fullName:undefined),status:r.status,submittedAt:r.submitted_at,updatedAt:r.updated_at,isCurrent:r.is_current,feedback:r.feedback ?? undefined,reviewedAt:r.reviewed_at ?? undefined,reviewedByUserId:r.reviewed_by ?? undefined,supersedesSubmissionId:r.supersedes_submission_id ?? undefined,
+  const submissions: SubmissionAttempt[] = rows.submissions.map(r => ({ id:r.id,assignmentId:r.assignment_id,enrollmentId:r.enrollment_id ?? undefined,targetId:r.target_id,teamId:r.team_id ?? undefined,swapGroupId:r.swap_group_id??undefined,participantEnrollmentIds:r.swap_group_id?rows.swapMembers.data.filter(m=>m.group_id===r.swap_group_id).map(m=>m.enrollment_id):r.team_id===team?.id?team?.members.map(m=>m.enrollmentId):undefined,submittedByName:team?.members.find(m=>m.personId===r.submitted_by)?.name ?? (r.enrollment_id===e?.id?user.fullName:undefined),status:r.status,submittedAt:r.submitted_at,updatedAt:r.updated_at,isCurrent:r.is_current,feedback:r.feedback ?? undefined,reviewedAt:r.reviewed_at ?? undefined,reviewedByUserId:r.reviewed_by ?? undefined,supersedesSubmissionId:r.supersedes_submission_id ?? undefined,
     payload:r.submission_type==='text' ? { type:'text',submittedText:r.submitted_text! } : r.submission_type==='link' ? { type:'link',submittedUrl:r.submitted_url! } : { type:'file',filePath:r.file_path!,originalFilename:r.original_filename!,mimeType:r.mime_type ?? undefined } }));
   return { user,cohort,enrollment,weeks,submissions,now:new Date().toISOString() };
 });

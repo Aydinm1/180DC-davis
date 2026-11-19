@@ -1,3 +1,4 @@
+import {serveSwapFile} from '@/lib/slide-swap/server';
 import { createClient } from '@/lib/supabase/server';
 import { storageObjectUrl } from '@/lib/uploads/server';
 
@@ -8,6 +9,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const { data: { user } } = await db.auth.getUser();
   if (!user) return new Response('Sign in to download.', { status: 401, headers });
   const { id } = await params;
+  const proof=await db.rpc('slide_swap_proof',{p_submission:id});
+  if(proof.data)return serveSwapFile(proof.data,true,false);
   // RLS checks the live roster and owner/admin authority, including historical attempts.
   const { data, error } = await db.from('submissions').select('file_path,original_filename,submission_type').eq('id', id).maybeSingle();
   if (error || !data || data.submission_type !== 'file' || !data.file_path) return new Response('File not found or access denied.', { status: 404, headers });

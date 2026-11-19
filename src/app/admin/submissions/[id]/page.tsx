@@ -1,3 +1,5 @@
+import {createClient} from '@/lib/supabase/server';
+import type {SwapReview} from '@/components/admin/slide-swap-review';
 import {readScheduleReview} from '@/lib/schedules/data';
 import type { Metadata } from "next";
 import { AdminSubmissionReview } from "@/components/admin/admin-submission-review";
@@ -18,5 +20,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
   const project=assignment?.workflow==='guided'&&submission?.teamId?await readGuidedProject(assignment.id,submission.teamId):undefined;
   const investigationEntries=assignment?.workflow==='investigation'?await Promise.all(state.submissions.filter(s=>s.assignmentId===assignment.id&&s.enrollmentId===submission?.enrollmentId).map(async s=>[s.id,await readInvestigationReview(s.id)] as const)):[];
   const scheduleEntries=assignment?.workflow==='schedule'?await Promise.all(state.submissions.filter(s=>s.assignmentId===assignment.id&&s.enrollmentId===submission?.enrollmentId).map(async s=>[s.id,await readScheduleReview(s.id)] as const)):[];
-  return <AdminSubmissionReview key={id} submissionId={id} reference={reference} project={project?{...project,teams:undefined}:undefined} schedules={Object.fromEntries(scheduleEntries)} investigations={Object.fromEntries(investigationEntries)} />;
+  const swapEntries=submission?.swapGroupId?await Promise.all(state.submissions.filter(s=>s.swapGroupId===submission.swapGroupId&&s.assignmentId===submission.assignmentId).map(async s=>{const r=await(await createClient()).rpc('slide_swap_review',{p_submission:s.id});if(r.error)throw Error('Could not load presentation references');return [s.id,r.data as unknown as SwapReview] as const;})):[];
+  return <AdminSubmissionReview swaps={Object.fromEntries(swapEntries)} key={id} submissionId={id} reference={reference} project={project?{...project,teams:undefined}:undefined} schedules={Object.fromEntries(scheduleEntries)} investigations={Object.fromEntries(investigationEntries)} />;
 }

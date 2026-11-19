@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-16
+**Last updated:** 2026-11-18
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -547,3 +547,19 @@ assistive technology. Editable admin setup retains its Client call toggle.
 
 The All weeks queue labels each obligation with its week on desktop and phone. Use
 the Week dropdown for drill-down; do not repeat week-by-week summaries above the queue.
+
+## Slide Swap workspace
+
+Use compact Instructions / Workspace and Create / Swap / Meet & present navigation. Show one
+phase at a time. Lead with the private story or assigned presenter's deck; waiting state
+names partners and offers Refresh. Keep story text comfortably bounded and use the shared
+PDF reader with an optional Download for uploaded files. Default creation to Slide link,
+with Upload PDF as an alternative. Show a labeled Google Slides/Canva URL input and brief
+viewing-access guidance. Linked decks use an Open slides action in a new tab in member
+exchange and admin review; no empty PDF viewer appears. Place the next-phase action on
+its own row below the deck with a visible gap, labeled Next: Meet & present. Proof input is a single labeled image picker with
+progress, retry/cancel, status and feedback. Admin setup separates Instructions, Stories
+and Partners. Edit one selected story/group at a time, with two/three ordered
+participant/story selectors per group. Read-only
+review puts the meeting photo first and frozen decks/stories in an expandable comparison
+section. Previews clearly state nothing is submitted; no real upload actions run there.

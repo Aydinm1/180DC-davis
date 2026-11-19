@@ -37,7 +37,7 @@ export function PdfReader({resource,fill=false}:{resource:PdfResource;fill?:bool
         if(!live)return;
         pdf.GlobalWorkerOptions.workerSrc=`${assets}pdf.worker.min.mjs`;
         const response=await fetch(urls.preview,{credentials:'same-origin',cache:'no-store',signal:abort.signal});
-        if(!response.ok)throw new Error(response.status===401?'Your session expired. Sign in again to view this PDF.':response.status===403?'Active admin access is required to view this PDF.':response.status===404?'This PDF is unavailable.': 'Could not load this PDF. Retry or download the original.');
+        if(!response.ok)throw new Error(response.status===401?'Your session expired. Sign in again to view this PDF.':response.status===403?(resource.kind==='swap'?'Your GAP access changed. Sign in again or contact your lead.':'Active admin access is required to view this PDF.'):response.status===404?'This PDF is unavailable.': 'Could not load this PDF. Retry or download the original.');
         const data=new Uint8Array(await response.arrayBuffer());
         if(!live)return;
         if(data.length>20*1024*1024)throw new Error('This PDF exceeds the 20 MB preview limit.');
@@ -60,11 +60,11 @@ export function PdfReader({resource,fill=false}:{resource:PdfResource;fill?:bool
         setCount(document.numPages);linkService.setDocument(document);viewer.setDocument(document);
         observer=new ResizeObserver(()=>{if(live&&viewer&&container.current?.clientWidth){if(viewer.currentScaleValue==='page-width')viewer.currentScaleValue='page-width';viewer.update();}});
         observer.observe(container.current!);
-      }catch(reason){if(live&&!abort.signal.aborted)setError(current=>current|| (reason instanceof Error&&/session expired|admin access|unavailable|Could not load|exceeds/.test(reason.message)?reason.message:'This PDF is corrupt or unsupported. Download the original file.'));}
+      }catch(reason){if(live&&!abort.signal.aborted)setError(current=>current|| (reason instanceof Error&&/session expired|GAP access|admin access|unavailable|Could not load|exceeds/.test(reason.message)?reason.message:'This PDF is corrupt or unsupported. Download the original file.'));}
     }
     void open();
     return()=>{live=false;abort.abort();observer?.disconnect();controller.current=undefined;viewer?.setDocument(null!);void task?.destroy();};
-  },[urls.preview,retry]);
+  },[urls.preview,retry,resource.kind]);
   function find(value=query,previous=false,again=false){
     setQuery(value);setMatches(value?'Searching…':'');
     controller.current?.bus.dispatch('find',{source:searchInput.current,type:again?'again':'',query:value,caseSensitive:false,entireWord:false,highlightAll:true,findPrevious:previous,matchDiacritics:false});

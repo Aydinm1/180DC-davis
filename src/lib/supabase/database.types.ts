@@ -770,6 +770,181 @@ export type Database = {
         }
         Relationships: []
       }
+      swap_assets: {
+        Row: {
+          assignment_id: string
+          created_at: string
+          current: boolean
+          enrollment_id: string
+          expected_id: string | null
+          expected_version: string | null
+          expires_at: string
+          external_url: string | null
+          group_id: string
+          group_version: number
+          id: string
+          kind: string
+          mime: string | null
+          name: string
+          owner_id: string
+          path: string | null
+          size: number | null
+          state: string
+          story_id: string | null
+          submission_id: string | null
+        }
+        Insert: {
+          assignment_id: string
+          created_at?: string
+          current?: boolean
+          enrollment_id: string
+          expected_id?: string | null
+          expected_version?: string | null
+          expires_at?: string
+          external_url?: string | null
+          group_id: string
+          group_version: number
+          id?: string
+          kind: string
+          mime?: string | null
+          name: string
+          owner_id: string
+          path?: string | null
+          size?: number | null
+          state?: string
+          story_id?: string | null
+          submission_id?: string | null
+        }
+        Update: {
+          assignment_id?: string
+          created_at?: string
+          current?: boolean
+          enrollment_id?: string
+          expected_id?: string | null
+          expected_version?: string | null
+          expires_at?: string
+          external_url?: string | null
+          group_id?: string
+          group_version?: number
+          id?: string
+          kind?: string
+          mime?: string | null
+          name?: string
+          owner_id?: string
+          path?: string | null
+          size?: number | null
+          state?: string
+          story_id?: string | null
+          submission_id?: string | null
+        }
+        Relationships: []
+      }
+      swap_attempts: {
+        Row: {
+          asset_id: string
+          created_at: string
+          enrollment_ids: string[]
+          group_id: string
+          submission_id: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          enrollment_ids: string[]
+          group_id: string
+          submission_id: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          enrollment_ids?: string[]
+          group_id?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swap_attempts_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "swap_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swap_configs: {
+        Row: {
+          assignment_id: string
+          overview: string
+          stories: Json
+          version: number
+        }
+        Insert: {
+          assignment_id: string
+          overview: string
+          stories: Json
+          version?: number
+        }
+        Update: {
+          assignment_id?: string
+          overview?: string
+          stories?: Json
+          version?: number
+        }
+        Relationships: []
+      }
+      swap_decks: {
+        Row: {
+          asset_id: string
+          enrollment_id: string
+          group_id: string
+          position: number
+          story: Json
+        }
+        Insert: {
+          asset_id: string
+          enrollment_id: string
+          group_id: string
+          position: number
+          story: Json
+        }
+        Update: {
+          asset_id?: string
+          enrollment_id?: string
+          group_id?: string
+          position?: number
+          story?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swap_decks_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "swap_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swap_receipts: {
+        Row: {
+          actor_id: string
+          payload: Json
+          request_id: string
+          result: Json
+        }
+        Insert: {
+          actor_id: string
+          payload: Json
+          request_id: string
+          result: Json
+        }
+        Update: {
+          actor_id?: string
+          payload?: Json
+          request_id?: string
+          result?: Json
+        }
+        Relationships: []
+      }
       upload_intents: {
         Row: {
           assignment_id: string
@@ -842,10 +1017,17 @@ export type Database = {
         Args: { p_action: string; p_data: Json }
         Returns: string
       }
+      can_download_swap: { Args: { path: string }; Returns: boolean }
       can_learn: { Args: { p_cohort: string }; Returns: boolean }
       can_read_content: { Args: { p_cohort: string }; Returns: boolean }
+      can_read_swap: { Args: { gid: string }; Returns: boolean }
       can_read_target: { Args: { p_target: string }; Returns: boolean }
+      can_read_target_before_swap: {
+        Args: { p_target: string }
+        Returns: boolean
+      }
       can_read_team: { Args: { p_team: string }; Returns: boolean }
+      can_upload_swap: { Args: { path: string }; Returns: boolean }
       case_enrollment: { Args: { p_assignment: string }; Returns: string }
       current_member: {
         Args: never
@@ -871,6 +1053,15 @@ export type Database = {
           enrollment_id: string
           person_id: string
         }[]
+      }
+      file_upload_before_swap: {
+        Args: {
+          p_action: string
+          p_actor: string
+          p_data?: Json
+          p_intent?: string
+        }
+        Returns: Json
       }
       file_upload_impl: {
         Args: {
@@ -967,9 +1158,21 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      resolve_submission_target_before_swap: {
+        Args: { p_assignment: string }
+        Returns: Database["public"]["Tables"]["submission_targets"]["Row"]
+        SetofOptions: {
+          from: "*"
+          to: "submission_targets"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       save_week_before_teams: { Args: { p_data: Json }; Returns: string }
       schedule_enrollment: { Args: { p_assignment: string }; Returns: string }
       submission_gate: { Args: never; Returns: undefined }
+      swap_asset_allowed: { Args: { fid: string }; Returns: boolean }
+      swap_ready: { Args: { aid: string }; Returns: boolean }
       team_file_upload_impl: {
         Args: {
           p_action: string
@@ -979,6 +1182,7 @@ export type Database = {
         }
         Returns: Json
       }
+      unlock_swap: { Args: { gid: string }; Returns: undefined }
       valid_schedule: {
         Args: { complete: boolean; rows: Json }
         Returns: boolean
@@ -992,6 +1196,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      valid_swap_link: { Args: { value: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -1664,23 +1869,107 @@ export type Database = {
           },
         ]
       }
+      slide_swap_groups: {
+        Row: {
+          assignment_id: string
+          id: string
+          is_test: boolean
+          name: string
+          unlocked_at: string | null
+          version: number
+        }
+        Insert: {
+          assignment_id: string
+          id?: string
+          is_test: boolean
+          name: string
+          unlocked_at?: string | null
+          version?: number
+        }
+        Update: {
+          assignment_id?: string
+          id?: string
+          is_test?: boolean
+          name?: string
+          unlocked_at?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "slide_swap_groups_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      slide_swap_members: {
+        Row: {
+          assignment_id: string
+          enrollment_id: string
+          group_id: string
+          position: number
+          story_id: string
+        }
+        Insert: {
+          assignment_id: string
+          enrollment_id: string
+          group_id: string
+          position: number
+          story_id: string
+        }
+        Update: {
+          assignment_id?: string
+          enrollment_id?: string
+          group_id?: string
+          position?: number
+          story_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "slide_swap_members_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "slide_swap_members_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "cohort_enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "slide_swap_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "slide_swap_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       submission_targets: {
         Row: {
           assignment_id: string
           enrollment_id: string | null
           id: string
+          swap_group_id: string | null
           team_id: string | null
         }
         Insert: {
           assignment_id: string
           enrollment_id?: string | null
           id?: string
+          swap_group_id?: string | null
           team_id?: string | null
         }
         Update: {
           assignment_id?: string
           enrollment_id?: string | null
           id?: string
+          swap_group_id?: string | null
           team_id?: string | null
         }
         Relationships: [
@@ -1696,6 +1985,13 @@ export type Database = {
             columns: ["enrollment_id"]
             isOneToOne: false
             referencedRelation: "cohort_enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submission_targets_swap_group_id_fkey"
+            columns: ["swap_group_id"]
+            isOneToOne: false
+            referencedRelation: "slide_swap_groups"
             referencedColumns: ["id"]
           },
           {
@@ -1727,6 +2023,7 @@ export type Database = {
           submitted_text: string | null
           submitted_url: string | null
           supersedes_submission_id: string | null
+          swap_group_id: string | null
           target_id: string
           team_id: string | null
           updated_at: string
@@ -1750,6 +2047,7 @@ export type Database = {
           submitted_text?: string | null
           submitted_url?: string | null
           supersedes_submission_id?: string | null
+          swap_group_id?: string | null
           target_id: string
           team_id?: string | null
           updated_at?: string
@@ -1773,6 +2071,7 @@ export type Database = {
           submitted_text?: string | null
           submitted_url?: string | null
           supersedes_submission_id?: string | null
+          swap_group_id?: string | null
           target_id?: string
           team_id?: string | null
           updated_at?: string
@@ -1811,6 +2110,13 @@ export type Database = {
             columns: ["supersedes_submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_swap_group_id_fkey"
+            columns: ["swap_group_id"]
+            isOneToOne: false
+            referencedRelation: "slide_swap_groups"
             referencedColumns: ["id"]
           },
           {
@@ -1885,6 +2191,7 @@ export type Database = {
         Returns: Json
       }
       attendance: { Args: { p_action: string; p_data?: Json }; Returns: Json }
+      cancel_slide_swap: { Args: { p_id: string }; Returns: undefined }
       case_progress: {
         Args: { p_enrollment?: string }
         Returns: {
@@ -1918,9 +2225,14 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      cleanup_slide_swap: { Args: { p_done?: string[] }; Returns: Json }
       cleanup_uploads: {
         Args: { p_failed?: boolean; p_id?: string; p_owner?: string }
         Returns: Json
+      }
+      configure_slide_swap: {
+        Args: { p_assignment: string; p_data: Json; p_request: string }
+        Returns: undefined
       }
       file_upload: {
         Args: {
@@ -1929,6 +2241,10 @@ export type Database = {
           p_data?: Json
           p_intent?: string
         }
+        Returns: Json
+      }
+      finalize_slide_swap: {
+        Args: { p_actor: string; p_id: string; p_pages?: number }
         Returns: Json
       }
       grading_example: {
@@ -2003,6 +2319,17 @@ export type Database = {
         Returns: Json
       }
       my_team: { Args: { p_enrollment: string }; Returns: Json }
+      prepare_slide_swap: {
+        Args: {
+          p_assignment: string
+          p_expected: string
+          p_expected_version: string
+          p_file: Json
+          p_kind: string
+          p_request: string
+        }
+        Returns: Json
+      }
       read_assignment_team_briefs: {
         Args: { p_assignment: string; p_team?: string }
         Returns: Json
@@ -2025,6 +2352,10 @@ export type Database = {
       }
       read_schedule: {
         Args: { p_assignment: string; p_preview?: boolean }
+        Returns: Json
+      }
+      read_slide_swap: {
+        Args: { p_admin?: boolean; p_assignment: string }
         Returns: Json
       }
       record_activity: { Args: never; Returns: undefined }
@@ -2074,6 +2405,15 @@ export type Database = {
         Args: { p_assignment: string; p_example: Json; p_version: number }
         Returns: Json
       }
+      save_slide_swap_link: {
+        Args: {
+          p_assignment: string
+          p_expected: string
+          p_request: string
+          p_url: string
+        }
+        Returns: Json
+      }
       schedule_review: { Args: { p_submission: string }; Returns: Json }
       set_assignment_completion: {
         Args: {
@@ -2087,6 +2427,13 @@ export type Database = {
       set_test_participation: {
         Args: { p_id: string; p_is_test: boolean }
         Returns: string
+      }
+      slide_swap_asset: { Args: { p_id: string }; Returns: Json }
+      slide_swap_proof: { Args: { p_submission: string }; Returns: string }
+      slide_swap_review: { Args: { p_submission: string }; Returns: Json }
+      slide_swap_upload: {
+        Args: { p_actor: string; p_id: string }
+        Returns: Json
       }
       submit_link: {
         Args: {

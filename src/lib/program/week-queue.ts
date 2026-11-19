@@ -16,7 +16,7 @@ export function buildWeekQueue(state: AdminWorkspaceState, cohortId: string, wee
   const priority={submitted:0,revision_requested:1,overdue:2,due_soon:3,upcoming:4,completed:5};
   return priority[a.state]-priority[b.state] || (a.person?.fullName??'').localeCompare(b.person?.fullName??'') || assignments.findIndex(x=>x.assignment.id===a.assignment.id)-assignments.findIndex(x=>x.assignment.id===b.assignment.id);
  });
- const complete=assignments.length ? participants.filter(e=>assignments.every(a=>a.rows.some(r=>r.memberEnrollmentIds.includes(e.id) && r.state==='completed'))).length : 0;
+ const complete=assignments.length ? participants.filter(e=>assignments.every(a=>a.rows.some(r=>r.memberEnrollmentIds.includes(e.id) && r.state==='completed')||state.completionCredits?.some(c=>c.assignmentId===a.assignment.id&&c.enrollmentId===e.id))).length : 0;
  return {assignments,rows,received:rows.filter(r=>r.submission).length,awaiting:rows.filter(r=>r.state==='submitted').length,participants:participants.length,complete,rate:assignments.length && participants.length ? complete/participants.length : undefined};
 }
 

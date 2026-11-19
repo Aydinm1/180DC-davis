@@ -5,6 +5,12 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Separated the Slide Swap deck link and next-step button, and clarified the final phase as Meet & present.
+
+- Added Google Slides and Canva links as the default Slide Swap option, preserving PDF uploads, private all-ready exchange and meeting-photo grading. Linked slide content may change at its source.
+
+- Added the Slide Swap Individual activity: admin-assigned stories and pairs/trios, private five-slide deck exchange, one shared meeting-photo review and individual completion.
+
 - Removed the per-week breakdown from the All weeks review inbox, retaining its combined counts and week filter.
 
 - Added a default All weeks review inbox with per-week counts and cross-week Save & review next navigation.

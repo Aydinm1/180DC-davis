@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-16
+**Last updated:** 2026-11-18
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -729,3 +729,27 @@ examples. Keep existing name, day/block and staffing validation. Saved data rema
 by existing RPC byte limits (200 KB participant operations, 1 MB configuration/reference
 operations); validators also reject a task array exceeding 1 MB. Add task is disabled only
 while editing is otherwise unavailable, not because a task count was reached.
+
+## Slide Swap individual activity
+
+Assignments may use `slide_swap` in Individual mode. Admins supply formatted instructions,
+a private story library and ordered pairs/trios, separately per official/test audience.
+Every enrolled official participant needs a different valid story within a two/three-person
+group before publication; later additions wait for setup. No project team is changed.
+
+Create → Swap → Present: each person shares a Google Slides or Canva design link, or uploads
+a PDF of exactly five pages (20 MB maximum). Students enable partner viewing access. Link
+permissions and slide counts are not automatically checked; linked decks may keep changing
+at their source. Readiness is preparation, not a graded submission. Once every active group
+member has a ready deck, preserve deck references/stories and membership atomically. Pair members
+present each other's decks; trio positions present the next position, wrapping at the end.
+Creators keep their original stories and reveal them aloud after presentations. Partners'
+original text is never included in member responses. One still PNG/JPEG/WebP meeting photo
+enters the existing review queue for the group. Approval completes the assignment for
+current participants; revisions replace the proof without changing decks. Normal historical
+attempts/feedback remain available. Withdrawal revokes access without erasing snapshots.
+
+Setup exposes readiness and individual completion exceptions. Admins can re-pair before
+unlock while preserving started story/deck ownership. Unlocked groups cannot be rewritten;
+manual individual credit resolves exceptions without proof or affecting their partners.
+Admin preview simulates locally with an explicit sample group; Viewer practice is fictional.

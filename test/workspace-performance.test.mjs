@@ -19,12 +19,12 @@ function database({ gate = Promise.resolve(), fail, tables = {} } = {}) {
   return { started, from: query, rpc: query };
 }
 
-test('all 14 independent workspace reads start before any resolves, with full pagination', async () => {
+test('all 16 independent workspace reads start before any resolves, with full pagination', async () => {
   let release;
   const db = database({ gate: new Promise(resolve => { release = resolve; }), tables: { people: Array.from({ length: 101 }, (_, id) => ({ id })) } });
   const pending = readWorkspaceRows(db, true);
-  assert.equal(db.started.length, 14, 'Independent reads must not wait for previous data sets');
-  assert.equal(new Set(db.started.map(c => c.name)).size, 14);
+  assert.equal(db.started.length, 16, 'Independent reads must not wait for previous data sets');
+  assert.equal(new Set(db.started.map(c => c.name)).size, 16);
   release();
   const rows = await pending;
   assert.equal(rows.people.data.length, 101);

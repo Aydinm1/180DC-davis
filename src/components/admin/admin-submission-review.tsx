@@ -1,4 +1,5 @@
 "use client";
+import {SlideSwapReview,type SwapReview} from './slide-swap-review';
 import {ScheduleComparison} from '@/components/program/schedule-comparison';
 import type {ScheduleSnapshot} from '@/lib/schedules/types';
 
@@ -39,7 +40,7 @@ function ViewAttempt({ attempt, announce, historical=false, fill=false }: { hist
   </> : <button className={className} type="button" onClick={() => announce("This fictional preview file is not available to download.")}>Download original file</button>;
 }
 
-export function AdminSubmissionReview({ submissionId, reference, project, investigations={},schedules={} }: { submissionId: string; reference?: GradingReference; project?: GuidedProject; schedules?:Record<string,ScheduleSnapshot|undefined>;investigations?:Record<string,InvestigationReview|undefined> }) {
+export function AdminSubmissionReview({ submissionId, reference, project, investigations={},schedules={},swaps={} }: { submissionId: string; reference?: GradingReference; project?: GuidedProject; swaps?:Record<string,SwapReview>;schedules?:Record<string,ScheduleSnapshot|undefined>;investigations?:Record<string,InvestigationReview|undefined> }) {
   const workspace = useAdminWorkspace();
   const router = useRouter();
   const params = useSearchParams();
@@ -62,12 +63,13 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
 
   if (!submission) return <PageContainer className="py-16"><StateMessage title="Submission not found">Return to the review queue and choose a current submission in this cohort.</StateMessage></PageContainer>;
   const team=workspace.teams?.find(t=>t.id===submission.teamId&&t.cohortId===workspace.selectedCohortId);
-  const enrollment = workspace.enrollments.find((item) => (team?team.enrollmentIds.includes(item.id):item.id === submission.enrollmentId) && item.cohortId === workspace.selectedCohortId);
+  const swapGroup=workspace.swapGroups?.find(g=>g.id===submission.swapGroupId);
+  const enrollment = workspace.enrollments.find((item) => (swapGroup?swapGroup.enrollmentIds.includes(item.id):team?team.enrollmentIds.includes(item.id):item.id === submission.enrollmentId) && item.cohortId === workspace.selectedCohortId);
   const person = workspace.people.find((item) => item.id === enrollment?.personId);
   const week = workspace.weeks.find((item) => item.cohortId === workspace.selectedCohortId && assignmentsForWeek(item).some((assignment) => assignment.id === submission.assignmentId));
   if (!enrollment || !week) return <PageContainer className="py-16"><StateMessage title="Submission not found">This submission does not belong to the selected cohort.</StateMessage></PageContainer>;
   const currentSubmission = submission;
-  const history = workspace.submissions.filter((item) => (team?item.teamId===team.id:item.enrollmentId === submission.enrollmentId) && item.assignmentId === submission.assignmentId && !item.isCurrent).toSorted((a, b) => b.submittedAt.localeCompare(a.submittedAt));
+  const history = workspace.submissions.filter((item) => (swapGroup?item.swapGroupId===swapGroup.id:team?item.teamId===team.id:item.enrollmentId === submission.enrollmentId) && item.assignmentId === submission.assignmentId && !item.isCurrent).toSorted((a, b) => b.submittedAt.localeCompare(a.submittedAt));
   const assignment = assignmentsForWeek(week).find((item) => item.id === submission.assignmentId);
   const allWeeks=params.get('week')==='all';
   const weekWide = (allWeeks||params.get('week') === week.id) && !params.has('assignment');
@@ -104,9 +106,9 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
     <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-2"><h2 className="text-sm font-semibold">Submitted work</h2>{history.length?<button type="button" aria-pressed={showHistory} className="min-h-11 text-sm font-semibold text-action" onClick={()=>setShowHistory(v=>!v)}>{showHistory?'← Current submission':`History (${history.length})`}</button>:null}</div>
     <div hidden={showHistory} className={`min-h-0 flex-1 ${isPdf?'':'overflow-y-auto p-5'}`}>
       {submission.payload.type==='file'&&!isPdf?<p className="mb-4 break-all text-sm font-semibold">{submission.payload.originalFilename}</p>:null}
-      {schedules[submission.id]?<ScheduleComparison snapshot={schedules[submission.id]!}/>:<ViewAttempt attempt={submission} announce={setMessage} fill={isPdf}/>}
+      {schedules[submission.id]?<ScheduleComparison snapshot={schedules[submission.id]!}/>:<><ViewAttempt attempt={submission} announce={setMessage} fill={isPdf}/>{swaps[submission.id]?<SlideSwapReview snapshot={swaps[submission.id]}/>:null}</>}
     </div>
-    <div hidden={!showHistory} className="min-h-0 flex-1 overflow-y-auto p-5"><h3 className="mb-4 text-base font-semibold">Previous submissions</h3><ol className="space-y-5">{history.map(attempt=><li key={attempt.id} className="border-b border-border pb-5 last:border-0"><p className="font-semibold">{submissionDisplayName(attempt)}</p><p className="mt-1 text-xs text-ink-soft">{formatSubmissionTime(attempt.submittedAt)} · {attempt.status.replace('_',' ')}</p>{attempt.feedback?<p className="mt-2 text-sm leading-6 text-ink-soft">{attempt.feedback}</p>:null}<div className="mt-3">{schedules[attempt.id]?<ScheduleComparison snapshot={schedules[attempt.id]!}/>:<ViewAttempt attempt={attempt} announce={setMessage} historical/>}</div>{investigations[attempt.id]?<div className="mt-4"><InvestigationHintSnapshot reference={investigations[attempt.id]!}/></div>:null}</li>)}</ol></div>
+    <div hidden={!showHistory} className="min-h-0 flex-1 overflow-y-auto p-5"><h3 className="mb-4 text-base font-semibold">Previous submissions</h3><ol className="space-y-5">{history.map(attempt=><li key={attempt.id} className="border-b border-border pb-5 last:border-0"><p className="font-semibold">{submissionDisplayName(attempt)}</p><p className="mt-1 text-xs text-ink-soft">{formatSubmissionTime(attempt.submittedAt)} · {attempt.status.replace('_',' ')}</p>{attempt.feedback?<p className="mt-2 text-sm leading-6 text-ink-soft">{attempt.feedback}</p>:null}<div className="mt-3">{schedules[attempt.id]?<ScheduleComparison snapshot={schedules[attempt.id]!}/>:<><ViewAttempt attempt={attempt} announce={setMessage} historical/>{swaps[attempt.id]?<SlideSwapReview snapshot={swaps[attempt.id]}/>:null}</>}</div>{investigations[attempt.id]?<div className="mt-4"><InvestigationHintSnapshot reference={investigations[attempt.id]!}/></div>:null}</li>)}</ol></div>
   </section>;
   const review=<section aria-label="Review tools" className="flex h-full min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface">
     <div role="tablist" aria-label="Review tools" className="flex shrink-0 border-b border-border px-3">{tabs.map(value=><button type="button" role="tab" key={value} id={`${toolsId}-${value}`} aria-controls={`${toolsId}-${value}-panel`} aria-selected={tool===value} tabIndex={tool===value?0:-1} onClick={()=>selectTool(value)} onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const i=tabs.indexOf(value);const next=e.key==='Home'?tabs[0]:e.key==='End'?tabs[2]:tabs[(i+(e.key==='ArrowRight'?1:2))%3];selectTool(next);document.getElementById(`${toolsId}-${next}`)?.focus();}}} className={`min-h-12 border-b-2 px-4 text-sm font-semibold ${tool===value?'border-action text-action':'border-transparent text-ink-soft hover:text-ink'}`}>{value==='feedback'?'Feedback':value==='rubric'?'Rubric':'Example'}</button>)}</div>
@@ -128,7 +130,7 @@ export function AdminSubmissionReview({ submissionId, reference, project, invest
   </section>;
   return <main className="pb-4"><PageContainer className="pt-3 sm:pt-4" style={{maxWidth:'100rem'}}>
     <header className="mb-4"><div className="flex flex-wrap items-center justify-between gap-x-4"><Link href={backHref} className="inline-flex min-h-11 items-center text-sm font-semibold text-action">← Review queue</Link><span className="text-xs font-semibold text-ink-soft">Week {week.weekNumber}{enrollment.isTest?' · Test submission':''}</span></div>
-      <div className="mt-1 flex flex-wrap items-center gap-3"><h1 className="text-2xl font-bold tracking-tight">{team?.name??person?.fullName??'Member submission'}</h1><AssignmentStatusBadge state={submission.status}/></div>
+      <div className="mt-1 flex flex-wrap items-center gap-3"><h1 className="text-2xl font-bold tracking-tight">{swapGroup?.name??team?.name??person?.fullName??'Member submission'}</h1><AssignmentStatusBadge state={submission.status}/></div>
       <p className="mt-1 text-sm leading-6 text-ink-soft">{assignment?.title} · Submitted {formatSubmissionTime(submission.submittedAt)}</p>
       {team?<details className="mt-1 text-xs text-ink-soft"><summary className="cursor-pointer py-2">Team members</summary><p>{team.enrollmentIds.map(id=>workspace.people.find(p=>p.id===workspace.enrollments.find(e=>e.id===id)?.personId)?.fullName).filter(Boolean).join(' · ')}</p></details>:null}
     </header>

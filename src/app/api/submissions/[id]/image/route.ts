@@ -1,3 +1,4 @@
+import {serveSwapFile} from '@/lib/slide-swap/server';
 import { createClient } from '@/lib/supabase/server';
 import { readBounded, storageObjectUrl } from '@/lib/uploads/server';
 import { isImageMime } from '@/lib/uploads/format';
@@ -16,6 +17,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const { data: { user } } = await db.auth.getUser();
   if (!user) return new Response('Sign in to view this image.', { status: 401, headers });
   const { id } = await params;
+  const proof=await db.rpc('slide_swap_proof',{p_submission:id});
+  if(proof.data)return serveSwapFile(proof.data,false,true);
   // The same live RLS boundary as downloads, including previous attempts and team access.
   const { data, error } = await db.from('submissions').select('file_path,file_size,mime_type,submission_type').eq('id', id).maybeSingle();
   if (error || !data || data.submission_type !== 'file' || !data.file_path || !isImageMime(data.mime_type)) {

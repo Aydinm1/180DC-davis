@@ -1,3 +1,6 @@
+import {readSlideSwap,readSwapSettings} from '@/lib/slide-swap/data';
+import {SlideSwap} from './slide-swap';
+import {swapInstructions} from '@/lib/slide-swap/types';
 import {readSchedule} from '@/lib/schedules/data';
 import {SchedulePlanning} from './schedule-planning';
 import { readCaseExercise } from '@/lib/cases/data';
@@ -20,6 +23,11 @@ import { TeamAssignmentInstructions } from './team-assignment-instructions';
 export async function AssignmentContent({ assignment, weekNumber, enrollmentId, weekHref, preview = false, browse = false }: {
   assignment: AssignmentDetail; weekNumber: number; enrollmentId: string; weekHref: string; preview?: boolean; browse?: boolean;
 }) {
+  if(assignment.workflow==='slide_swap') {
+    const samples=preview?await readSwapSettings(assignment.id):undefined;
+    const initial=preview||browse?{workflow:'slide_swap',overview:browse?swapInstructions:samples?.overview??swapInstructions,enrollmentId:'practice',attempts:[]}:await readSlideSwap(assignment.id);
+    return <main className="pb-12"><PageContainer className="py-8"><Link href={weekHref} className="action-link min-h-11 text-sm font-semibold text-action">← Week {weekNumber}</Link><h1 className="mt-4 text-3xl font-bold">{assignment.title}</h1><p className="mt-2 text-sm text-ink-soft">Due {assignment.dueLabel} · Individual Slide Swap</p><SlideSwap key={assignment.id} id={assignment.id} initial={initial} samples={samples} preview={preview||browse}/></PageContainer></main>;
+  }
   if(assignment.workflow==='schedule') {
     const initial=await readSchedule(assignment.id,preview||browse);
     return <main className="pb-12"><div className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 lg:px-8"><SchedulePlanning key={assignment.id} assignmentId={assignment.id} initial={initial} preview={preview} browse={browse} heading={{title:assignment.title,weekNumber,dueLabel:assignment.dueLabel,weekHref}}/></div></main>;

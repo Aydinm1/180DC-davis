@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-16
+**Last updated:** 2026-11-18
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,23 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Separate Slide Swap actions and clarify Meet & present wording. Seven local activity/
+  browser checks verify desktop/phone spacing and navigation; 143 unit/docs checks, lint,
+  typecheck and production build pass. Commit/push/deployment authorized.
+
+- [x] Support Google Slides/Canva links alongside PDFs in Slide Swap. Seven local activity/
+  browser checks pass without skips, including mixed groups, replacement, private exchange
+  and desktop/phone review. 143 unit/docs checks, schema security, lint, types, generated
+  types and production build pass. Hosted migrations applied after approval; commit/push/deployment authorized.
+
+- [x] Implement reusable Slide Swap: private stories/decks, assignment-specific pairs/trios,
+  atomic unlock, shared proof review, individual completion, previews and security checks.
+  Six activity/browser entries and nine existing team entries pass without skips. 142
+  unit/docs checks, schema security, lint, typecheck, generated types and build pass;
+  additional DB regressions and their skipped browser checks are recorded in Operations.
+  Hosted migrations applied after approval; commit/push/deployment authorized.
+  Real Week 5 setup/publication remains a separate action.
 
 - [x] Remove the All weeks breakdown while preserving the combined queue and week filter.
   140 unit/docs checks, lint and production build pass; browser expectation updated.

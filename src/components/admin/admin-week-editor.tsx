@@ -1,4 +1,5 @@
-"use client";
+'use client';
+import type {SwapSettings} from '@/lib/slide-swap/types';
 
 import { useCallback, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
@@ -27,7 +28,7 @@ import type { TeamBrief } from '@/lib/teams/briefs';
 
 const input = "mt-2 min-h-11 w-full rounded-lg border border-border-strong bg-surface px-3.5 text-base text-ink";
 
-export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = {}, caseTemplate, investigations={}, investigationTemplate,schedules={},teamBriefs={} }: { weekId: string; references?: GradingReference[]; guided?: Record<string,GuidedProject>; cases?: Record<string,CaseExercise>; caseTemplate?: CaseContent;investigations?:Record<string,Investigation>;investigationTemplate?:InvestigationConfig;schedules?:Record<string,ScheduleActivity>;teamBriefs?:Record<string,TeamBrief[]> }) {
+export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = {}, caseTemplate, investigations={}, investigationTemplate,schedules={},swaps={},teamBriefs={} }: { weekId: string; references?: GradingReference[]; guided?: Record<string,GuidedProject>; cases?: Record<string,CaseExercise>; caseTemplate?: CaseContent;investigations?:Record<string,Investigation>;investigationTemplate?:InvestigationConfig;schedules?:Record<string,ScheduleActivity>;swaps?:Record<string,SwapSettings>;teamBriefs?:Record<string,TeamBrief[]> }) {
   const workspace = useAdminWorkspace();
   const router = useRouter();
   const source = workspace.weeks.find((week) => week.id === weekId && week.cohortId === workspace.selectedCohortId);
@@ -112,7 +113,7 @@ export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = 
         <div className="flex flex-wrap items-center justify-between gap-4"><h2 className="text-xl font-bold">Assignments</h2><Button variant="secondary" disabled={saving} onClick={() => { const id = crypto.randomUUID(); const dueAt = new Date().toISOString(); patch({ assignment: undefined, assignments: [...assignmentsForWeek(draft), { id, weekNumber: draft.weekNumber, title: "", instructions: "", dueAt }] }); setDeadlines((current) => ({ ...current, [id]: formatPacificDateTimeInput(dueAt) })); setSelectedAssignment(id); }}>Add assignment</Button></div>
         <label className="block text-sm font-bold lg:hidden">Select assignment<select className={input} value={selectedAssignment ?? ''} onChange={e => setSelectedAssignment(e.target.value)}>{assignmentsForWeek(draft).map((a, i) => <option key={a.id} value={a.id}>{a.title || `Assignment ${i + 1}`}</option>)}</select></label>
         <div className="grid items-start gap-6 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <nav aria-label="Select assignment" className="hidden space-y-2 lg:block">{assignmentsForWeek(draft).map((a, i) => <button type="button" key={a.id} aria-pressed={selectedAssignment === a.id} onClick={() => setSelectedAssignment(a.id)} className={`w-full rounded-lg border p-4 text-left ${selectedAssignment === a.id ? 'border-action bg-success-bg' : 'border-border bg-surface hover:bg-surface-subtle'}`}><span className="block break-words text-sm font-bold">{a.title || `Assignment ${i + 1}`}</span><span className="mt-2 block text-xs text-ink-soft">{a.submissionMode === 'team' ? 'Team' : 'Individual'} · {(guided[a.id]?.workflow ?? a.workflow) === 'guided' ? 'Guided project' : (guided[a.id]?.workflow ?? a.workflow) === 'cases' ? 'Eight-case challenge' : (guided[a.id]?.workflow ?? a.workflow) === 'investigation' ? 'Spreadsheet investigation' : (guided[a.id]?.workflow ?? a.workflow) === 'schedule' ? 'Schedule planning' : 'Standard'}</span><span className="mt-1 block text-xs leading-5 text-ink-soft">{formatDeadline(a.dueAt)}</span></button>)}</nav>
+        <nav aria-label="Select assignment" className="hidden space-y-2 lg:block">{assignmentsForWeek(draft).map((a, i) => <button type="button" key={a.id} aria-pressed={selectedAssignment === a.id} onClick={() => setSelectedAssignment(a.id)} className={`w-full rounded-lg border p-4 text-left ${selectedAssignment === a.id ? 'border-action bg-success-bg' : 'border-border bg-surface hover:bg-surface-subtle'}`}><span className="block break-words text-sm font-bold">{a.title || `Assignment ${i + 1}`}</span><span className="mt-2 block text-xs text-ink-soft">{a.submissionMode === 'team' ? 'Team' : 'Individual'} · {(guided[a.id]?.workflow ?? a.workflow) === 'guided' ? 'Guided project' : (guided[a.id]?.workflow ?? a.workflow) === 'cases' ? 'Eight-case challenge' : (guided[a.id]?.workflow ?? a.workflow) === 'investigation' ? 'Spreadsheet investigation' : (guided[a.id]?.workflow ?? a.workflow) === 'schedule' ? 'Schedule planning' : (guided[a.id]?.workflow ?? a.workflow) === 'slide_swap' ? 'Slide Swap' : 'Standard'}</span><span className="mt-1 block text-xs leading-5 text-ink-soft">{formatDeadline(a.dueAt)}</span></button>)}</nav>
         <div className="min-w-0">
         {assignmentsForWeek(draft).map((assignment, index) => {
           const persisted = assignmentsForWeek(source).find((item) => item.id === assignment.id);
@@ -133,7 +134,7 @@ export function AdminWeekEditor({ weekId, references = [], guided = {}, cases = 
             </div></div>
             <div hidden={assignmentSection !== 'grading'} className="mt-6"><GradingReferenceEditor scheduleStarter={schedules[assignment.id]?.workflow==='schedule'&&schedules[assignment.id]?.formatVersion===2?schedules[assignment.id]?.starter??[]:undefined} assignmentId={assignment.id} initial={references.find(r => r.assignmentId === assignment.id)} persisted={Boolean(persisted)} onDirty={referenceChanged} expanded /></div>
             <div hidden={assignmentSection !== 'activity'} className="mt-6">
-              {persisted&&guided[assignment.id]?<GuidedEditor assignmentId={assignment.id} initial={guided[assignment.id]} cases={cases[assignment.id]} caseTemplate={caseTemplate} investigation={investigations[assignment.id]} investigationTemplate={investigationTemplate} schedule={schedules[assignment.id]} teamMode={persisted.submissionMode==='team'} onDirty={referenceChanged}/>:<p className="text-sm text-ink-soft">Save the assignment first to configure its workflow.</p>}
+              {persisted&&guided[assignment.id]?<GuidedEditor assignmentId={assignment.id} initial={guided[assignment.id]} cases={cases[assignment.id]} caseTemplate={caseTemplate} investigation={investigations[assignment.id]} investigationTemplate={investigationTemplate} swap={swaps[assignment.id]} schedule={schedules[assignment.id]} teamMode={persisted.submissionMode==='team'} onDirty={referenceChanged}/>:<p className="text-sm text-ink-soft">Save the assignment first to configure its workflow.</p>}
             </div>
           </Card></div>;
         })}

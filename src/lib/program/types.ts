@@ -102,6 +102,7 @@ export type SubmissionAttempt = {
   enrollmentId?: string;
   targetId?: string;
   teamId?: string;
+  swapGroupId?: string;
   participantEnrollmentIds?: readonly string[];
   submittedByName?: string;
   status: SubmissionStatus;
@@ -115,7 +116,7 @@ export type SubmissionAttempt = {
 };
 
 export type Assignment = {
-  workflow?: 'standard' | 'guided' | 'cases' | 'investigation' | 'schedule';
+  workflow?: 'standard' | 'guided' | 'cases' | 'investigation' | 'schedule' | 'slide_swap';
   /** Member-scoped manual credit; never a fabricated submission. */
   caseProgress?: { answered: number; completedAt?: string };
   completionCredit?: { id: string; grantedAt: string };
@@ -132,7 +133,7 @@ export type Assignment = {
 };
 
 export function submissionBelongsTo(attempt: SubmissionAttempt, enrollmentId: string) {
-  return attempt.enrollmentId === enrollmentId || !!attempt.teamId && !!attempt.participantEnrollmentIds?.includes(enrollmentId);
+  return attempt.enrollmentId === enrollmentId || !!(attempt.teamId||attempt.swapGroupId) && !!attempt.participantEnrollmentIds?.includes(enrollmentId);
 }
 
 export type AssignmentCompletion = {

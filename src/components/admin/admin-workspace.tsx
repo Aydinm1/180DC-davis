@@ -80,7 +80,7 @@ export function AdminWorkspace({ children, user, initialState }: { children: Rea
   }
   const value: AdminWorkspaceContextValue = {
     selectedCohortId, setSelectedCohortId: changeCohort, setUnsavedChanges, navigate,
-    people, approvedMembers, cohorts, enrollments, weeks, submissions, teams:initialState.teams,
+    people, approvedMembers, cohorts, enrollments, weeks, submissions, teams:initialState.teams,swapGroups:initialState.swapGroups,
     completionCredits:initialState.completionCredits,
     caseProgress:initialState.caseProgress,
     async updateSubmission(id, status, feedback, expectedUpdatedAt) {

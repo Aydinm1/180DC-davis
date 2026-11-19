@@ -1,9 +1,9 @@
-export type PdfResource = { kind: 'submission' | 'example'; id: string; name: string };
+export type PdfResource = { kind: 'submission' | 'example' | 'swap'; id: string; name: string };
 export function isPdfFile(mime: string | null | undefined, name: string) {
  return mime === 'application/pdf' || !mime && /\.pdf$/i.test(name);
 }
 export function pdfUrls(resource: PdfResource) {
- const base=resource.kind==='submission'?'/api/submissions/':'/api/grading-examples/';
+ const base=resource.kind==='swap'?'/api/slide-swap/assets/':resource.kind==='submission'?'/api/submissions/':'/api/grading-examples/';
  return {preview:`${base}${resource.id}/pdf`,download:`${base}${resource.id}/download`};
 }
 export function pdfSignature(bytes:Uint8Array) {

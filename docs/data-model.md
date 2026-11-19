@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-12
+**Last updated:** 2026-11-18
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -334,7 +334,8 @@ payloads, catches prepared file finalization, and atomically freezes the workflo
 Standard assignments and existing work remain unchanged. See ADR 0022.
 
 Team-ownership extension (local): `submission_targets` uniquely identifies an assignment
-and either an enrollment or a cohort team. Existing attempts are backfilled without
+and an enrollment, cohort team or assignment-specific Slide Swap group (the third owner
+is added by ADR 0034). Existing attempts are backfilled without
 changing IDs/content. Attempts have a required `target_id`, nullable individual
 `enrollment_id`, nullable `team_id`, and optional `submitted_by` person (historical
 individual attempts are not assigned an invented submitter). The scope trigger validates
@@ -390,7 +391,7 @@ Constraints require the assignment week and owning enrollment/team to belong to 
 exactly one valid file, URL, or written-text payload according to `submission_type`.
 Non-file attempts have null filename/path/size/MIME; text and URL are mutually exclusive.
 Files require nonnull size and MIME. A partial unique index permits only one current submission per target
-(assignment and individual/team owner). Resubmission atomically sets the previous row to non-current and inserts
+(assignment and individual/team/swap-group owner). Resubmission atomically sets the previous row to non-current and inserts
 a new row pointing to it. Historical records are never silently overwritten.
 
 ## Safe week catalog
@@ -774,3 +775,34 @@ examples. Keep existing name, day/block and staffing validation. Saved data rema
 by existing RPC byte limits (200 KB participant operations, 1 MB configuration/reference
 operations); validators also reject a task array exceeding 1 MB. Add task is disabled only
 while editing is otherwise unavailable, not because a task count was reached.
+
+## Slide Swap storage and ownership
+
+`workflow = slide_swap` requires Individual mode. Public `slide_swap_groups` and
+`slide_swap_members` store assignment-specific identity/order/scope; reads require admin
+or live participation in that group. No client writes are granted. `submission_targets`
+and `submissions` add nullable `swap_group_id`; targets have exactly one individual,
+project-team or swap-group owner. Existing owners/records are not rewritten.
+
+Private `swap_configs`, `swap_assets`, `swap_decks`, `swap_attempts` and `swap_receipts`
+store stories, versioned setup, immutable upload paths, readiness, frozen story/deck maps,
+proof participant snapshots and retry receipts. These tables are RPC-only, including for
+admins. `read_slide_swap` has separate admin/member projections; it never sends a partner
+story or unopened deck. The new private bucket is `slide-swap`, capped at 20 MB and
+PDF/PNG/JPEG/WebP. Insert needs an authorized unexpired owner intent; read needs a ready
+asset and owner/assigned-presenter/group-proof/admin authority. No browser delete/update.
+
+Typed setup/prepare/cancel RPCs use user sessions. Finalization/upload-inspection and cleanup
+RPCs are service-only and recheck live actor identity, enrollment, publication, current IDs,
+group versions and the transaction gate. File metadata must match Storage; inspected decks
+must have exactly five pages. `save_slide_swap_link` is a narrowly authorized user-session
+RPC sharing the transaction gate, expected current deck and duplicate-safe receipts. Link
+assets have a validated HTTPS Google Slides/Canva `external_url` and null path/MIME/size;
+file assets require path/MIME/size and no URL. Links are never Storage objects or upload
+intents. URLs are projected only for the author, assigned presenter after unlock, or admin
+review. Unlock preserves two/three original story/asset references; remote slide content
+is mutable and is neither fetched nor snapshotted.
+Proof insertion requires its matching private snapshot; ordinary upload/response paths
+remain blocked. Completion projections recognize group participant IDs, never infer that
+an individual exception credit completes the whole group. RLS and endpoints recheck access
+on every request, including after withdrawal or role/roster revocation.

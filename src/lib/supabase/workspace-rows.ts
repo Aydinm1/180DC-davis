@@ -6,7 +6,7 @@ import { readPages } from './pagination.ts';
 export async function readWorkspaceRows(db: SupabaseClient<Database>, admin: boolean) {
   // All sets are independent. Pagination remains ordered and complete within each set.
   const [people, roster, cohorts, enrollments, weeks, resources, assignments, submissions, documents,
-    activity, teamRows, memberships, completionCredits, caseProgress] = await Promise.all([
+    activity, teamRows, memberships, completionCredits, caseProgress,swapGroups,swapMembers] = await Promise.all([
     readPages((from, to) => db.from('people').select('*').order('id').range(from, to)),
     readPages((from, to) => db.from('approved_members').select('*').order('id').range(from, to)),
     readPages((from, to) => db.from('program_cohorts').select('*').order('id').range(from, to)),
@@ -21,7 +21,9 @@ export async function readWorkspaceRows(db: SupabaseClient<Database>, admin: boo
     readPages((from, to) => db.from('team_memberships').select('*').order('enrollment_id').range(from, to)),
     readPages((from, to) => db.from('assignment_completions').select('*').is('revoked_at', null).order('id').range(from, to)),
     readPages((from, to) => db.rpc('case_progress').order('assignment_id').order('enrollment_id').range(from, to)),
+    readPages((from,to)=>db.from('slide_swap_groups').select('*').order('id').range(from,to)),
+    readPages((from,to)=>db.from('slide_swap_members').select('*').order('enrollment_id').range(from,to)),
   ]);
   return { people, roster, cohorts, enrollments, weeks, resources, assignments, submissions, documents,
-    activity, teamRows, memberships, completionCredits, caseProgress };
+    activity, teamRows, memberships, completionCredits, caseProgress,swapGroups,swapMembers };
 }
