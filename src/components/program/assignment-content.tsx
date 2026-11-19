@@ -1,5 +1,6 @@
 import {readSlideSwap,readSwapSettings} from '@/lib/slide-swap/data';
 import {SlideSwap} from './slide-swap';
+import {SlideSwapPreview} from '@/components/admin/slide-swap-preview';
 import {swapInstructions} from '@/lib/slide-swap/types';
 import {readSchedule} from '@/lib/schedules/data';
 import {SchedulePlanning} from './schedule-planning';
@@ -26,7 +27,7 @@ export async function AssignmentContent({ assignment, weekNumber, enrollmentId, 
   if(assignment.workflow==='slide_swap') {
     const samples=preview?await readSwapSettings(assignment.id):undefined;
     const initial=preview||browse?{workflow:'slide_swap',overview:browse?swapInstructions:samples?.overview??swapInstructions,enrollmentId:'practice',attempts:[]}:await readSlideSwap(assignment.id);
-    return <main className="pb-12"><PageContainer className="py-8"><Link href={weekHref} className="action-link min-h-11 text-sm font-semibold text-action">← Week {weekNumber}</Link><h1 className="mt-4 text-3xl font-bold">{assignment.title}</h1><p className="mt-2 text-sm text-ink-soft">Due {assignment.dueLabel} · Individual Slide Swap</p><SlideSwap key={assignment.id} id={assignment.id} initial={initial} samples={samples} preview={preview||browse}/></PageContainer></main>;
+    return <main className="pb-12"><PageContainer className="py-8"><Link href={weekHref} className="action-link min-h-11 text-sm font-semibold text-action">← Week {weekNumber}</Link><h1 className="mt-4 text-3xl font-bold">{assignment.title}</h1><p className="mt-2 text-sm text-ink-soft">Due {assignment.dueLabel} · Individual Slide Swap</p>{samples?<SlideSwapPreview key={assignment.id} id={assignment.id} initial={initial} samples={samples}/>:<SlideSwap key={assignment.id} id={assignment.id} initial={initial} preview={preview||browse}/>}</PageContainer></main>;
   }
   if(assignment.workflow==='schedule') {
     const initial=await readSchedule(assignment.id,preview||browse);

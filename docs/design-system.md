@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-19
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -552,7 +552,11 @@ the Week dropdown for drill-down; do not repeat week-by-week summaries above the
 
 Use compact Instructions / Workspace and Create / Swap / Meet & present navigation. Show one
 phase at a time. Lead with the private story or assigned presenter's deck; waiting state
-names partners and offers Refresh. Keep story text comfortably bounded and use the shared
+names partners and offers Refresh. Once a deck is saved, put readiness and the deck link/
+Refresh actions first, using a spaced action row on desktop and stacked actions on phones.
+Collapse the original story into a native clickable disclosure below that status; it remains
+expanded before the first deck is saved. Use only “Double-check your viewing permissions.”
+as link-field guidance. Keep story text comfortably bounded and use the shared
 PDF reader with an optional Download for uploaded files. Default creation to Slide link,
 with Upload PDF as an alternative. Show a labeled Google Slides/Canva URL input and brief
 viewing-access guidance. Linked decks use an Open slides action in a new tab in member
@@ -563,3 +567,10 @@ and Partners. Edit one selected story/group at a time, with two/three ordered
 participant/story selectors per group. Read-only
 review puts the meeting photo first and frozen decks/stories in an expandable comparison
 section. Previews clearly state nothing is submitted; no real upload actions run there.
+
+Admin preview opens with Test pair / Assignment preview navigation. Test pair has two
+labeled presenter-link fields and Preview swap. Once started, show Presenter 1 / Presenter 2
+view controls, Edit test links and the same member workspace; changing presenters preserves
+the shared simulated photo outcome. Editing and restarting clears that simulation. Keep
+invalid links in their fields with a clear error. State that this preview does not submit
+and links reset when leaving. Do not expose this real-link test setup in Viewer practice.

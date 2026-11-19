@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Moved saved Slide Swap readiness/actions above the story, made saved stories collapsible, and simplified viewing-permission guidance.
+
+- Added an admin-only Slide Swap test pair: paste two presentation links, switch presenter views and simulate meeting proof without student accounts or saved records.
+
 - Separated the Slide Swap deck link and next-step button, and clarified the final phase as Meet & present.
 
 - Added Google Slides and Canva links as the default Slide Swap option, preserving PDF uploads, private all-ready exchange and meeting-photo grading. Linked slide content may change at its source.

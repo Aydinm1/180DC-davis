@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-19
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -740,7 +740,9 @@ group before publication; later additions wait for setup. No project team is cha
 Create → Swap → Present: each person shares a Google Slides or Canva design link, or uploads
 a PDF of exactly five pages (20 MB maximum). Students enable partner viewing access. Link
 permissions and slide counts are not automatically checked; linked decks may keep changing
-at their source. Readiness is preparation, not a graded submission. Once every active group
+at their source. Readiness is preparation, not a graded submission. After saving a deck, lead Create with
+its ready/waiting status and actions; collapse the story into a clickable disclosure so
+students do not need to scroll through it to find their status. Once every active group
 member has a ready deck, preserve deck references/stories and membership atomically. Pair members
 present each other's decks; trio positions present the next position, wrapping at the end.
 Creators keep their original stories and reveal them aloud after presentations. Partners'
@@ -752,4 +754,8 @@ attempts/feedback remain available. Withdrawal revokes access without erasing sn
 Setup exposes readiness and individual completion exceptions. Admins can re-pair before
 unlock while preserving started story/deck ownership. Unlocked groups cannot be rewritten;
 manual individual credit resolves exceptions without proof or affecting their partners.
-Admin preview simulates locally with an explicit sample group; Viewer practice is fictional.
+Admin preview defaults to a Test pair: paste two Google Slides/Canva links and switch
+between Presenter 1 and Presenter 2 to inspect the exchange and simulate photo proof.
+No student accounts or configured groups are required. Links and simulated proof live only
+within the open preview, reset on reload/leaving, and create no records. Assignment preview
+remains available for configured sample groups. Viewer practice stays fictional.

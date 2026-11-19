@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-19
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,17 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Prioritize saved Slide Swap readiness/actions, collapse the story after saving,
+  and simplify link guidance. Seven local activity/browser checks verify long-story
+  readiness, keyboard disclosure toggling, reload collapse and desktop/phone action gaps.
+  143 unit/docs checks, lint, typecheck and production build pass. Commit/push/deployment authorized.
+
+- [x] Add an admin preview test pair with two slide links and presenter switching, without
+  student accounts or participant writes. Seven local activity/browser checks verify
+  desktop/phone exchange, editing, reset and zero participant actions/uploads. 143 unit/docs
+  checks, lint, typecheck and production build pass. Release authorized; Next.js security-upgrade
+  recommendation is recorded in Operations.
 
 - [x] Separate Slide Swap actions and clarify Meet & present wording. Seven local activity/
   browser checks verify desktop/phone spacing and navigation; 143 unit/docs checks, lint,

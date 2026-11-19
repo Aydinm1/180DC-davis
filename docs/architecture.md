@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-19
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -649,3 +649,10 @@ Google Slides and Canva URLs are validated at both application and database boun
 stored privately, and opened directly in a new tab with noopener/noreferrer. GAP does not
 fetch, embed, inspect permissions or cache remote slide content; file endpoints exclude
 link assets. The same all-ready unlock supports mixed link/PDF groups.
+
+Admin `SlideSwapPreview` provides an in-memory two-link test pair and a switch back to
+configured assignment preview. It passes synthetic ready group/deck references into the
+shared preview workspace and reuses its zero-write photo simulation. The server only
+loads admin-authorized settings; no test groups, enrollments, assets or submissions are
+created. URLs pass the existing deck-link validator and open in separate tabs. No browser
+storage, new endpoints or schema changes are used; leaving/reloading clears test links.

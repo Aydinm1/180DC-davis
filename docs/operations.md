@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-19
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -1560,3 +1560,20 @@ replacement by PDF, mixed trio unlock, no pre-unlock partner URL, admin link rev
 link saving, existing PDF upload/inspection/reading and shared photo grading. Four schema
 security checks and 143 unit/docs checks pass, with lint, typecheck, generated types and
 Webpack production build. No external Google/Canva deck was requested or changed.
+
+Admin two-link test-pair verification (2026-11-19): seven Slide Swap entries pass without
+skips, including 1280px/390px presenter switching, direct partner links, invalid-link
+retention, local shared-photo simulation, edit/restart and reload reset. Preview sends no
+participant Server Actions or Storage uploads; the existing admin Last active recorder is
+allowed. Asset counts remain unchanged. 143 unit/docs checks, lint, typecheck and Webpack
+production build pass. No hosted changes or release performed for this preview addition.
+The build emitted a one-time Next.js security-upgrade recommendation for installed 16.4.2;
+the normal retry succeeded without disabling checks. Dependency upgrades remain follow-up
+work and are not included in this preview change.
+
+Saved Slide Swap readiness verification (2026-11-19): seven local activity/browser entries
+pass without skips, including a long story collapsed after saving, readiness above the
+disclosure, Enter/Space toggling, reload collapse and desktop/phone action gaps. Screenshots
+were inspected at 1280px/390px. 143 unit/docs checks, lint, typecheck and production build
+pass. No database changes or hosted release were performed for this UI adjustment. The
+existing Next.js security-upgrade recommendation remains a separate follow-up.
