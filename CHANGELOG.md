@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Replaced the raw Slide Swap meeting-photo picker with a styled Choose photo / Change photo control and a wrapping filename display.
+
 - Moved saved Slide Swap readiness/actions above the story, made saved stories collapsible, and simplified viewing-permission guidance.
 
 - Added an admin-only Slide Swap test pair: paste two presentation links, switch presenter views and simulate meeting proof without student accounts or saved records.

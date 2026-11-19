@@ -1577,3 +1577,9 @@ disclosure, Enter/Space toggling, reload collapse and desktop/phone action gaps.
 were inspected at 1280px/390px. 143 unit/docs checks, lint, typecheck and production build
 pass. No database changes or hosted release were performed for this UI adjustment. The
 existing Next.js security-upgrade recommendation remains a separate follow-up.
+
+Meeting-photo picker verification (2026-11-19): seven local Slide Swap activity/browser
+entries pass without skips, including keyboard opening, photo replacement, long filenames
+at 1280px/390px and both real upload and zero-write proof simulation. Screenshots were
+inspected. 143 unit/docs checks, lint, typecheck and production build pass. No schema or
+hosted changes. The existing Next.js security-upgrade recommendation remains follow-up.

@@ -10,6 +10,10 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Restyle the Slide Swap meeting-photo picker. Seven local activity/browser checks
+  verify keyboard selection, replacement, long filenames on desktop/phone and existing
+  upload/preview flows. 143 unit/docs checks, lint, typecheck and build pass. Release authorized.
+
 - [x] Prioritize saved Slide Swap readiness/actions, collapse the story after saving,
   and simplify link guidance. Seven local activity/browser checks verify long-story
   readiness, keyboard disclosure toggling, reload collapse and desktop/phone action gaps.

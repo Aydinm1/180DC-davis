@@ -561,8 +561,11 @@ PDF reader with an optional Download for uploaded files. Default creation to Sli
 with Upload PDF as an alternative. Show a labeled Google Slides/Canva URL input and brief
 viewing-access guidance. Linked decks use an Open slides action in a new tab in member
 exchange and admin review; no empty PDF viewer appears. Place the next-phase action on
-its own row below the deck with a visible gap, labeled Next: Meet & present. Proof input is a single labeled image picker with
-progress, retry/cancel, status and feedback. Admin setup separates Instructions, Stories
+its own row below the deck with a visible gap, labeled Next: Meet & present. Proof input uses a bordered photo picker with an explicit Choose photo / Change photo
+button, selected filename and PNG/JPEG/WebP/20 MB guidance. Keep the native file input
+visually hidden and associated with its label; the visible button supports keyboard access.
+Stack button and filename on phones, wrap long names, and preserve selection if the dialog
+is dismissed. Retain progress, retry/cancel, status and feedback. Admin setup separates Instructions, Stories
 and Partners. Edit one selected story/group at a time, with two/three ordered
 participant/story selectors per group. Read-only
 review puts the meeting photo first and frozen decks/stories in an expandable comparison
