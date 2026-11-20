@@ -210,6 +210,13 @@ setup, admins may grant completion to an enrolled participant with no current su
 In Review queue → choose the assignment → Not submitted, use Mark complete and confirm
 the named person/assignment in an in-app confirmation, unaffected by blocked browser
 popups. The same confirmation handles Undo and Slide Swap individual exceptions. Complete shows the manual timestamp and confirmed Undo completion.
+Not submitted rows offer individual checkboxes, Select all and Mark selected complete
+for eligible missing Individual work. Select all includes only currently filtered, visible
+rows; changing cohort/week/assignment/audience/status/search clears selection. A single
+in-app confirmation lists every person/assignment. Existing submissions and completed
+credits are excluded. Each selected credit uses the existing live authorization and
+submission-race checks; report per-row failures and keep successful credits. Retrying
+failed or uncertain rows is duplicate-safe. No bulk review approval or bulk undo is added.
 Credit applies only to that assignment/enrollment, not the entire week or cohort. A week
 completes only when all its assignments are approved or explicitly credited.
 

@@ -1591,3 +1591,12 @@ focus restoration. Member completion/reload and direct HTTP authorization checks
 Seven Slide Swap entries and 143 unit/docs checks pass, as do lint, typecheck and production
 build. No database migration or production records changed. Existing Next.js upgrade
 recommendation remains follow-up work; this UI fix has not been released.
+
+Bulk manual-credit verification (2026-11-19): eight completion entries pass without skips.
+Desktop/phone checks cover filtered Select all, individual checkbox changes, selection
+reset on search, confirmation cancellation, a real submission racing a bulk grant, partial
+success with a retry, interrupted request recovery, inactive/test exclusions and direct
+HTTP action denials. Existing submission metadata remains unchanged; malformed admin
+chunks reject before any grant. Six assignment regressions and 145 unit/docs checks pass,
+with lint, typecheck and Webpack production build. Screenshots were inspected. No migration
+or hosted writes were performed. Existing dependency-security follow-up is unchanged.

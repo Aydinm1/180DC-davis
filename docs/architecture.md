@@ -192,6 +192,13 @@ ID and timestamp to member assignment DTOs. Shared completion selectors honor cr
 received counts still require real attempts. Writes refresh protected views after
 success, with confirmation/retry and explicit undo. The RPC/submission gate and insertion
 guard prevent concurrent link/file/text saves from bypassing credit.
+The review queue owns selection in a child keyed by its full filter query. Bulk grants
+accept up to 100 unique assignment/enrollment pairs per Server Action; larger UI selections
+are chunked without adding a user-facing limit. Authenticate the live admin, validate the
+entire chunk, then call the existing user-scoped grant RPC sequentially per item. Each
+transaction rechecks authorization/eligibility, so partial success is explicit; return only
+IDs and safe errors, revalidate once per chunk and retry only failed/uncertain pairs. No
+service-role access, new database function or schema migration is introduced.
 
 Shared ownership: cohort teams and memberships are read only into the authorized admin
 workspace. Members first resolve their own enrollment, then `my_team`; their loader

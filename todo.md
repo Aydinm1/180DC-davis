@@ -10,6 +10,12 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Add filtered Select all and batch manual credit for missing Individual work. Eight
+  completion entries verify desktop/phone selection, filter reset, confirmation, races,
+  partial results, interrupted-request retry and action access guards. Six assignment
+  regressions and 145 unit/docs checks pass, with lint, types and production build.
+  Existing submissions remain unchanged; no migration required. Release authorized.
+
 - [x] Replace browser confirms for manual completion/undo and Slide Swap exceptions
   with an in-app dialog. Seven completion entries verify blocked native confirms,
   Cancel/Escape, focus, grant/undo and member credit on desktop/phone. Seven Slide Swap

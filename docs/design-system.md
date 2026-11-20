@@ -164,6 +164,11 @@ Keep the dialog open with an inline error on failure and disable actions while s
 show “Manually completed,” its Pacific timestamp and confirmed Undo completion. Do not
 add a score, synthetic attachment or new hero card. Members see the existing Complete
 badge with a short GAP-lead credit notice instead of a submission button.
+Missing-work selection uses a quiet toolbar: Select all / Clear selection, selected count
+and Mark selected complete. Add 44px checkbox targets to eligible desktop rows and phone
+cards. Keep Official/Test and current filters scoped. Use the shared in-app confirmation
+with a keyboard-scrollable list of named credits and per-row results. Partial success stays
+visible with Retry failed; never imply all selected work succeeded when some failed.
 
 Teams use one restrained management panel with a labeled team selector in its header,
 member count/scope and lock explanation below. The default view lists assigned participants;

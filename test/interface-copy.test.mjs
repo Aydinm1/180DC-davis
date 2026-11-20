@@ -3,7 +3,7 @@ import test from 'node:test';
 import {readFileSync} from 'node:fs';
 const source=path=>readFileSync(new URL('../src/'+path,import.meta.url),'utf8');
 test('review, attendance and direction inbox omit bookkeeping commentary',()=>{
- const files=['components/admin/admin-overview.tsx','components/admin/project-direction-requests.tsx','components/attendance/admin-attendance.tsx'];
+ const files=['components/admin/admin-overview.tsx','components/admin/review-queue-rows.tsx','components/admin/project-direction-requests.tsx','components/attendance/admin-attendance.tsx'];
  const text=files.map(source).join('\n');
  for(const removed of ['Counts describe assignment submissions, not unique people.','This does not mean the week is complete.','Preparation approvals are separate from graded submissions.','Official teams only.','Test check-ins are retained but never included in official present counts.','Self-check-in closed. Recorded attendance is retained.'])assert.ok(!text.includes(removed),removed);
  assert.match(text,/No submissions awaiting review/);
