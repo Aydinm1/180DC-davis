@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Fixed manual assignment completion becoming unusable after browser confirmation popups were suppressed, using an accessible in-app confirmation for grant/undo and Slide Swap exceptions.
+
 - Replaced the raw Slide Swap meeting-photo picker with a styled Choose photo / Change photo control and a wrapping filename display.
 
 - Moved saved Slide Swap readiness/actions above the story, made saved stories collapsible, and simplified viewing-permission guidance.

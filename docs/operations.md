@@ -1583,3 +1583,11 @@ entries pass without skips, including keyboard opening, photo replacement, long 
 at 1280px/390px and both real upload and zero-write proof simulation. Screenshots were
 inspected. 143 unit/docs checks, lint, typecheck and production build pass. No schema or
 hosted changes. The existing Next.js security-upgrade recommendation remains follow-up.
+
+Manual-completion dialog verification (2026-11-19): seven completion entries pass without
+skips, including desktop/phone grant and undo while `window.confirm` always returns false,
+Cancel/Escape leaving credit unchanged, initial Cancel focus, keyboard trapping and trigger
+focus restoration. Member completion/reload and direct HTTP authorization checks pass.
+Seven Slide Swap entries and 143 unit/docs checks pass, as do lint, typecheck and production
+build. No database migration or production records changed. Existing Next.js upgrade
+recommendation remains follow-up work; this UI fix has not been released.

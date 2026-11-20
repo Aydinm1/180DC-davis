@@ -156,7 +156,11 @@ avoid presenting normal progress as an actionable request. Phone layouts wrap ac
 and preserve 44px controls. Preview is clearly read-only and offers an explicit sample team.
 
 Manual completion stays in existing review rows/cards: a quiet 44px Mark complete action
-for missing Individual work, confirmed with the person and assignment. Complete rows
+for missing Individual work, confirmed in a branded in-app modal with the person and
+assignment. Do not use browser confirm popups: users can suppress them, blocking future
+actions. Apply the same modal to Slide Swap individual completion exceptions. Cancel
+receives initial focus; Escape cancels, focus stays inside, and closing restores the trigger.
+Keep the dialog open with an inline error on failure and disable actions while saving. Complete rows
 show “Manually completed,” its Pacific timestamp and confirmed Undo completion. Do not
 add a score, synthetic attachment or new hero card. Members see the existing Complete
 badge with a short GAP-lead credit notice instead of a submission button.

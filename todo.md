@@ -10,6 +10,11 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Replace browser confirms for manual completion/undo and Slide Swap exceptions
+  with an in-app dialog. Seven completion entries verify blocked native confirms,
+  Cancel/Escape, focus, grant/undo and member credit on desktop/phone. Seven Slide Swap
+  entries, 143 unit/docs checks, lint, typecheck and build pass. Release authorized.
+
 - [x] Restyle the Slide Swap meeting-photo picker. Seven local activity/browser checks
   verify keyboard selection, replacement, long filenames on desktop/phone and existing
   upload/preview flows. 143 unit/docs checks, lint, typecheck and build pass. Release authorized.

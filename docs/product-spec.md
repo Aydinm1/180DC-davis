@@ -208,7 +208,8 @@ to real content requires approval of the full brief, not an automatic migration.
 For early assignments where one person submitted on behalf of teammates before team
 setup, admins may grant completion to an enrolled participant with no current submission.
 In Review queue → choose the assignment → Not submitted, use Mark complete and confirm
-the named person/assignment. Complete shows the manual timestamp and confirmed Undo completion.
+the named person/assignment in an in-app confirmation, unaffected by blocked browser
+popups. The same confirmation handles Undo and Slide Swap individual exceptions. Complete shows the manual timestamp and confirmed Undo completion.
 Credit applies only to that assignment/enrollment, not the entire week or cohort. A week
 completes only when all its assignments are approved or explicitly credited.
 
