@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-19
+**Last updated:** 2026-11-22
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -1524,7 +1524,9 @@ no real assignment setup or example answer was populated.
 ## Slide Swap release and cleanup
 
 Apply `202611170001_slide_swap.sql`, then `202611180001_slide_swap_links.sql` before code
-using Slide Swap goes live. The latter adds private Google Slides/Canva link readiness;
+using Slide Swap goes live. Apply `202611220001_slide_swap_canva_short_links.sql` before
+deploying the short-link compatibility fix; it expands the private URL validator without
+rewriting any existing data. The 20261118 migration adds private Google Slides/Canva link readiness;
 it does not fetch external decks, require OAuth credentials, or change existing files.
 The initial migration adds assignment-specific shared ownership and private story/deck/proof storage without touching
 existing teams/submissions. Local implementation does not configure or publish real Week 5.
@@ -1600,3 +1602,14 @@ HTTP action denials. Existing submission metadata remains unchanged; malformed a
 chunks reject before any grant. Six assignment regressions and 145 unit/docs checks pass,
 with lint, typecheck and Webpack production build. Screenshots were inspected. No migration
 or hosted writes were performed. Existing dependency-security follow-up is unchanged.
+
+Canva short-link verification (2026-11-22): confirmed the official canva.link share format
+against Canva’s Help Centre. Seven local Slide Swap entries pass without skips, covering
+short-link save/reload, replacement, partner exchange, admin review, zero-write test-pair
+preview, and desktop/phone flows. Existing full Canva URLs and PDFs remain covered.
+Validators reject non-HTTPS, spoofed hosts, credentials, custom ports and empty/nested
+short paths. Four schema-security checks, 145 unit/docs checks, lint, typecheck, generated
+types and production build pass. Hosted migration `202611220001` was approved and applied
+on 2026-11-22. Verified its receipt, short/full URL acceptance, spoof/HTTP rejection and
+unchanged private-function execution grants. Commit/push/deployment authorized. No real
+deck or participant record changed.

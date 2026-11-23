@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-19
+**Last updated:** 2026-11-22
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -653,7 +653,7 @@ headers. Existing submission download/image routes delegate swap proof through a
 asset lookup. PDF.js is lazy on clients and external on the server, with the matching
 server inspection worker included in tracing. Student PDFs do not enable forms or scripting.
 Google Slides and Canva URLs are validated at both application and database boundaries,
-stored privately, and opened directly in a new tab with noopener/noreferrer. GAP does not
+including official `canva.link/<slug>` short share links, stored privately, and opened directly in a new tab with noopener/noreferrer. GAP does not
 fetch, embed, inspect permissions or cache remote slide content; file endpoints exclude
 link assets. The same all-ready unlock supports mixed link/PDF groups.
 

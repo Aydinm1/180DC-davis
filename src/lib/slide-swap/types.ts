@@ -19,5 +19,6 @@ export function swapDeckUrl(value:string):string|null{
  try{const url=new URL(value);if(url.protocol!=='https:'||url.username||url.password||url.port)return null;
  const google=url.hostname==='docs.google.com'&&/^\/presentation\/(?:u\/\d+\/)?d\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_./-]*)?$/.test(url.pathname);
  const canva=['canva.com','www.canva.com'].includes(url.hostname)&&/^\/design\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_./-]*)?$/.test(url.pathname);
- return google||canva?url.href:null;}catch{return null;}
+ const canvaShort=url.hostname==='canva.link'&&/^\/[A-Za-z0-9_-]+\/?$/.test(url.pathname);
+ return google||canva||canvaShort?url.href:null;}catch{return null;}
 }

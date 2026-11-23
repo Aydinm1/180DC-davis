@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-19
+**Last updated:** 2026-11-22
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -746,7 +746,8 @@ Every enrolled official participant needs a different valid story within a two/t
 group before publication; later additions wait for setup. No project team is changed.
 
 Create → Swap → Present: each person shares a Google Slides or Canva design link, or uploads
-a PDF of exactly five pages (20 MB maximum). Students enable partner viewing access. Link
+a PDF of exactly five pages (20 MB maximum). Canva links include full `canva.com/design/…`
+and official `https://canva.link/<slug>` short share URLs. Students enable partner viewing access. Link
 permissions and slide counts are not automatically checked; linked decks may keep changing
 at their source. Readiness is preparation, not a graded submission. After saving a deck, lead Create with
 its ready/waiting status and actions; collapse the story into a clickable disclosure so

@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-19
+**Last updated:** 2026-11-22
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,12 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Accept official canva.link short share URLs at application/database boundaries.
+  Seven Slide Swap entries verify save/reload, exchange, admin review, preview, full-URL
+  compatibility and spoof rejection on desktop/phone. Four schema-security and 145 unit/
+  docs checks, lint, types, generated types and build pass. Hosted migration applied and
+  verified after approval on 2026-11-22; commit/push/deployment authorized.
 
 - [x] Add filtered Select all and batch manual credit for missing Individual work. Eight
   completion entries verify desktop/phone selection, filter reset, confirmation, races,

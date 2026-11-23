@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-22
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -797,7 +797,10 @@ RPCs are service-only and recheck live actor identity, enrollment, publication, 
 group versions and the transaction gate. File metadata must match Storage; inspected decks
 must have exactly five pages. `save_slide_swap_link` is a narrowly authorized user-session
 RPC sharing the transaction gate, expected current deck and duplicate-safe receipts. Link
-assets have a validated HTTPS Google Slides/Canva `external_url` and null path/MIME/size;
+assets have a validated HTTPS Google Slides/Canva `external_url` and null path/MIME/size.
+Canva URLs may use `canva.com/design/…` or exactly `canva.link/<slug>` (optional trailing
+slash/query/fragment). Host spoofing, credentials, custom ports and empty/nested short-link
+paths are denied. The additive validator migration changes no stored rows or grants;
 file assets require path/MIME/size and no URL. Links are never Storage objects or upload
 intents. URLs are projected only for the author, assigned presenter after unlock, or admin
 review. Unlock preserves two/three original story/asset references; remote slide content

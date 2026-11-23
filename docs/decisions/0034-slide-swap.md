@@ -36,3 +36,9 @@ provide explicit admin exceptions and never unlock a swap or fabricate a submiss
 
 No Slack sends, automatic pairings, story generation, real Week 5 setup or hosted changes
 are part of this implementation.
+
+Compatibility update (2026-11-22): accept official HTTPS `canva.link/<slug>` share links
+alongside full Canva design URLs. Both app and database validators enforce the exact host
+and one nonempty slug; they do not follow redirects or inspect the remote design. Existing
+private sharing, all-ready unlock, receipts and stored files are unchanged. Canva documents
+these automatically generated short links in its [Help Centre](https://www.canva.com/en_gb/help/create-and-manage-short-links/).
