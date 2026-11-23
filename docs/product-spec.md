@@ -506,7 +506,7 @@ See [ADR 0028](decisions/0028-manual-monday-attendance-sync.md).
 
 Workshop joins Guide, Template, Reading and Video in ordered Materials. Preserve existing
 materials and the separate presentation link. Admin Attendance retains selected cohort,
-showing compact week/date selectors and selected-week state/present counts. One workshop session maps to each week. Active
+showing week cards with workshop titles, short dates, official present counts and check-in state. One workshop session maps to each week. Active
 cohorts/published weeks can open a static six-character code/QR for two hours (DB time),
 redisplay unchanged, or close early. Deliberate reopening renews date/code/window but
 retains marks. A searchable phone roster supports Mark present and confirmed Undo,

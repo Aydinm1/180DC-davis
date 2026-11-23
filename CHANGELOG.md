@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Restored attendance week cards with workshop titles and official present counts, retained clean short dates and compact content-driven height, and replaced the cramped native dropdown arrow with an inset decorative chevron.
+
 - Removed the redundant main Instructions editor/requirement for activities with their own configured briefs; Standard instructions and existing activity readiness checks remain required.
 - Aligned Undo completion with Review/View actions and shortened manual-credit metadata.
 - Streamed the review queue's guided-project panel separately and limited its histories to the selected cohort, so guidance does not block the main queue.

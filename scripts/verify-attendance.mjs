@@ -144,7 +144,7 @@ test('Workshop materials and attendance lifecycle, security and browser story',a
   });
   await t.test('desktop/phone QR sign-in handoff, manual code, retry, receipt and admin correction',{skip:!app},async()=>{
    await sql(`insert into public.program_weeks(id,cohort_id,week_number,title,description,published)
-    select gen_random_uuid(),${q(cohort)},n,'Workshop '||n,'Disposable visual fixture',false from generate_series(3,6) n;`);
+    select gen_random_uuid(),${q(cohort)},n,case n when 3 then 'From Data to Decisions' when 4 then 'Project Management & Crafting Recommendations' when 5 then 'Storytelling with Slides, Public Speaking & Stakeholder Management' else 'Week 6' end,'Disposable visual fixture',false from generate_series(3,6) n;`);
    const {chromium}=await import('playwright-core'),browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true}),screens=await mkdtemp(join(tmpdir(),'gap-attendance-browser-'));
    try{for(const width of [1280,390]){
     ok(await call(lead.client,'open',{weekId:week,workshopDate:'2026-10-21'}));await session(lead);
@@ -176,12 +176,14 @@ test('Workshop materials and attendance lifecycle, security and browser story',a
     const adminCtx=await browser.newContext({viewport:{width,height:900}});await adminCtx.addCookies([...(await jar(lead))].map(([name,value])=>({name,value,url:app})));const adminPage=await adminCtx.newPage();adminPage.setDefaultTimeout(20000);
     await adminPage.goto(`${app}/admin/attendance?cohort=${cohort}`);await adminPage.getByRole('heading',{name:'Attendance',exact:true}).waitFor();await adminPage.getByRole('img',{name:'Scan to check in for Week 1',exact:true}).waitFor();assert.match(await adminPage.getByRole('img',{name:'Scan to check in for Week 1',exact:true}).getAttribute('src'),/^data:image\/png;base64,/);
     const weekSelector=adminPage.getByRole('region',{name:'Program weeks'});
-    await weekSelector.getByRole('button',{name:'Week 2 Not scheduled',exact:true}).click();
+    await weekSelector.getByRole('button',{name:/Week 2.*Private workshop/}).click();
     await adminPage.getByRole('heading',{name:'Private workshop',exact:true}).waitFor();
     const firstWeek=weekSelector.getByRole('button',{name:/Week 1/});
     await firstWeek.focus();await adminPage.keyboard.press('Enter');
     await adminPage.getByRole('heading',{name:'Workshop test',exact:true}).waitFor();
-    assert.doesNotMatch(await weekSelector.innerText(),/\d{4}-\d{2}-\d{2}|Workshop test|Private workshop/);
+    assert.doesNotMatch(await weekSelector.innerText(),/\d{4}-\d{2}-\d{2}/);
+    await firstWeek.getByText('Workshop test',{exact:true}).waitFor();
+    assert.match(await firstWeek.innerText(),/\d+ present/);
     assert.doesNotMatch(await adminPage.locator('main').innerText(),/Test check-ins are retained|Recorded attendance is retained|Not recorded does not mean absent|This code stays the same/);
     const unchanged=await session(lead),beforePresent=await snapshot();
     await adminPage.getByRole('button',{name:'Present check-in',exact:true}).click();
@@ -202,6 +204,8 @@ test('Workshop materials and attendance lifecycle, security and browser story',a
     assert.equal(await adminPage.getByRole('button',{name:'Refresh',exact:true}).count(),0);await adminPage.reload();const search=adminPage.getByRole('searchbox',{name:'Search people'});const email=await sql(`select email from public.people where id=${q(other.person)}`);await search.fill(email);await adminPage.getByRole('button',{name:'Mark present',exact:true}).click();await adminPage.getByRole('button',{name:'Undo',exact:true}).waitFor();
     adminPage.once('dialog',d=>d.accept());await adminPage.getByRole('button',{name:'Undo',exact:true}).click();await adminPage.getByRole('button',{name:'Mark present',exact:true}).waitFor();await adminPage.reload();await search.fill(email);await adminPage.getByText('Not recorded',{exact:true}).waitFor();
     assert.ok(await adminPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await adminPage.screenshot({path:join(screens,`admin-${width}.png`),fullPage:true});
+    await weekSelector.screenshot({path:join(screens,`cards-${width}.png`)});
+    await adminPage.getByRole('combobox',{name:'Participation view',exact:true}).locator('..').screenshot({path:join(screens,`participation-${width}.png`)});
     await adminPage.goto(`${app}/admin/weeks/${week}?cohort=${cohort}`);await adminPage.getByRole('navigation',{name:'Week sections',exact:true}).getByRole('button',{name:'Materials',exact:true}).click();const types=adminPage.getByRole('combobox',{name:'Type',exact:true});await types.first().waitFor();assert.equal(await types.count(),2);assert.equal(await types.nth(1).inputValue(),'workshop');await types.nth(0).selectOption('workshop');await adminPage.getByRole('navigation',{name:'Week sections',exact:true}).getByRole('button',{name:'Overview',exact:true}).click();await adminPage.getByLabel(/^Description/).fill(`Disposable attendance workshop ${width}`);await adminPage.getByRole('button',{name:'Save changes',exact:true}).click();await adminPage.getByText('Week published.',{exact:true}).waitFor();await adminPage.reload();await adminPage.getByRole('navigation',{name:'Week sections',exact:true}).getByRole('button',{name:'Materials',exact:true}).click();assert.equal(await types.nth(0).inputValue(),'workshop');
     await adminPage.goto(`${app}/admin/preview/week/1?cohort=${cohort}`);await adminPage.getByRole('link',{name:/Workshop exercise/}).waitFor();const materials=await adminPage.locator('#materials ol > li').allTextContents();assert.match(materials[0],/Read first/);assert.match(materials[1],/Workshop exercise/);assert.ok(materials.every(value=>value.includes('Workshop')));
     await adminPage.goto(`${app}/admin/attendance?cohort=${cohort}`);

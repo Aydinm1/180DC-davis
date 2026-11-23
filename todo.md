@@ -10,6 +10,12 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Restore glanceable attendance cards with titles, dates and official present counts;
+  fix participation dropdown spacing/weight. Desktop/phone screenshots with six weeks
+  and long names inspected, including compact card height and an inset decorative
+  dropdown chevron. All nine attendance and 146 unit/docs checks, lint, types, production
+  build and diff checks pass. Code-only release authorized; no migration required.
+
 - [x] Standardize activity instruction ownership, align manual-completion row actions,
   and stream selected-cohort guidance separately from the review queue. Local migration,
   forged-workflow rejection and blank-brief publishing pass. Nine guided, eight completion,

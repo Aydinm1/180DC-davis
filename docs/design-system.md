@@ -61,8 +61,16 @@ actions and usable narrow/zoomed layouts. Its design may evolve separately from 
 
 ### Attendance reporting
 
-Use a compact horizontally scrollable week/date selector, with short dates such as
-“Oct 21”; show the full week title and check-in state only in the selected panel.
+Attendance week selectors are wide cards: week number and short date (“Oct 21”) on the
+first line, the full workshop title beneath, then official present count and a quiet
+Open/Closed state in a separated footer. Use three columns on desktop, two on tablets and
+horizontally scrollable cards on phones. Keep the selected card green and all titles
+readable without truncation. Card height follows its content with tight title/footer gaps;
+do not add a tall minimum height or push the footer down with an automatic spacer.
+The selected panel retains full session controls.
+Participation dropdowns retain the native select/picker with normal-weight text, but hide
+the browser arrow using appearance-none. Place one non-interactive decorative chevron
+12px inside the right edge and reserve text padding for it. Match search-field height.
 Remove the manual Refresh action; browser reload remains available and successful
 changes still refresh server data. Group Workshop date, Open/Close check-in and active
 Present check-in controls in the session toolbar, with Sync to Monday at the far edge.
