@@ -26,3 +26,14 @@ test('assignment summaries and instruction limits are validated before saving',(
  assert.match(validateAdminWeek({...week,assignments:[{...assignment,instructionsFormat:'html'}]}),/format/);
  assert.equal(validateAdminWeek({...week,assignments:[{...assignment,summary:'😀'.repeat(300),instructionsFormat:'markdown'}]}),undefined);
 });
+
+
+test('structured activities own their instructions; Standard still requires its main brief',()=>{
+ const assignment={id:'a',title:'Activity',instructions:'',dueAt:'2026-11-28T20:00:00Z',weekNumber:1};
+ const week={id:'w',cohortId:'c',weekNumber:1,title:'Week 1',description:'Learn',publicationState:'published',resources:[],assignments:[assignment]};
+ for(const workflow of ['guided','cases','investigation','schedule','slide_swap']){
+  assert.equal(validateAdminWeek({...week,assignments:[{...assignment,workflow}]}),undefined);
+  assert.match(validateAdminWeek({...week,assignments:[{...assignment,workflow,title:''}]}),/every assignment/);
+ }
+ for(const workflow of [undefined,'standard'])assert.match(validateAdminWeek({...week,assignments:[{...assignment,workflow}]}),/instructions/);
+});

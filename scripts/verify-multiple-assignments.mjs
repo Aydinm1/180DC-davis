@@ -119,10 +119,26 @@ test('multiple assignments preserve independent history and require all approval
    assert.ok(['localhost','127.0.0.1'].includes(new URL(app).hostname));
    const {chromium}=await import('playwright-core'),browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
    const screenshots=await mkdtemp(join(tmpdir(),'gap-brief-pages-'));
+   await sql(`update public.program_weeks set title='Storytelling with Slides, Public Speaking & Stakeholder Management' where id=${q(week)};
+    insert into public.program_weeks(id,cohort_id,week_number,title,description,published) values
+    (${q(randomUUID())},${q(cohort)},3,'From Data to Decisions','Disposable',true),
+    (${q(randomUUID())},${q(cohort)},4,'Project Management & Crafting Recommendations','Disposable',true),
+    (${q(randomUUID())},${q(cohort)},5,'Presentation Practice','Disposable',true),
+    (${q(randomUUID())},${q(cohort)},6,'Week 6','Disposable',false);`);
    const source='Your task\nResearch Notion.\n\n- Find evidence\n- Cite sources\n\n1. Recommend an initiative\n2. Describe a challenge\n\n[Safe source](https://example.com)\n[Unsafe](javascript:alert)\n<script>window.__briefUnsafe=true</script>\n![No image](https://example.com/tracker.png)';
    try{for(const width of [1280,390]){
     const adminCtx=await browser.newContext({viewport:{width,height:900}});await adminCtx.addCookies([...(await jar(lead))].map(([name,value])=>({name,value,url:app})));const page=await adminCtx.newPage();page.setDefaultTimeout(15000);
-    await page.goto(`${app}/admin/weeks/${week}?cohort=${cohort}`);
+    await page.goto(`${app}/admin/weeks?cohort=${cohort}`);
+    const weekLink=page.locator(`main a[href="/admin/weeks/${week}?cohort=${cohort}"]`);
+    await weekLink.getByText('2 assignments',{exact:true}).waitFor();
+    await weekLink.getByText('Published',{exact:true}).waitFor();
+    assert.ok(!(await weekLink.innerText()).includes('First brief'));
+    assert.equal(await page.locator('main ol > li').count(),6);
+    await page.locator('main ol > li').last().getByText('No assignments yet',{exact:true}).waitFor();
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+    await page.screenshot({path:join(screenshots,`weeks-${width}.png`),fullPage:true});
+    await weekLink.click();
+    await page.waitForURL(url=>url.pathname===`/admin/weeks/${week}`);
     await openAssignmentEditor(page,first);const card=page.locator(`[data-assignment-editor="${first}"]`),input=card.getByLabel('Instructions',{exact:true});
     const summary=`Research Notion and prepare four evidence-backed SWOT findings (${width}).`;
     await card.getByLabel('Summary (optional)',{exact:true}).fill(summary);

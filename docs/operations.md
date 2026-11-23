@@ -1,7 +1,7 @@
 # GAP Operations Guide
 
 **Status:** Active
-**Last updated:** 2026-11-22
+**Last updated:** 2026-11-23
 **Source of truth for:** Local setup, environment variables, external configuration, and deployment
 
 This file defines the intended operating procedure. Steps marked **Pending** have not yet
@@ -1643,3 +1643,32 @@ server. Lint, typecheck and the Webpack production build pass, including native 
 processing, local PDF workers, Apple/Android JPEG metadata parsing and upload recovery.
 The build no longer emits the dependency security-upgrade interruption. Changes are local;
 commit/push/deployment remain separate release steps.
+
+
+## Activity instructions and queue loading — local verification 2026-11-23
+
+Migration `202611230001_activity_instruction_ownership.sql` changes only the private
+week-save implementation behind the existing public wrapper. No existing content or participant records are rewritten.
+The new migration was applied directly to local PostgreSQL: the local receipt ledger
+is behind schema already present, so replaying older migrations was rejected by an
+existing Monday snapshot function. Historical local receipts were not repaired here.
+
+Local acceptance checks publish guided work with blank unused main instructions,
+reject forged workflow claims on Standard work, retain title/configuration/access gates,
+and exercise the editor and completion confirmations on desktop/phone. The streaming
+regression holds an exclusive local guided-state lock: the main review queue and its
+controls must render before the lock is released and the guided panel can finish.
+No deliberate production delay or real participant mutation is used for verification.
+
+Acceptance passed locally: nine guided, eight completion, six assignment, five queue/activity
+and four security entries, without skips; 146 unit/documentation checks, lint, typecheck,
+generated-type consistency, production build and diff checks. Desktop/phone screenshots
+were inspected. Guided publication also passes through the browser editor with blank
+ordinary instructions, while Standard authoring remains covered.
+
+Hosted migration `202611230001` was approved and applied on 2026-11-23. Read-only
+verification confirms its receipt, persisted-workflow validation, unchanged public wrapper,
+empty private search path, SECURITY DEFINER setting and denied direct private execution
+for anonymous/authenticated/service roles. No participant/content data was changed by the
+migration. Commit/push/deployment of the combined Weeks, Attendance and review-queue
+cleanup is authorized.

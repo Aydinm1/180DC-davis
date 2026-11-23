@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-22
+**Last updated:** 2026-11-23
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -297,6 +297,13 @@ The authorized collection save persists metadata atomically with the week; omitt
 metadata in older payloads preserves existing values. A supplied blank/null summary
 clears it. Invalid format, summary type/length or oversized instructions roll back the
 whole save. No RLS/Storage changes or real-content rewrites are introduced.
+
+Migration `202611230001` updates the private week-collection save behind the existing
+public wrapper: publication requires main instructions only for persisted Standard
+assignments (including new rows). It looks up the locked saved workflow; supplied
+`workflow` values cannot waive Standard validation. Structured-activity configuration,
+publication triggers, mode/history locks, RLS and grants remain enforced. Existing
+instruction text, PDFs, activity configuration and submissions are not rewritten.
 
 `save_program_week(jsonb)` is a live-admin-authorized function called from the existing
 `admin_mutate('week', ...)` interface. It locks the week and its existing assignments,

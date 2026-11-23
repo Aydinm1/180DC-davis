@@ -3,7 +3,7 @@ import QRCode from 'qrcode';
 import { createClient } from '@/lib/supabase/server';
 import { requireUser } from '@/lib/supabase/auth';
 import { readPages } from '@/lib/supabase/pagination';
-import type { AttendanceAdminData, AttendancePrompt } from './types';
+import { isCheckInOpen, type AttendanceAdminData, type AttendancePrompt } from './types';
 
 export async function readAttendanceAdmin(cohortId: string): Promise<AttendanceAdminData> {
   await requireUser(true);
@@ -15,6 +15,7 @@ export async function readAttendanceAdmin(cohortId: string): Promise<AttendanceA
   // Only an explicit application origin is used. No external QR service receives the code.
   if (site && /^https?:\/\//.test(site)) {
     await Promise.all(result.sessions.map(async session => {
+      if (!isCheckInOpen(session, result.now)) return;
       const url = new URL(`/attendance/${session.id}`, site);
       url.hash = `code=${session.code}`;
       session.qr = await QRCode.toDataURL(url.toString(), { errorCorrectionLevel: 'M', margin: 4, width: 384 });

@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-22
+**Last updated:** 2026-11-23
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -256,6 +256,16 @@ new activity workflow, approval step or automatic real Week 3 setup is added. Cl
 nonempty team briefs explicitly before converting the assignment's mode/workflow. See
 [ADR 0026](decisions/0026-assignment-team-briefs.md).
 
+#### Activity instruction ownership
+
+Standard assignments use the main Instructions editor (including the optional assignment
+PDF and team briefs). Guided projects, case challenges, investigations, schedule planning
+and Slide Swap use their Activity setup instructions instead; their redundant Instructions
+editor is hidden. Existing unused main-instruction text/PDFs remain stored unchanged.
+Publishing still requires an assignment title/deadline and the activity's existing setup
+readiness checks. Only Standard requires nonempty main instructions; the database decides
+this from the persisted workflow, not a client-supplied workflow value.
+
 #### Guided project assignments
 
 Team assignments optionally use a reusable Guided project workflow. Only the final
@@ -496,7 +506,7 @@ See [ADR 0028](decisions/0028-manual-monday-attendance-sync.md).
 
 Workshop joins Guide, Template, Reading and Video in ordered Materials. Preserve existing
 materials and the separate presentation link. Admin Attendance retains selected cohort,
-showing week dates/state/present counts. One workshop session maps to each week. Active
+showing compact week/date selectors and selected-week state/present counts. One workshop session maps to each week. Active
 cohorts/published weeks can open a static six-character code/QR for two hours (DB time),
 redisplay unchanged, or close early. Deliberate reopening renews date/code/window but
 retains marks. A searchable phone roster supports Mark present and confirmed Undo,

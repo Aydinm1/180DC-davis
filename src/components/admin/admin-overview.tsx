@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { useLocalSearchParams, replaceLocalQuery } from '@/lib/navigation/local-query';
 import { PageContainer } from '@/components/ui/container';
 import { filterSubmissionRows,getAdminQueueCounts,type AdminQueueFilter } from '@/lib/program/admin';
@@ -7,13 +8,12 @@ import { buildReviewQueue,selectReviewWeek } from '@/lib/program/week-queue';
 import { formatDeadline } from '@/lib/program/state';
 import { useAdminWorkspace } from './admin-workspace';
 import { ReviewQueueRows } from './review-queue-rows';
-import { ProjectDirectionRequests, type ProjectInboxEntry } from './project-direction-requests';
 import { InvestigationHintInsights } from './investigation-insights';
 import { AdminCaseProgress } from './admin-case-progress';
 
 const filters: {value:AdminQueueFilter;label:string}[]=[{value:'awaiting_review',label:'Awaiting review'},{value:'revision_requested',label:'Revisions requested'},{value:'complete',label:'Complete'},{value:'all',label:'All submissions'},{value:'missing',label:'Not submitted'}];
 const control='min-h-11 rounded-lg border border-border-strong bg-surface px-3 text-sm';
-export function AdminOverview({projectEntries=[]}:{projectEntries?:ProjectInboxEntry[]}){
+export function AdminOverview({projectInbox}:{projectInbox?:ReactNode}){
  const state=useAdminWorkspace(),params=useLocalSearchParams();
  const cohortId=state.selectedCohortId,week=selectReviewWeek(state,cohortId,params.get('week'),params.get('assignment'));
  const audience=params.get('audience')==='test'?'test':'official';
@@ -35,5 +35,5 @@ export function AdminOverview({projectEntries=[]}:{projectEntries?:ProjectInboxE
  {selected?.assignment.workflow==='cases'?<><div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-5 sm:px-7"><h2 className="text-lg font-bold">{selected.assignment.title}</h2><button type="button" onClick={()=>update({assignment:'',caseStatus:''})} className="action-link min-h-11 text-sm font-bold text-action">All assignments</button></div><AdminCaseProgress assignmentId={selected.assignment.id} rows={selected.rows} query={query.toString()}/></>:<section id="submissions" aria-label="Submission queue" className="border-t border-border"><div className="bg-surface-subtle/60 px-5 py-5 sm:px-7"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="min-w-0 break-words text-lg font-bold">{selected?selected.assignment.title:'All assignments'}</h2>{selected?<button onClick={()=>update({assignment:''})} className="action-link min-h-11 text-sm font-bold text-action">All assignments</button>:null}</div><div className="mt-4 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between"><div className="flex flex-wrap gap-2" aria-label="Filter submissions">{filters.map(f=><button key={f.value} aria-pressed={filter===f.value} onClick={()=>update({status:f.value})} className={'min-h-11 rounded-md px-3 text-sm font-semibold '+(filter===f.value?'bg-action text-white':'text-ink-soft hover:bg-surface')}>{f.label} {counts[f.value]}</button>)}</div><label className="text-xs font-semibold text-ink-soft">Search members<input aria-label="Search members" type="search" value={search} onChange={e=>update({q:e.target.value})} placeholder="Name or email" className={'mt-2 block w-full xl:w-56 '+control} /></label></div></div>
  <ReviewQueueRows key={query.toString()} rows={visible} query={query.toString()} week={week} filter={filter}/>
  </section>}{selected?.assignment.workflow==='investigation'?<InvestigationHintInsights key={selected.assignment.id+audience} assignmentId={selected.assignment.id} test={audience==='test'}/>:null}</section>
- <ProjectDirectionRequests entries={projectEntries}/></PageContainer></main>;
+ {projectInbox}</PageContainer></main>;
 }

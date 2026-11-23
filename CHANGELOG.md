@@ -5,6 +5,14 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Removed the redundant main Instructions editor/requirement for activities with their own configured briefs; Standard instructions and existing activity readiness checks remain required.
+- Aligned Undo completion with Review/View actions and shortened manual-credit metadata.
+- Streamed the review queue's guided-project panel separately and limited its histories to the selected cohort, so guidance does not block the main queue.
+
+- Simplified Attendance with compact week/date selectors, grouped session and roster controls, and no Refresh button. Attendance reads no longer wait for the full workspace projection; closed-session QR images are no longer generated.
+
+- Simplified the admin Weeks list to compact week titles, assignment counts and publication status, replacing repeated assignment/deadline paragraphs.
+
 - Resolved reported dependency vulnerabilities by updating Next.js/eslint-config-next to 16.4.6 and fast-xml-parser to 5.12.1, including the locked dependency tree.
 
 - Fixed Slide Swap rejecting official canva.link short links produced by Canva’s Share menu, including member submissions and admin test-pair previews.

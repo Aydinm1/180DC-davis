@@ -1,7 +1,7 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-19
+**Last updated:** 2026-11-23
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
@@ -61,6 +61,14 @@ actions and usable narrow/zoomed layouts. Its design may evolve separately from 
 
 ### Attendance reporting
 
+Use a compact horizontally scrollable week/date selector, with short dates such as
+“Oct 21”; show the full week title and check-in state only in the selected panel.
+Remove the manual Refresh action; browser reload remains available and successful
+changes still refresh server data. Group Workshop date, Open/Close check-in and active
+Present check-in controls in the session toolbar, with Sync to Monday at the far edge.
+Keep roster count, Official/Test selection and search in one separate roster toolbar.
+Do not show a disabled presentation action for closed check-ins.
+
 Place a quiet **Sync to Monday** action inside the selected week’s attendance panel,
 only in Official participants. Disable conflicting controls while syncing. Show concise
 checked/already-checked counts and an optional Sync details disclosure for unresolved
@@ -112,6 +120,11 @@ started settings are read-only. Keep copy limited to essential state and recover
 
 Omit the routine file-reselection reminder beneath submission file pickers.
 
+The admin Weeks list uses compact linked rows: week number, wrapping week title,
+assignment count and publication badge. Keep assignment names and deadlines inside the
+week editor rather than concatenating them into the overview. On phones, place the status
+beneath the summary so long titles retain space; the whole row remains a keyboard link.
+
 The admin week editor uses Overview / Assignments / Materials navigation rather than
 stacking every form. Assignments use a compact ordered selector (sidebar on desktop,
 labeled native select on phones) and one visible assignment, with Details / Instructions /
@@ -119,6 +132,10 @@ Activity setup / Grading reference sections. Guided setup shows one common brief
 team direction at a time; readiness appears in the team selector. Challenge setup shows
 Overview / Cases / Closing reflection and one selected case. All navigation is local,
 keyboard-accessible and preserves draft input, selected files and in-progress transfers.
+For activities with their own instructions, omit the main Instructions section and its
+unused text/PDF editor; author their briefs only in Activity setup. Standard retains its
+Instructions section. A previously selected Instructions section falls back to Activity
+setup when the saved workflow changes. Preserve unsaved inputs in the other panels.
 Keep week publication/save controls visible; activity, direction, reference and PDF saves
 remain independent and labeled at their own controls. Existing grading/workflow hash links
 reveal the matching assignment section. No new explanatory copy or activity library page.
@@ -434,6 +451,10 @@ Admin overview defaults to an All weeks inbox: one restrained bordered panel, we
 header and compact combined received/awaiting counts, without a per-week summary list.
 Week drill-down shows ordered assignment counts,
 then an integrated queue toolbar. Remove repeated week descriptions and completion heroes.
+Manual completion actions use the same flush-left, body-size green action treatment and
+44px target as Review/View. Place compact “Manual credit · Oct 28” metadata below Undo
+completion; keep the full timestamp available in its title. Avoid long timestamps above
+an indented button widening the action column.
 Summary counts use Montserrat at body size (14px), not a separate oversized display line.
 Numbers inherit their labels' font/weight; awaiting-review phrases and filter labels use
 semibold rather than mixing large bold and light text. Allow wrapping on phones.

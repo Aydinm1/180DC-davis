@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-22
+**Last updated:** 2026-11-23
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,27 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Standardize activity instruction ownership, align manual-completion row actions,
+  and stream selected-cohort guidance separately from the review queue. Local migration,
+  forged-workflow rejection and blank-brief publishing pass. Nine guided, eight completion,
+  six assignment, five queue/activity and four security entries pass without skips,
+  including desktop/phone and blocked-guidance streaming. 146 unit/docs checks, lint,
+  types, generated DB types, production build and diff checks pass. Pending Weeks/Attendance
+  changes preserved. Hosted migration approved, applied and verified on 2026-11-23;
+  combined cleanup commit/push/deployment authorized.
+
+- [x] Simplify Attendance controls/dates, remove manual refresh, decouple attendance
+  reads from the workspace projection and skip closed-session QR generation. Nine
+  attendance entries cover desktop/phone, expiry, correction, access and QR privacy;
+  Monday export regression, 145 unit/docs checks, lint, types, build and diff checks pass.
+  Shared admin startup still reads its full workspace. Pending Weeks-list changes
+  preserved; combined cleanup release authorized.
+
+- [x] Simplify the admin Weeks overview to titles, assignment counts and publication
+  status. Desktop/phone screenshots cover six weeks and long names; all six assignment
+  regressions and 145 unit/docs checks, lint, types, production build and diff checks pass.
+  Combined cleanup release authorized.
 
 - [x] Resolve dependency advisories with Next/eslint-config-next 16.4.6 and fast-xml-parser
   5.12.1. Clean npm ci, full/production audits (zero findings), script policy and dependency

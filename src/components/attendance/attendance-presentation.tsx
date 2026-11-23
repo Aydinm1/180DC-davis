@@ -44,7 +44,7 @@ export function AttendancePresentation({ session, weekNumber, title, now }: {
   }
 
   return <>
-    <Button variant="secondary" className="mt-5" disabled={!open} onClick={present}>Present check-in</Button>
+    {open ? <Button variant="secondary" onClick={present}>Present check-in</Button> : null}
     <dialog ref={dialog} aria-labelledby="attendance-presentation-title" aria-describedby={open ? undefined : 'attendance-presentation-instructions'}
       onCancel={event => { event.preventDefault(); exit(); }}
       onKeyDown={event => {

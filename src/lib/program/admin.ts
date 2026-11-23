@@ -93,7 +93,7 @@ export function validateAdminWeek(week: AdminWeek, options: { forPublish?: boole
     if (assignment.summary && Array.from(assignment.summary).length > 300) return "Keep each assignment summary to 300 characters or fewer.";
     if (Array.from(assignment.instructions).length > 50000) return "Keep assignment instructions to 50,000 characters or fewer.";
     if (assignment.instructionsFormat && !['plain','markdown'].includes(assignment.instructionsFormat)) return "Choose a valid instruction format.";
-    if (forPublish && (!assignment.title.trim() || !assignment.instructions.trim())) return "Complete every assignment title and instructions before publishing.";
+    if (forPublish && (!assignment.title.trim() || ((!assignment.workflow || assignment.workflow === "standard") && !assignment.instructions.trim()))) return "Complete every assignment title and instructions before publishing.";
     if (assignment.dueAt && Number.isNaN(new Date(assignment.dueAt).getTime())) return "Enter a valid assignment deadline.";
     if (forPublish && !assignment.dueAt) return "Enter every assignment deadline before publishing.";
   }

@@ -113,3 +113,5 @@ do not override a later source-of-truth update and superseding ADR.
 - [ADR 0033: Private schedule grading examples](0033-private-schedule-grading-examples.md)
 
 - [ADR 0034 — Slide Swap](0034-slide-swap.md)
+
+- [ADR 0035: One instruction source per assignment workflow](0035-activity-instruction-ownership.md)

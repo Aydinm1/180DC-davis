@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-22
+**Last updated:** 2026-11-23
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -44,7 +44,13 @@ Attendance uses user-scoped clients and typed actions in `src/lib/attendance/`, 
 a service-key client or new public API. Its generic landing sits outside the protected
 portal layout to capture QR fragments before login. Anonymous output contains no workshop
 details; authorized reads fetch matching enrollment/context and own receipt. Codes are
-only serialized to admin screens; `qrcode` generates PNGs server-side, not externally.
+only serialized to admin screens; `qrcode` generates PNGs server-side for open sessions
+only, not externally. The attendance page authorizes live Admin access and selects its
+cohort from an ordered, paginated id/state projection, independently of the shared
+layout's full workspace read. Its attendance RPC can run alongside that layout read
+instead of waiting for assignment, submission, activity and progress projections. The
+shared admin layout still loads its full workspace on initial entry; this change does
+not split that provider or introduce cross-request caching of private data.
 The admin-only presentation component reuses that authorized session/code/QR projection
 inside a native modal dialog. Browser fullscreen is an optional client capability, with
 a full-window fallback; no new route, API, code generation or mutation is involved.
@@ -149,6 +155,14 @@ authorized DTO. Only active, unfrozen pending alternatives expose decisions; rec
 selections never need an approval. Current week/audience filters match the review overview.
 Decision edits retain note/version/request identity through failures; no schema, RPC,
 submission eligibility or public action contract changes.
+
+The review queue streams guided direction requests/progress in an independent Suspense
+boundary after the main queue snapshot is ready. It reads guided projects only for the
+selected cohort (the requested valid cohort, active fallback, then first cohort), not all
+cohorts. Week/assignment/audience filtering within that cohort stays local; changing cohort
+navigates and loads its own inbox. The queue is usable while guided histories are still
+loading. The shared full workspace projection remains on initial admin entry; this does
+not introduce private-data caching or change guided decision authorization.
 
 Independent workspace datasets are fetched concurrently after authorization through
 `readWorkspaceRows`, preserving deterministic pagination and fail-closed errors.
