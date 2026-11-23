@@ -128,7 +128,8 @@ started settings are read-only. Keep copy limited to essential state and recover
 
 Omit the routine file-reselection reminder beneath submission file pickers.
 
-The admin Weeks list uses compact linked rows: week number, wrapping week title,
+The admin Weeks list uses compact linked rows: a 40px neutral circle containing the week
+number (with an accessible “Week” prefix), wrapping week title,
 assignment count and publication badge. Keep assignment names and deadlines inside the
 week editor rather than concatenating them into the overview. On phones, place the status
 beneath the summary so long titles retain space; the whole row remains a keyboard link.

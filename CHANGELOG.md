@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Restored circular week-number markers in the admin Weeks list while keeping compact assignment counts.
+
 - Restored attendance week cards with workshop titles and official present counts, retained clean short dates and compact content-driven height, and replaced the cramped native dropdown arrow with an inset decorative chevron.
 
 - Removed the redundant main Instructions editor/requirement for activities with their own configured briefs; Standard instructions and existing activity readiness checks remain required.

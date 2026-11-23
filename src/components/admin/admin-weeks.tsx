@@ -27,10 +27,10 @@ export function AdminWeeks() {
                 <li key={week.id} className="border-b border-border last:border-0">
                   <Link
                     href={`/admin/weeks/${week.id}?cohort=${workspace.selectedCohortId}`}
-                    className="group grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-5 hover:bg-surface-subtle sm:grid-cols-[3.5rem_minmax(0,1fr)_auto_auto] sm:gap-x-5 sm:px-6"
+                    className="group grid grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-5 hover:bg-surface-subtle sm:grid-cols-[2.5rem_minmax(0,1fr)_auto_auto] sm:gap-x-5 sm:px-6"
                   >
-                    <span className="self-start pt-0.5 text-sm font-bold text-ink-soft sm:self-center sm:pt-0">
-                      <span className="sr-only sm:not-sr-only">Week </span>{week.weekNumber}
+                    <span className="grid size-10 self-start place-items-center rounded-full bg-surface-subtle text-sm font-bold text-ink sm:self-center">
+                      <span className="sr-only">Week </span>{week.weekNumber}
                     </span>
                     <span className="min-w-0">
                       <span className="block text-sm font-bold leading-6 sm:text-base">{week.title}</span>
