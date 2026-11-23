@@ -10,6 +10,12 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Resolve dependency advisories with Next/eslint-config-next 16.4.6 and fast-xml-parser
+  5.12.1. Clean npm ci, full/production audits (zero findings), script policy and dependency
+  tree pass. 145 unit/docs and 66 integration entries pass without skips, covering desktop/
+  phone auth, Viewer access, uploads, PDFs, Slide Swap, assignments and bulk completion.
+  Lint, typecheck and production build pass. No migration; release authorized.
+
 - [x] Accept official canva.link short share URLs at application/database boundaries.
   Seven Slide Swap entries verify save/reload, exchange, admin review, preview, full-URL
   compatibility and spoof rejection on desktop/phone. Four schema-security and 145 unit/

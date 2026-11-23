@@ -1613,3 +1613,33 @@ types and production build pass. Hosted migration `202611220001` was approved an
 on 2026-11-22. Verified its receipt, short/full URL acceptance, spoof/HTTP rejection and
 unchanged private-function execution grants. Commit/push/deployment authorized. No real
 deck or participant record changed.
+
+## Dependency security update — 2026-11-22
+
+Updated Next.js and eslint-config-next from 16.4.2 to 16.4.6, and fast-xml-parser from
+5.11.1 to 5.12.1. React/React DOM, Node/npm, the Supabase libraries/CLI and PDF.js remain
+on their existing versions. This is a compatible Next.js 16 patch update; no application
+API migration or codemod was needed. The matching installed Next.js documentation remains
+available through the existing AGENTS.md path.
+
+The current full and production-only npm audits report zero vulnerabilities. This closes
+the Next.js and XML-parser findings previously recorded as follow-up work, including
+[Next.js cache disclosure](https://github.com/advisories/GHSA-mfr8-8qww-v76h) and
+[XML stop-node scanning](https://github.com/advisories/GHSA-474x-hrwr-fgx4). Earlier warnings
+in this document are historical; production receives the fixes only after a release.
+
+A fresh npm ci reproduces the updated lockfile. The complete dependency tree has no
+reported problems, and npm install-scripts ls reports no unreviewed scripts. The existing
+exact unrs-resolver approval and scoped minimatch override remain unchanged. Neither
+audit --force nor new install-script approvals were used. No database/schema, credentials
+or hosted configuration changes are part of this update.
+
+Local verification: 145 unit/documentation checks and 66 integration entries pass without
+skips: program/session/landing 14, Viewers 8, manual/bulk completion 8, multiple assignments
+6, Storage/image/Office uploads 13, PDF reader 6, Slide Swap 7 and schema security 4.
+Program and Storage browser suites used GAP_TEST_BROWSER=1 and the production build’s
+matching GAP_TEST_ACTION_MANIFEST; stale development manifests are not valid for that
+server. Lint, typecheck and the Webpack production build pass, including native image
+processing, local PDF workers, Apple/Android JPEG metadata parsing and upload recovery.
+The build no longer emits the dependency security-upgrade interruption. Changes are local;
+commit/push/deployment remain separate release steps.

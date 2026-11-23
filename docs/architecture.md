@@ -52,7 +52,7 @@ Tab storage carries pending input across same-tab sign-in; OAuth returns use a c
 Actions/DB transactions independently check live access. Refresh/revalidation provide
 updates without shared protected caching or realtime.
 
-- Next.js 16.4.2 stable App Router, React 19.2, TypeScript strict mode, and Tailwind
+- Next.js 16.4.6 stable App Router, React 19.2, TypeScript strict mode, and Tailwind
   CSS 4 on Node.js 24 LTS.
 - Production dependencies use stable/LTS release channels. Keep Next.js and
   `eslint-config-next` versions identical and keep React/React DOM versions identical.

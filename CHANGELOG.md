@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Resolved reported dependency vulnerabilities by updating Next.js/eslint-config-next to 16.4.6 and fast-xml-parser to 5.12.1, including the locked dependency tree.
+
 - Fixed Slide Swap rejecting official canva.link short links produced by Canva’s Share menu, including member submissions and admin test-pair previews.
 
 - Added Select all and batch manual completion for currently visible eligible Not submitted rows, with one confirmation, scoped selection and per-person failure reporting.
