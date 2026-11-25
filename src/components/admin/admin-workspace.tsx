@@ -1,15 +1,12 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { AppHeader } from "@/components/shell/app-header";
 import type { AdminWeek, AdminWorkspaceState } from "@/lib/program/admin";
 import { saveAdmin } from "@/lib/supabase/actions";
 
 import type { ApprovedMember, CohortEnrollment, ProgramCohort, ProgramUser, SubmissionStatus } from "@/lib/program/types";
-import { CohortSwitcher } from "@/components/admin/cohort-switcher";
-import { PageContainer } from "@/components/ui/container";
+import { AdminShell } from "./admin-shell";
 
 type AdminWorkspaceContextValue = AdminWorkspaceState & {
   selectedCohortId: string;
@@ -32,8 +29,10 @@ type AdminWorkspaceContextValue = AdminWorkspaceState & {
 const AdminWorkspaceContext = createContext<AdminWorkspaceContextValue | null>(null);
 
 
+export function useOptionalAdminWorkspace() { return useContext(AdminWorkspaceContext); }
+
 export function useAdminWorkspace() {
-  const value = useContext(AdminWorkspaceContext);
+  const value = useOptionalAdminWorkspace();
   if (!value) throw new Error("Admin workspace is unavailable.");
   return value;
 }
@@ -109,28 +108,8 @@ export function AdminWorkspace({ children, user, initialState }: { children: Rea
     setSelectedCohortState: state => persist('cohort_state', { id:selectedCohortId,state }),
   };
 
-  const cohortQuery = `?cohort=${encodeURIComponent(selectedCohortId)}`;
-
-  const navigation = [
-    { label: "Review queue", href: `/admin${cohortQuery}`, current: pathname === "/admin" || pathname.startsWith("/admin/submissions") },
-    { label: "Weeks", href: `/admin/weeks${cohortQuery}`, current: pathname.startsWith("/admin/weeks") },
-    { label: "Attendance", href: `/admin/attendance${cohortQuery}`, current: pathname.startsWith("/admin/attendance") },
-    { label: "Members", href: `/admin/members${cohortQuery}`, current: pathname.startsWith("/admin/members") },
-  ];
-
-  return (
-    <AdminWorkspaceContext.Provider value={value}>
-      <div className="min-h-screen bg-canvas text-ink">
-        <AppHeader user={user} navigation={navigation} profileLinks={[]} homeHref={`/admin${cohortQuery}`} />
-        <div className="border-b border-border bg-surface-subtle">
-          <PageContainer className="flex min-h-14 flex-wrap items-center justify-between gap-3 py-2">
-            <CohortSwitcher cohorts={cohorts} selectedId={selectedCohortId} onChange={changeCohort} />
-            <div className="flex flex-wrap gap-4">{selectedCohortId ? <Link className="inline-flex min-h-10 items-center text-sm font-bold text-action hover:text-action-hover" href={`/admin/preview${cohortQuery}`} onClick={event => { if (!confirmNavigation()) event.preventDefault(); }}>Preview as member →</Link> : null}{hasMyProgram ? <Link className="inline-flex min-h-10 items-center text-sm font-bold text-action hover:text-action-hover" href="/" onClick={event => { if (!confirmNavigation()) event.preventDefault(); }}>My program →</Link> : null}</div>
-          </PageContainer>
-        </div>
-        {saving ? <p role="status" className="px-6 py-2 text-sm text-ink-soft">Saving changes…</p> : null}
-        <fieldset disabled={saving} className="min-w-0">{children}</fieldset>
-      </div>
-    </AdminWorkspaceContext.Provider>
-  );
+  return <AdminWorkspaceContext.Provider value={value}><AdminShell user={user} cohorts={cohorts} selectedCohortId={selectedCohortId} onCohortChange={changeCohort} hasMyProgram={hasMyProgram} confirmNavigation={confirmNavigation}>
+    {saving ? <p role="status" className="px-6 py-2 text-sm text-ink-soft">Saving changes…</p> : null}
+    <fieldset disabled={saving} className="min-w-0">{children}</fieldset>
+  </AdminShell></AdminWorkspaceContext.Provider>;
 }

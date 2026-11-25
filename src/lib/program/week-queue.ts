@@ -1,11 +1,11 @@
-import { getCurrentAdminWeek, getSubmissionRows, type AdminWorkspaceState } from './admin.ts';
+import { getCurrentAdminWeek, getSubmissionRows, type AdminQueueState } from './admin.ts';
 import { assignmentsForWeek } from './types.ts';
 
-export function selectQueueWeek(state: AdminWorkspaceState, cohortId: string, weekId?: string | null, assignmentId?: string | null) {
+export function selectQueueWeek(state: AdminQueueState, cohortId: string, weekId?: string | null, assignmentId?: string | null) {
  const weeks=state.weeks.filter(w=>w.cohortId===cohortId && w.publicationState==='published').toSorted((a,b)=>a.weekNumber-b.weekNumber);
  return weeks.find(w=>w.id===weekId) ?? weeks.find(w=>assignmentsForWeek(w).some(a=>a.id===assignmentId)) ?? getCurrentAdminWeek(weeks) ?? weeks.at(-1);
 }
-export function buildWeekQueue(state: AdminWorkspaceState, cohortId: string, weekId: string, now: Date, audience: 'official'|'test'='official') {
+export function buildWeekQueue(state: AdminQueueState, cohortId: string, weekId: string, now: Date, audience: 'official'|'test'='official') {
  const week=state.weeks.find(w=>w.id===weekId && w.cohortId===cohortId && w.publicationState==='published');
  const participants=state.enrollments.filter(e=>e.cohortId===cohortId && e.participationStatus==='enrolled' && !!e.isTest===(audience==='test'));
  const assignments=week ? assignmentsForWeek(week).map(assignment=>{
@@ -21,10 +21,10 @@ export function buildWeekQueue(state: AdminWorkspaceState, cohortId: string, wee
 }
 
 // Missing scope opens the cohort inbox; assignment-only bookmarks keep their original week.
-export function selectReviewWeek(state:AdminWorkspaceState,cohortId:string,weekId?:string|null,assignmentId?:string|null){
+export function selectReviewWeek(state:AdminQueueState,cohortId:string,weekId?:string|null,assignmentId?:string|null){
  return weekId==='all'||(!weekId&&!assignmentId)?undefined:selectQueueWeek(state,cohortId,weekId,assignmentId);
 }
-export function buildReviewQueue(state:AdminWorkspaceState,cohortId:string,weekId:string,now:Date,audience:'official'|'test'='official'){
+export function buildReviewQueue(state:AdminQueueState,cohortId:string,weekId:string,now:Date,audience:'official'|'test'='official'){
  const weeks=state.weeks.filter(w=>w.cohortId===cohortId&&w.publicationState==='published'&&(weekId==='all'||w.id===weekId)).toSorted((a,b)=>a.weekNumber-b.weekNumber).map(week=>({week,...buildWeekQueue(state,cohortId,week.id,now,audience)}));
  const rows=weeks.flatMap(w=>w.rows);
  return {weeks,rows,assignments:weeks.flatMap(w=>w.assignments),received:rows.filter(r=>r.submission).length,awaiting:rows.filter(r=>r.state==='submitted').length,participants:state.enrollments.filter(e=>e.cohortId===cohortId&&e.participationStatus==='enrolled'&&!!e.isTest===(audience==='test')).length};

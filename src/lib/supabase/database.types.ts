@@ -2430,6 +2430,15 @@ export type Database = {
       }
       slide_swap_asset: { Args: { p_id: string }; Returns: Json }
       slide_swap_proof: { Args: { p_submission: string }; Returns: string }
+      slide_swap_queue_progress: {
+        Args: { p_cohort: string }
+        Returns: {
+          assignment_id: string
+          enrollment_id: string
+          group_id: string
+          ready: boolean
+        }[]
+      }
       slide_swap_review: { Args: { p_submission: string }; Returns: Json }
       slide_swap_upload: {
         Args: { p_actor: string; p_id: string }

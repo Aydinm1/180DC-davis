@@ -5,6 +5,10 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Show individual Slide Swap readiness and group ready counts in the admin review queue before meeting-photo submission; read only scoped preparation flags through a live-admin RPC.
+
+- Made the review queue load selected-cohort current metadata independently of the full admin workspace, without fetching assignment bodies, resources, file metadata, feedback or superseded submissions. Existing queue URLs, counts, filters and review actions are retained.
+
 - Restored circular week-number markers in the admin Weeks list while keeping compact assignment counts.
 
 - Restored attendance week cards with workshop titles and official present counts, retained clean short dates and compact content-driven height, and replaced the cramped native dropdown arrow with an inset decorative chevron.

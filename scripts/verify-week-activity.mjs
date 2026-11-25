@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {readQueueRows} from '../src/lib/supabase/queue-rows.ts';
+import {readWorkspaceRows} from '../src/lib/supabase/workspace-rows.ts';
 import {showReview} from './lib/review-workspace.mjs';
 import test from 'node:test';
 import {execFile} from 'node:child_process';
@@ -51,6 +53,33 @@ test('Last active privacy, visible visits, branded metadata and week-wide admin 
    assert.ok(ok(await lead.client.rpc('admin_activity')).some(a=>a.person_id===member.person));
    await sql(`update public.approved_members set active=false where person_id=${q(member.person)}`);assert.ok((await member.client.rpc('record_activity')).error);await sql(`update public.approved_members set active=true where person_id=${q(member.person)};update public.approved_members set role='member' where person_id=${q(lead.person)}`);assert.ok((await lead.client.rpc('admin_activity')).error);await sql(`update public.approved_members set role='admin' where person_id=${q(lead.person)}`);
    for(const user of [member,other,tester])for(const a of [assignment,second]){ok(await user.client.rpc('submit_text',{p_assignment_id:a,p_text:'Fixture response'}));const row=ok(await user.client.from('submissions').select('*').eq('assignment_id',a).eq('is_current',true).single());if(user===other || user===member&&a===second)ok(await lead.client.rpc('review_submission',{p_data:{id:row.id,status:'completed',feedback:'Approved',expectedUpdatedAt:row.updated_at}}));}
+  });
+  await t.test('queue metadata excludes bodies/history and stays available with resource reads blocked',async()=>{
+   const bodyMarker='QUEUE_CURRENT_BODY_NOT_IN_LIST_',oldMarker='QUEUE_OLD_BODY_NOT_IN_LIST_',briefMarker='QUEUE_BRIEF_NOT_IN_LIST_';
+   await sql(`update public.assignments set instructions=${q(briefMarker+'x'.repeat(40000))} where id=${q(assignment)}`);
+   for(const marker of [oldMarker,bodyMarker]){
+    const base=ok(await member.client.from('submissions').select('id,updated_at').eq('assignment_id',assignment).eq('is_current',true).single());
+    ok(await member.client.rpc('submit_text',{p_assignment_id:assignment,p_text:marker+'x'.repeat(15000),p_expected_id:base.id,p_expected_updated_at:base.updated_at}));
+   }
+   const baseline=await readWorkspaceRows(lead.client,true),lean=await readQueueRows(lead.client,cohort);
+   const ids=new Set([assignment,second]);
+   assert.equal(lean.submissions.length,baseline.submissions.data.filter(s=>s.is_current&&ids.has(s.assignment_id)).length);
+   assert.ok(lean.submissions.every(s=>s.is_current));
+   const before=Buffer.byteLength(JSON.stringify(baseline)),after=Buffer.byteLength(JSON.stringify(lean));
+   assert.ok(after<before/2,`Expected smaller metadata payload: ${before} -> ${after}`);
+   console.log(`Queue fixture database payload: ${before} -> ${after} bytes (${Math.round((1-after/before)*100)}% smaller)`);
+   assert.ok(!JSON.stringify(lean).includes(bodyMarker));assert.ok(!JSON.stringify(lean).includes(oldMarker));assert.ok(!JSON.stringify(lean).includes(briefMarker));
+   if(app){
+    const locker=execFile('docker',['exec','-i','supabase_db_gap','psql','-X','-q','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1']);
+    const ready=new Promise((resolve,reject)=>{locker.stdout.on('data',chunk=>{if(String(chunk).includes('resources-locked'))resolve();});locker.once('error',reject);locker.once('exit',code=>{if(code)reject(new Error('Could not lock local resources'));});});
+    locker.stdin.write('begin;lock table public.resources in access exclusive mode;\n\\echo resources-locked\n');
+    try{
+     await ready;
+     const response=await fetch(`${app}/admin?cohort=${cohort}`,{headers:{cookie:(await cookies(lead)).map(c=>c.name+'='+c.value).join('; ')},signal:AbortSignal.timeout(8000)}),html=await response.text();
+     assert.equal(response.status,200);assert.ok(html.includes('Review queue'));assert.ok(html.includes('Submission queue'));
+     for(const marker of [bodyMarker,oldMarker,briefMarker])assert.ok(!html.includes(marker));
+    }finally{locker.stdin.end('commit;\n\\q\n');}
+   }
   });
   await t.test('HTTP activity derives identity; anonymous/inactive denied, GET/prefetch do not write',{skip:!app},async()=>{
    const jar=await cookies(viewer),headers={cookie:jar.map(c=>c.name+'='+c.value).join('; ')};

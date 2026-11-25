@@ -1672,3 +1672,50 @@ empty private search path, SECURITY DEFINER setting and denied direct private ex
 for anonymous/authenticated/service roles. No participant/content data was changed by the
 migration. Commit/push/deployment of the combined Weeks, Attendance and review-queue
 cleanup is authorized.
+
+
+## Scoped review queue — local verification 2026-11-25
+
+The queue now uses its own authorized metadata loader and provider, separate from the
+full admin workspace. No migration, dependency update, hosted configuration or real
+participant mutation is required. Submission detail and editing routes retain their
+existing full loader. Admin queue links do not speculatively fetch those detail pages.
+
+The disposable queue fixture reduced raw database response data from 96,740 to 5,477
+bytes (94%). This measures the projected datasets, not production response time or total
+HTTP bytes. An exclusive local resource-table lock does not prevent the main queue from
+rendering. Ordered pagination, current-attempt filtering and conditional case-progress
+reads have dedicated contract checks.
+
+Local acceptance passes: queue/activity 6, manual/bulk completion 8, program/session 14,
+guided 9, cases 7, Viewers 8, PDF reader 6, Slide Swap 7, attendance 9 and multiple
+assignments 6, without skips. Desktop/phone queue screenshots were inspected; filters,
+search and participation switches stay local, while review-next and cross-workspace
+navigation retain their context. The large program history suite passed in isolation
+after a concurrent run exhausted the local database statement timeout.
+
+149 unit/documentation checks, lint, typecheck, Webpack production build and diff checks
+pass. This verification does not establish hosted latency; commit, push and deployment
+remain separate release steps.
+
+
+## Slide Swap queue preparation — local verification 2026-11-25
+
+Migration `202611250001_slide_swap_queue_progress.sql` adds a read-only live-admin RPC
+for scoped readiness flags. It was applied directly to local PostgreSQL for verification;
+hosted migration was approved and applied on 2026-11-25. No existing records are rewritten.
+
+The seven Slide Swap checks pass, including no/partial/full readiness, PDF and link decks,
+private response fields, unpublished/other-cohort scope, withdrawal, member/Viewer/anonymous
+denial and immediate inactive/demoted-admin denial. Desktop and phone screenshots show
+partial preparation before photo submission; the same run verifies shared grading and
+zero-write previews. Generated database types match the local schema.
+
+Six queue/activity regressions, 151 unit/documentation checks, lint, typecheck, production
+build and diff checks also pass. Queue filtering, group counts and review-next retain
+their existing behavior.
+
+Hosted verification confirms migration `202611250001`, the live-admin guard, empty search
+path, SECURITY DEFINER and authenticated-only execution (anonymous denied). Both queue
+changes are authorized for commit, push and production deployment. Signed-in hosted
+acceptance and production latency remain real-user checks after release.

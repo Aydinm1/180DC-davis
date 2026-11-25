@@ -8,7 +8,7 @@ import { pendingDirectionRequest, projectProgressLabel, projectQuestion } from '
 import { useLocalSearchParams } from '@/lib/navigation/local-query';
 import { selectReviewWeek } from '@/lib/program/week-queue';
 import type { GuidedProject, GuidedTeam, DirectionRequest, Research } from '@/lib/guided/types';
-import { useAdminWorkspace } from './admin-workspace';
+import { useAdminQueue } from './admin-queue-workspace';
 
 export type ProjectInboxEntry={assignmentId:string;weekId:string;cohortId:string;title:string;project:GuidedProject};
 const requestId=(entry:ProjectInboxEntry,team:GuidedTeam)=>'direction-request-'+entry.assignmentId+'-'+team.id;
@@ -56,7 +56,7 @@ function TeamRequest({entry,team,proposal,weekNumber,onDecided}:{entry:ProjectIn
 }
 
 export function ProjectDirectionRequests({entries}:{entries:ProjectInboxEntry[]}) {
- const workspace=useAdminWorkspace(),params=useLocalSearchParams(),[message,setMessage]=useState('');
+ const workspace=useAdminQueue(),params=useLocalSearchParams(),[message,setMessage]=useState('');
  const week=selectReviewWeek(workspace,workspace.selectedCohortId,params.get('week'),params.get('assignment'));
  const filtered=entries.filter(e=>e.cohortId===workspace.selectedCohortId&&(!week||e.weekId===week.id)&&(!params.get('assignment')||e.assignmentId===params.get('assignment')));
  if(!filtered.length)return null;

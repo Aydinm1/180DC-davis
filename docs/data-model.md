@@ -1,7 +1,7 @@
 # GAP Data Model and Authorization
 
 **Status:** Active
-**Last updated:** 2026-11-23
+**Last updated:** 2026-11-25
 **Source of truth for:** Database schema, relationships, statuses, RLS, and Storage contracts
 
 ## Manual assignment completion
@@ -816,3 +816,26 @@ Proof insertion requires its matching private snapshot; ordinary upload/response
 remain blocked. Completion projections recognize group participant IDs, never infer that
 an individual exception credit completes the whole group. RLS and endpoints recheck access
 on every request, including after withdrawal or role/roster revocation.
+
+
+Admin-only `slide_swap_queue_progress(p_cohort)` projects assignment/group/enrollment IDs
+and a boolean for a current ready deck, for enrolled matching-audience members of published
+Slide Swap assignments in the selected cohort. It rechecks live verified active Admin access
+and returns no stories, links, file metadata or asset IDs. Private tables remain RPC-only.
+
+## Review queue metadata projection
+
+The queue uses existing user-scoped SELECT policies, `case_progress` and the admin-only
+`slide_swap_queue_progress` RPC. No table, RLS policy or Storage change is required. Require current verified Admin access before
+any queue query. Database filters restrict current submissions to selected-cohort
+published assignments and restrict roster data to that cohort's enrolled participants.
+Roster active/role flags remain available to manual-credit eligibility checks. Official
+and Test data remain distinct in queue/group ownership, progress and credit UI.
+
+Explicit queue types omit assignment bodies, submission payloads, feedback and previous
+attempts, so no fabricated full submission is used to satisfy a type. The full review
+continues reading existing history and rechecking authorization normally. Case-progress
+result filters are bounded by selected published case IDs; query failure is an error,
+not an empty success. Header cohort labels and the signed-in admin's own enrollment
+availability are the only catalog-wide metadata reads. No service client or cross-request
+cache is introduced. See ADR 0036.

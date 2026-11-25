@@ -6,7 +6,7 @@ import { PageContainer } from '@/components/ui/container';
 import { filterSubmissionRows,getAdminQueueCounts,type AdminQueueFilter } from '@/lib/program/admin';
 import { buildReviewQueue,selectReviewWeek } from '@/lib/program/week-queue';
 import { formatDeadline } from '@/lib/program/state';
-import { useAdminWorkspace } from './admin-workspace';
+import { useAdminQueue } from './admin-queue-workspace';
 import { ReviewQueueRows } from './review-queue-rows';
 import { InvestigationHintInsights } from './investigation-insights';
 import { AdminCaseProgress } from './admin-case-progress';
@@ -14,7 +14,7 @@ import { AdminCaseProgress } from './admin-case-progress';
 const filters: {value:AdminQueueFilter;label:string}[]=[{value:'awaiting_review',label:'Awaiting review'},{value:'revision_requested',label:'Revisions requested'},{value:'complete',label:'Complete'},{value:'all',label:'All submissions'},{value:'missing',label:'Not submitted'}];
 const control='min-h-11 rounded-lg border border-border-strong bg-surface px-3 text-sm';
 export function AdminOverview({projectInbox}:{projectInbox?:ReactNode}){
- const state=useAdminWorkspace(),params=useLocalSearchParams();
+ const state=useAdminQueue(),params=useLocalSearchParams();
  const cohortId=state.selectedCohortId,week=selectReviewWeek(state,cohortId,params.get('week'),params.get('assignment'));
  const audience=params.get('audience')==='test'?'test':'official';
  const overview=buildReviewQueue(state,cohortId,week?.id??'all',new Date(),audience);

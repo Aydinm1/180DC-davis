@@ -1,7 +1,7 @@
 # GAP MVP Implementation TODO
 
 **Status:** Active
-**Last updated:** 2026-11-23
+**Last updated:** 2026-11-25
 
 Legend: `[ ]` pending · `[~]` active · `[x]` complete
 
@@ -9,6 +9,21 @@ This file tracks approved work. Product and technical rules live in `docs/`; com
 requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
+
+- [x] Show each Slide Swap participant’s readiness and group totals in Review queue.
+  Preparation stays separate from submission/completion with scoped lightweight reads.
+  Seven Slide Swap and six queue/activity checks pass, including desktop/phone partial
+  readiness, privacy and revoked-admin denial. 151 unit/docs checks, lint, types, generated
+  types, production build and diff checks pass. Docs/ADR updated. Local migration only;
+  hosted migration approved and applied; commit/push/deployment authorized.
+
+- [x] Give Review queue a selected-cohort metadata loader and separate route/provider
+  boundary. Preserve URLs, counts, filters, Official/Test, manual/bulk credit and review
+  navigation. Scoped projection/pagination, resource-lock isolation, desktop/phone queue,
+  review-next, access and full-workspace regressions pass. Fixture database payload is
+  94% smaller; production latency is not yet measured. Canonical docs/ADR updated;
+  149 unit/docs checks, lint, types, production build and diff checks pass. Local only;
+  no migration needed for this portion; combined release authorized.
 
 - [x] Restore numbered circles in the admin Weeks list, preserving compact summaries.
   Desktop/phone screenshots and six assignment/navigation regressions, lint, types,

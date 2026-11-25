@@ -27,8 +27,8 @@ export function compareCohorts(
 }
 
 export function deriveAssignmentState(
-  assignment: Assignment,
-  submission: SubmissionAttempt | undefined,
+  assignment: Pick<Assignment, "dueAt"|"completionCredit"|"caseProgress">,
+  submission: Pick<SubmissionAttempt,"status"> | undefined,
   now: Date,
 ): AssignmentDisplayState {
   if ((assignment.completionCredit || assignment.caseProgress?.completedAt)) return "completed";

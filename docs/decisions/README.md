@@ -115,3 +115,7 @@ do not override a later source-of-truth update and superseding ADR.
 - [ADR 0034 — Slide Swap](0034-slide-swap.md)
 
 - [ADR 0035: One instruction source per assignment workflow](0035-activity-instruction-ownership.md)
+
+- [ADR 0036: Scoped metadata loading for the review queue](0036-scoped-review-queue-loading.md)
+
+- [ADR 0037: Slide Swap queue readiness](0037-slide-swap-queue-readiness.md)

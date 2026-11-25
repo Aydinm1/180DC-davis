@@ -9,7 +9,7 @@ Attendance alone has a selected-week, check-only export action described in ADR 
 See [ADR 0008](decisions/0008-monday-member-import.md).
 
 **Status:** Active
-**Last updated:** 2026-11-23
+**Last updated:** 2026-11-25
 **Source of truth for:** Routes, application boundaries, auth/data flow, and mutation patterns
 
 ## Stack and principles
@@ -49,7 +49,7 @@ only, not externally. The attendance page authorizes live Admin access and selec
 cohort from an ordered, paginated id/state projection, independently of the shared
 layout's full workspace read. Its attendance RPC can run alongside that layout read
 instead of waiting for assignment, submission, activity and progress projections. The
-shared admin layout still loads its full workspace on initial entry; this change does
+full-workspace route group still loads its full workspace for Attendance; this does
 not split that provider or introduce cross-request caching of private data.
 The admin-only presentation component reuses that authorized session/code/QR projection
 inside a native modal dialog. Browser fullscreen is an optional client capability, with
@@ -161,8 +161,31 @@ boundary after the main queue snapshot is ready. It reads guided projects only f
 selected cohort (the requested valid cohort, active fallback, then first cohort), not all
 cohorts. Week/assignment/audience filtering within that cohort stays local; changing cohort
 navigates and loads its own inbox. The queue is usable while guided histories are still
-loading. The shared full workspace projection remains on initial admin entry; this does
-not introduce private-data caching or change guided decision authorization.
+loading. The queue's initial read no longer loads the full workspace; this does not
+introduce private-data caching or change guided decision authorization.
+
+The `/admin` root layout performs live Admin authorization and activity recording only.
+Route groups preserve every existing URL: `(queue)` owns `/admin` and its loading state;
+`(workspace)` retains the full loader/provider for Members, Weeks, Attendance, previews,
+case answers and submission review. Both reuse one visual `AdminShell` without a second
+root document layout. The queue uses `AdminQueueWorkspace` and explicit metadata types;
+full workspace consumers retain their full content/history types. Queue consumers also
+work within the full provider for review-next and completion actions.
+
+`readAdminQueue` uses the live user-scoped client. Small ordered/paginated cohort labels
+and the admin's own enrollment availability support the header. A requested UUID starts
+its scoped metadata reads concurrently; invalid/missing cohort selection uses the same
+active/first fallback after reading the cohort catalog. Only selected-cohort published
+weeks, assignment metadata, enrolled people/access flags, current submission metadata,
+teams/presentation groups and active manual credits reach the queue. Joins are scoped in
+the database, not filtered from global result sets. Case progress is fetched only for
+published case assignments, with bounded ID chunks and complete ordered pagination.
+Admin navigation and queue review/answer links disable speculative prefetch, so visible
+links do not silently start full-workspace or review reads before a click.
+No resources, assignment/PDF bodies, file metadata, activity timestamps, feedback or
+superseded attempts are read for this snapshot. Opening a review uses the existing full
+workspace loader and existing protected file endpoints. Loading errors reject the whole
+snapshot rather than returning misleading zero counts. See ADR 0036.
 
 Independent workspace datasets are fetched concurrently after authorization through
 `readWorkspaceRows`, preserving deterministic pagination and fail-closed errors.
@@ -655,6 +678,9 @@ and audience; assignment-only legacy bookmarks continue to resolve their owning 
 Slide Swap is an assignment-specific Individual activity under `src/lib/slide-swap/`.
 Its private loader/typed actions and narrow RPCs handle setup, deck readiness and proof.
 The existing activity editor, member Instructions/Workspace and PDF reader are reused.
+The queue conditionally reads the minimal, paginated `slide_swap_queue_progress` RPC only
+when its selected cohort has a published Slide Swap activity. Per-person preparation is
+displayed without loading settings, stories or decks.
 Only finalized proof enters normal shared submission/review history; the new group owner
 is separate from cohort teams. Member loaders explicitly scope group IDs to the current
 enrollment, even when an admin is testing the member portal. Admin review loads frozen

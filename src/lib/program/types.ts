@@ -169,6 +169,6 @@ export function isPublishedWeek(week: ProgramWeek): week is PublishedWeek {
   return week.publicationState === "published";
 }
 
-export function assignmentsForWeek(week: { assignments?: readonly Assignment[]; assignment?: Assignment }): readonly Assignment[] {
+export function assignmentsForWeek<T = Assignment>(week: { assignments?: readonly T[]; assignment?: T }): readonly T[] {
   return week.assignments ?? (week.assignment ? [week.assignment] : []);
 }

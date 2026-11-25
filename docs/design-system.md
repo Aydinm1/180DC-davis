@@ -1,10 +1,18 @@
 # GAP Design System
 
 **Status:** Active
-**Last updated:** 2026-11-23
+**Last updated:** 2026-11-25
 **Source of truth for:** Brand use, visual tokens, UI patterns, responsive behavior, and accessibility
 
 ## Direction
+
+### Presentation-group readiness
+
+Review queue presentation groups show the group title, a quiet N of M slides ready
+summary and a visible list pairing each participant name with Slides ready or Not ready.
+Use green text for ready and neutral text for not ready; labels carry meaning without
+color. Reuse this arrangement in the desktop table and phone cards. Keep the normal
+assignment status badge separate from preparation progress.
 
 ### Admin PDF reading
 
@@ -616,3 +624,9 @@ view controls, Edit test links and the same member workspace; changing presenter
 the shared simulated photo outcome. Editing and restarting clears that simulation. Keep
 invalid links in their fields with a clear error. State that this preview does not submit
 and links reset when leaving. Do not expose this real-link test setup in Viewer practice.
+
+
+Review queue loading keeps the existing heading scale and announces “Loading review
+queue…” with a busy loading region. Reuse the same admin header/cohort composition across
+queue and full-workspace pages; loading isolation must not introduce a separate visual
+style or new navigation URLs.

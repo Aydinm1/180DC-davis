@@ -2,12 +2,12 @@
 
 import type { AdminSubmissionRow } from '@/lib/program/admin';
 import { formatSubmissionTime } from '@/lib/program/state';
-import { useAdminWorkspace } from './admin-workspace';
+import { useAdminQueue } from './admin-queue-workspace';
 import {canManuallyComplete} from '@/lib/program/bulk-completion';
 import { ManualCompletionButton } from './manual-completion-button';
 
 export function AssignmentCompletionAction({row}: {row: AdminSubmissionRow}) {
-  const state = useAdminWorkspace();
+  const state = useAdminQueue();
   if (row.team || row.swapGroup || row.submission || (row.assignment.workflow==='investigation'||row.assignment.workflow==='schedule')) return <span className="text-ink-faint">Await submission</span>;
   const credit = row.completionCredit;
   const eligible = canManuallyComplete(row,state);

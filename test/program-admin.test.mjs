@@ -119,3 +119,11 @@ test("admin queues isolate two assignments in one week and reject unknown select
   assert.match(validateAdminWeek({ ...week, assignments: [first, first] }), /unique/);
   assert.equal(validateAdminWeek({ ...week, assignment: first, assignments: [] }), undefined);
 });
+
+test('Slide Swap readiness matches each group member without counting preparation as submission',()=>{
+ const state={people:[{id:'p1',fullName:'One'},{id:'p2',fullName:'Two'},{id:'p3',fullName:'Test'}],approvedMembers:[],cohorts:[],enrollments:[{id:'e1',personId:'p1',cohortId:'c',participationStatus:'enrolled'},{id:'e2',personId:'p2',cohortId:'c',participationStatus:'enrolled'},{id:'e3',personId:'p3',cohortId:'c',participationStatus:'enrolled',isTest:true}],weeks:[{id:'w',cohortId:'c',weekNumber:5,publicationState:'published',assignments:[{id:'a',title:'Swap',workflow:'slide_swap',submissionMode:'individual',dueAt:'2099-01-01'}]}],submissions:[],swapGroups:[{id:'g',assignmentId:'a',name:'Pair',isTest:false,enrollmentIds:['e1','e2']},{id:'t',assignmentId:'a',name:'Test pair',isTest:true,enrollmentIds:['e3']}],swapProgress:[{assignmentId:'a',groupId:'g',enrollmentId:'e1',ready:true},{assignmentId:'a',groupId:'g',enrollmentId:'e2',ready:false},{assignmentId:'other',groupId:'g',enrollmentId:'e2',ready:true},{assignmentId:'a',groupId:'t',enrollmentId:'e3',ready:true}]};
+ const [row]=getSubmissionRows({state,cohortId:'c',weekId:'w',now:new Date('2026-11-25')});
+ assert.deepEqual(row.slideReadiness,[{enrollmentId:'e1',name:'One',ready:true},{enrollmentId:'e2',name:'Two',ready:false}]);
+ assert.equal(row.submission,undefined);assert.notEqual(row.state,'completed');assert.notEqual(row.state,'submitted');
+ const testRows=getSubmissionRows({state,cohortId:'c',weekId:'w',now:new Date('2026-11-25'),audience:'test'});assert.equal(testRows.length,1);assert.equal(testRows[0].slideReadiness[0].name,'Test');
+});

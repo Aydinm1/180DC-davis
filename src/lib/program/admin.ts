@@ -36,8 +36,20 @@ export type AdminWorkspaceState = {
   submissions: readonly SubmissionAttempt[];
   teams?: readonly CohortTeam[];
   swapGroups?: readonly {id:string;assignmentId:string;name:string;isTest:boolean;enrollmentIds:readonly string[]}[];
+  swapProgress?: readonly {assignmentId:string;groupId:string;enrollmentId:string;ready:boolean}[];
   caseProgress?: readonly { assignmentId: string; enrollmentId: string; answered: number; completedAt?: string }[];
   completionCredits?: readonly AssignmentCompletion[];
+};
+
+/** Queue projections contain no assignment bodies or submission content. */
+export type QueueAssignment = Pick<Assignment, 'id'|'weekNumber'|'title'|'workflow'|'submissionMode'|'dueAt'>;
+export type QueueWeek = Pick<AdminWeek, 'id'|'cohortId'|'weekNumber'|'title'|'publicationState'> & {
+  assignments?: readonly QueueAssignment[]; assignment?: QueueAssignment;
+};
+export type QueueSubmission = Pick<SubmissionAttempt, 'id'|'assignmentId'|'enrollmentId'|'teamId'|'swapGroupId'|'status'|'submittedAt'|'updatedAt'|'isCurrent'>;
+export type AdminQueueState = Omit<AdminWorkspaceState, 'weeks'|'submissions'|'enrollments'> & {
+  enrollments: readonly Pick<CohortEnrollment,'id'|'cohortId'|'personId'|'participationStatus'|'isTest'>[];
+  weeks: readonly QueueWeek[]; submissions: readonly QueueSubmission[];
 };
 
 export type AdminQueueFilter = "awaiting_review" | "revision_requested" | "missing" | "complete" | "all";
@@ -163,13 +175,13 @@ export function pacificWallTimeToUtc(value: string, zone?: "PDT" | "PST") {
   return { value: selected.iso, zone: selected.zone } as const;
 }
 
-export function getCurrentAdminWeek(weeks: readonly AdminWeek[]) {
+export function getCurrentAdminWeek<T extends QueueWeek>(weeks: readonly T[]) {
   return weeks
     .filter((week) => week.publicationState === "published" && assignmentsForWeek(week).length)
     .toSorted((left, right) => right.weekNumber - left.weekNumber)[0];
 }
 
-export function getSubmissionRows({ state, cohortId, weekId, assignmentId, now, audience = 'official' }: { state: AdminWorkspaceState; cohortId: string; weekId: string; assignmentId?: string; now: Date; audience?: 'official' | 'test' }) {
+export function getSubmissionRows({ state, cohortId, weekId, assignmentId, now, audience = 'official' }: { state: AdminQueueState; cohortId: string; weekId: string; assignmentId?: string; now: Date; audience?: 'official' | 'test' }) {
   const week = state.weeks.find((item) => item.id === weekId && item.cohortId === cohortId);
   const enrollments = state.enrollments.filter((item) => item.cohortId === cohortId && item.participationStatus === "enrolled" && !!item.isTest === (audience === 'test'));
   if (!week) return [];
@@ -191,6 +203,7 @@ export function getSubmissionRows({ state, cohortId, weekId, assignmentId, now, 
     return {
       team,swapGroup,ownerKey:swapGroup?.id??team?.id??enrollment.id,memberEnrollmentIds,
       members:memberEnrollmentIds.flatMap(id=>{const e=enrollments.find(e=>e.id===id);const p=state.people.find(p=>p.id===e?.personId);return p?[p]:[];}),
+      slideReadiness:swapGroup?memberEnrollmentIds.flatMap(id=>{const e=enrollments.find(e=>e.id===id);const p=state.people.find(p=>p.id===e?.personId);const progress=state.swapProgress?.find(s=>s.assignmentId===assignment.id&&s.groupId===swapGroup.id&&s.enrollmentId===id);return p?[{enrollmentId:id,name:p.fullName,ready:progress?.ready??false}]:[];}):undefined,
       enrollment,
       assignment,
       person,

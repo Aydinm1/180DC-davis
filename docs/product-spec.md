@@ -1,7 +1,7 @@
 # GAP Product Specification
 
 **Status:** Active
-**Last updated:** 2026-11-23
+**Last updated:** 2026-11-25
 **Source of truth for:** Product scope, workflows, states, and acceptance criteria
 
 ## Product goal
@@ -770,6 +770,11 @@ enters the existing review queue for the group. Approval completes the assignmen
 current participants; revisions replace the proof without changing decks. Normal historical
 attempts/feedback remain available. Withdrawal revokes access without erasing snapshots.
 
+The admin review queue shows each active presentation-group member with Slides ready or
+Not ready, plus an N of M slides ready summary, before proof is submitted. This preparation
+status does not count as a submission or completion and does not change queue counts.
+Show these statuses directly on desktop and phones, without opening participant details.
+
 Setup exposes readiness and individual completion exceptions. Admins can re-pair before
 unlock while preserving started story/deck ownership. Unlocked groups cannot be rewritten;
 manual individual credit resolves exceptions without proof or affecting their partners.
@@ -778,3 +783,14 @@ between Presenter 1 and Presenter 2 to inspect the exchange and simulate photo p
 No student accounts or configured groups are required. Links and simulated proof live only
 within the open preview, reset on reload/leaving, and create no records. Assignment preview
 remains available for configured sample groups. Viewer practice stays fictional.
+
+
+### Review queue loading
+
+The review queue initially loads current metadata for the selected cohort's published
+assignments. Keep all existing counts, All weeks/assignment/status/search filters,
+Official/Test separation, shared-team/group ownership and manual credit behavior.
+Submission content, feedback and replacement history load when a review is opened.
+Cohort changes load a fresh scoped snapshot; local filters do not fetch the full workspace.
+Provide an accessible loading status while the queue opens. Guided direction requests
+remain a separately streamed panel. No private-data cache or weaker access check is added.
