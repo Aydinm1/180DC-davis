@@ -361,7 +361,10 @@ descriptive filenames.
   minimal navigation. Use one vertically centered row for logo, navigation, and profile
   on large screens. Below that breakpoint, keep logo and profile together with navigation
   on a horizontally scrollable second row.
-- **Route loading:** center the approved dark landscape UC Davis logo on the neutral
+- **Route loading:** every page/route loading boundary must reuse
+  `src/components/ui/route-loading.tsx` (`RouteLoading`), including protected admin routes.
+  Do not introduce page-specific loading headings, skeletons or alternate branding. Center
+  the approved dark landscape UC Davis logo on the neutral
   viewport, with one small green pulsing indicator underneath. Keep the logo static;
   disable animation for reduced motion. Announce “Loading GAP” to assistive technology
   without visible corner text, helper copy, fake progress or a blocking client overlay.
@@ -626,7 +629,8 @@ invalid links in their fields with a clear error. State that this preview does n
 and links reset when leaving. Do not expose this real-link test setup in Viewer practice.
 
 
-Review queue loading keeps the existing heading scale and announces “Loading review
-queue…” with a busy loading region. Reuse the same admin header/cohort composition across
-queue and full-workspace pages; loading isolation must not introduce a separate visual
-style or new navigation URLs.
+Review queue and Weeks use the shared 180 route-loading screen above. The root, admin
+and nested route loading files re-export the same component; a regression check covers
+every route boundary. Small inline pending states (saving, uploading or separately streamed
+project requests) remain local status messages and do not replace the page-loading standard.
+Reuse the same admin header/cohort composition across queue, catalog and editor pages.

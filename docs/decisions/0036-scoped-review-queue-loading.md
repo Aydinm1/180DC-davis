@@ -26,3 +26,12 @@ transfers submission bodies/history. Navigation across route groups replaces the
 provider, so editor warnings and review-next must be regression-tested. Existing review
 and editing pages retain their full loader. No migration, authorization weakening,
 private-data cache, new endpoint or application URL is introduced.
+
+
+## Extension — Weeks catalog (2026-11-25)
+
+Apply the same route isolation to the Weeks list via `(catalog)`. Read week metadata
+and assignment counts only; keep full editing under `(workspace)` and preserve all URLs.
+Use one shared branded loading component for root/admin/nested boundaries, replacing the
+queue-specific loading heading. Authorization and user-scoped database policies remain
+unchanged; no schema or API changes are required.

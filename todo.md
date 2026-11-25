@@ -10,6 +10,13 @@ requires implementation, validation, documentation, and changelog agreement.
 
 ## Current checkpoint — 2026-10-20
 
+- [x] Give the Weeks list a selected-cohort catalog loader and restore the shared 180
+  loading screen for every route boundary. Counts/drafts/cohort switching and editor
+  navigation pass on desktop/phone, with resource-lock isolation and access denials.
+  Seven queue/activity, six assignment and four loading/browser entries pass; 155
+  unit/docs checks, lint, types, production build and diff checks pass. Canonical docs
+  record the shared loading standard. Code-only release authorized; no migration needed.
+
 - [x] Show each Slide Swap participant’s readiness and group totals in Review queue.
   Preparation stays separate from submission/completion with scoped lightweight reads.
   Seven Slide Swap and six queue/activity checks pass, including desktop/phone partial

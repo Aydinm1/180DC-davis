@@ -5,6 +5,8 @@ Keep a Changelog without assigning versions until the first release.
 
 ## Unreleased
 
+- Load the admin Weeks list from scoped week metadata/counts instead of the full workspace; standardize every route loading screen on the shared 180 logo component.
+
 - Show individual Slide Swap readiness and group ready counts in the admin review queue before meeting-photo submission; read only scoped preparation flags through a live-admin RPC.
 
 - Made the review queue load selected-cohort current metadata independently of the full admin workspace, without fetching assignment bodies, resources, file metadata, feedback or superseded submissions. Existing queue URLs, counts, filters and review actions are retained.

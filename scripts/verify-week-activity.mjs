@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {readAdminWeeksRows} from '../src/lib/supabase/admin-weeks-rows.ts';
 import {readQueueRows} from '../src/lib/supabase/queue-rows.ts';
 import {readWorkspaceRows} from '../src/lib/supabase/workspace-rows.ts';
 import {showReview} from './lib/review-workspace.mjs';
@@ -53,6 +54,12 @@ test('Last active privacy, visible visits, branded metadata and week-wide admin 
    assert.ok(ok(await lead.client.rpc('admin_activity')).some(a=>a.person_id===member.person));
    await sql(`update public.approved_members set active=false where person_id=${q(member.person)}`);assert.ok((await member.client.rpc('record_activity')).error);await sql(`update public.approved_members set active=true where person_id=${q(member.person)};update public.approved_members set role='member' where person_id=${q(lead.person)}`);assert.ok((await lead.client.rpc('admin_activity')).error);await sql(`update public.approved_members set role='admin' where person_id=${q(lead.person)}`);
    for(const user of [member,other,tester])for(const a of [assignment,second]){ok(await user.client.rpc('submit_text',{p_assignment_id:a,p_text:'Fixture response'}));const row=ok(await user.client.from('submissions').select('*').eq('assignment_id',a).eq('is_current',true).single());if(user===other || user===member&&a===second)ok(await lead.client.rpc('review_submission',{p_data:{id:row.id,status:'completed',feedback:'Approved',expectedUpdatedAt:row.updated_at}}));}
+  });
+  await t.test('Weeks catalog includes drafts and exact counts without editor dependencies',async()=>{
+   const weeks=await readAdminWeeksRows(lead.client,cohort);assert.equal(weeks.length,2);assert.equal(weeks.find(w=>w.id===week).assignmentCount,2);assert.equal(weeks.find(w=>w.id===emptyWeek).assignmentCount,0);
+   assert.ok(weeks.every(w=>!('description' in w)&&!('assignments' in w)));
+   if(app)for(const identity of [null,member,viewer,inactive]){const response=await fetch(`${app}/admin/weeks?cohort=${cohort}`,{headers:{cookie:(identity?await cookies(identity):[]).map(c=>c.name+'='+c.value).join('; ')}}),html=await response.text();assert.ok(response.url.includes(identity?'/access-denied':'/login')||html.includes(identity?'/access-denied':'/login'));assert.ok(!html.includes('Research workshop'));}
+   if(app){const locker=(await import('node:child_process')).spawn('docker',['exec','-i','supabase_db_gap','psql','-X','-U','postgres','-d','postgres','-At','-v','ON_ERROR_STOP=1']);let output='';const ready=new Promise((resolve,reject)=>{locker.stdout.on('data',data=>{output+=data;if(output.includes('catalog-resources-locked'))resolve();});locker.on('error',reject);});locker.stdin.write('begin;lock table public.resources in access exclusive mode;\n\\echo catalog-resources-locked\n');try{await ready;const response=await fetch(`${app}/admin/weeks?cohort=${cohort}`,{headers:{cookie:(await cookies(lead)).map(c=>c.name+'='+c.value).join('; ')},signal:AbortSignal.timeout(8000)}),html=await response.text();assert.equal(response.status,200);assert.ok(html.includes('Research workshop'));assert.ok(html.includes('2 assignments'));assert.ok(!html.includes('Fixture response'));}finally{locker.stdin.end('commit;\n\\q\n');}}
   });
   await t.test('queue metadata excludes bodies/history and stays available with resource reads blocked',async()=>{
    const bodyMarker='QUEUE_CURRENT_BODY_NOT_IN_LIST_',oldMarker='QUEUE_OLD_BODY_NOT_IN_LIST_',briefMarker='QUEUE_BRIEF_NOT_IN_LIST_';

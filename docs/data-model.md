@@ -839,3 +839,12 @@ result filters are bounded by selected published case IDs; query failure is an e
 not an empty success. Header cohort labels and the signed-in admin's own enrollment
 availability are the only catalog-wide metadata reads. No service client or cross-request
 cache is introduced. See ADR 0036.
+
+
+### Admin week catalog projection
+
+Use existing user-scoped SELECT policies after live Admin authorization. Scope
+`program_weeks` by selected cohort, including drafts, and project only ID/cohort ID, week
+number, title, publication flag and nested `assignments(count)`. Header reads use cohort
+labels and the current admin's own enrollment availability. No migration, grant, RLS
+change or private-data cache is introduced. Detail editing retains its existing loader.

@@ -11,11 +11,11 @@ import { createElement } from 'react';
 import { chromium } from 'playwright-core';
 
 test('actual loading component fits desktop, phone and short screens', async t => {
-  const source = await readFile('src/app/loading.tsx', 'utf8');
+  const source = await readFile('src/components/ui/route-loading.tsx', 'utf8');
   const compiled = ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.CommonJS, esModuleInterop: true } }).outputText;
   const exports = {};
   new Function('require', 'exports', compiled)(createRequire(import.meta.url), exports);
-  const markup = renderToStaticMarkup(createElement(exports.default));
+  const markup = renderToStaticMarkup(createElement(exports.RouteLoading));
   const sheets = [];
   for await (const path of glob('.next/static/css/**/*.css')) sheets.push(await readFile(path, 'utf8'));
   assert.ok(sheets.length, 'Build before verifying generated loading styles');

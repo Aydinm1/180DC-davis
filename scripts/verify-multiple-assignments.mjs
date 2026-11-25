@@ -19,6 +19,7 @@ const anon=createClient(config.API_URL,config.ANON_KEY,options);
 const ok=r=>{assert.ifError(r.error);return r.data;};
 const q=s=>`'${String(s).replaceAll("'","''")}'`;
 async function sql(s){return(await exec('docker',['exec','supabase_db_gap','psql','-X','-U','postgres','-d','postgres','-At','-v','ON_ERROR_STOP=1','-c',s])).stdout.trim();}
+const catalogCohort=randomUUID(),catalogWeek=randomUUID();
 const cohort=randomUUID(),week=randomUUID(),otherWeek=randomUUID(),first=randomUUID(),second=randomUUID(),foreign=randomUUID(),users=[];
 async function fixture(role){
  const email=`gap-multi-test-${randomUUID()}@ucdavis.edu`,person=randomUUID();
@@ -38,6 +39,7 @@ test('multiple assignments preserve independent history and require all approval
   await sql(`insert into public.program_cohorts(id,quarter,year,starts_on,ends_on,state) values(${q(cohort)},'spring',2988,'2988-04-01','2988-06-01','active');
   insert into public.program_weeks(id,cohort_id,week_number,title,description,published) values(${q(week)},${q(cohort)},1,'Multi week','Disposable',true),(${q(otherWeek)},${q(cohort)},2,'Other week','Disposable',false);
   insert into public.assignments(id,week_id,title,instructions,due_at) values(${q(first)},${q(week)},'First brief','First instructions',now()),(${q(foreign)},${q(otherWeek)},'Foreign brief','Private',now());`);
+  await sql(`insert into public.program_cohorts(id,quarter,year,starts_on,ends_on,state) values(${q(catalogCohort)},'winter',2989,'2989-01-01','2989-03-01','draft');insert into public.program_weeks(id,cohort_id,week_number,title,description,published) values(${q(catalogWeek)},${q(catalogCohort)},1,'Catalog-only week','Disposable',false);`);
   const lead=await fixture('admin'),member=await fixture('member');
   let document;
   await t.test('adding assignments retains existing IDs/PDF; invalid collections roll back',async()=>{
@@ -87,7 +89,11 @@ test('multiple assignments preserve independent history and require all approval
    const{chromium}=await import('playwright-core');const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
    try{for(const width of [1280,390]){
     const adminCtx=await browser.newContext({viewport:{width,height:900}});await adminCtx.addCookies([...(await jar(lead))].map(([name,value])=>({name,value,url:process.env.GAP_TEST_APP_URL})));const editor=await adminCtx.newPage();editor.setDefaultTimeout(15000);
-    await editor.goto(`${process.env.GAP_TEST_APP_URL}/admin/weeks/${week}?cohort=${cohort}`);
+    await editor.goto(`${process.env.GAP_TEST_APP_URL}/admin/weeks?cohort=${cohort}`);
+    await editor.getByRole('heading',{name:'Weeks',exact:true}).waitFor();await editor.getByText('Draft',{exact:true}).waitFor();assert.equal(await editor.getByRole('listitem').count(),2);
+    await editor.getByRole('button',{name:/Managing cohort/}).click();await editor.getByRole('button',{name:'Winter 2989',exact:true}).click();await editor.waitForURL(url=>url.searchParams.get('cohort')===catalogCohort);await editor.getByText('Catalog-only week',{exact:true}).waitFor();await editor.getByText('No assignments yet',{exact:true}).waitFor();assert.equal(await editor.getByText('Multi week',{exact:true}).count(),0);await editor.getByRole('button',{name:/Managing cohort/}).click();await editor.getByRole('button',{name:'Spring 2988',exact:true}).click();await editor.waitForURL(url=>url.searchParams.get('cohort')===cohort);
+    const weekLink=editor.getByRole('link').filter({hasText:'Multi week'});await weekLink.waitFor();assert.match(await weekLink.innerText(),/2 assignments/);await editor.screenshot({path:join(await mkdtemp(join(tmpdir(),'gap-weeks-catalog-')),`weeks-${width}.png`),fullPage:true});await weekLink.click();
+
     await openAssignmentEditor(editor,first);await editor.getByRole('button',{name:'Add assignment',exact:true}).click();
     const third=await editor.getByRole('combobox',{name:'Select assignment',exact:true,includeHidden:true}).inputValue();const card=editor.locator(`[data-assignment-editor="${third}"]`);
     await card.getByLabel('Title',{exact:true}).fill('Temporary third');await openAssignmentEditor(editor,third,'Instructions');await card.getByLabel('Instructions',{exact:true}).fill('Temporary instructions');
@@ -204,6 +210,7 @@ test('multiple assignments preserve independent history and require all approval
    }console.log(`Assignment-page screenshots: ${screenshots}`);}finally{await browser.close();}
   });
  }finally{
+  await sql(`delete from public.program_weeks where cohort_id=${q(catalogCohort)};delete from public.program_cohorts where id=${q(catalogCohort)}`);
   const paths=await sql(`select path from public.assignment_documents where assignment_id in (${q(first)},${q(second)})`);if(paths)ok(await admin.storage.from('assignment-briefs').remove(paths.split('\n')));
   await sql(`update public.assignment_documents set expected_id=null where assignment_id in (${q(first)},${q(second)});delete from public.assignment_documents where assignment_id in (${q(first)},${q(second)});delete from public.submissions where assignment_id in (${q(first)},${q(second)});delete from public.assignments where week_id in (${q(week)},${q(otherWeek)});delete from public.program_weeks where cohort_id=${q(cohort)};delete from public.cohort_enrollments where cohort_id=${q(cohort)};delete from public.program_cohorts where id=${q(cohort)};`);
   for(const u of users){await sql(`delete from public.profiles where id=${q(u.id)};delete from public.approved_members where person_id=${q(u.person)};delete from public.people where id=${q(u.person)}`);ok(await admin.auth.admin.deleteUser(u.id));}

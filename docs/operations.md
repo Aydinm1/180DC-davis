@@ -1719,3 +1719,26 @@ Hosted verification confirms migration `202611250001`, the live-admin guard, emp
 path, SECURITY DEFINER and authenticated-only execution (anonymous denied). Both queue
 changes are authorized for commit, push and production deployment. Signed-in hosted
 acceptance and production latency remain real-user checks after release.
+
+
+## Weeks catalog and shared loading — local verification 2026-11-25
+
+The Weeks list now uses a separate catalog route, existing user-scoped policies and
+selected-cohort week metadata with nested assignment counts. It makes three small
+ordered/paginated reads (week catalog, cohort labels and the admin's own enrollment
+availability). No submissions, resource content or editor state is loaded for this list.
+No database migration or external configuration change is required. Production latency
+is not measured by local acceptance checks.
+
+The global/admin/queue/Weeks loading files all re-export the standard 180 logo component.
+A regression test checks every route-loading file; the browser harness renders the shared
+component at desktop, phone and short-screen sizes and verifies reduced-motion behavior.
+Draft/count display, cohort switching and list-to-editor navigation pass on desktop/phone;
+access denials and an exclusive local resource-table lock verify that the catalog remains
+protected and independent of unrelated full-workspace reads. No real records are used.
+
+Acceptance passes: seven queue/activity, six assignment and four loading/browser entries,
+155 unit/documentation checks, lint, typecheck, Webpack production build and diff checks.
+Screenshots were inspected. Commit/push/production deployment are authorized for this
+code-only release; no hosted database or configuration change is needed. Signed-in
+production speed remains a real-user check after release.

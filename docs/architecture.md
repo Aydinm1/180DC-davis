@@ -166,11 +166,21 @@ introduce private-data caching or change guided decision authorization.
 
 The `/admin` root layout performs live Admin authorization and activity recording only.
 Route groups preserve every existing URL: `(queue)` owns `/admin` and its loading state;
-`(workspace)` retains the full loader/provider for Members, Weeks, Attendance, previews,
+`(catalog)` owns the lightweight `/admin/weeks` list; `(workspace)` retains the full
+loader/provider for Members, week editing, Attendance, previews,
 case answers and submission review. Both reuse one visual `AdminShell` without a second
 root document layout. The queue uses `AdminQueueWorkspace` and explicit metadata types;
 full workspace consumers retain their full content/history types. Queue consumers also
 work within the full provider for review-next and completion actions.
+
+`readAdminWeeks` reads selected-cohort week metadata and nested assignment counts only,
+including draft weeks. The small cohort catalog and admin's own enrollment availability
+support the shared header; a valid requested UUID starts week reads in parallel. Invalid
+or missing selection falls back to active/first cohort. `AdminWeeks` receives a typed list
+instead of the full workspace context; cohort switches fetch the new catalog. Detail links
+disable prefetch and open the existing full editor at `/admin/weeks/[id]` only on demand.
+No submission, instruction, resource, document, roster or participant-progress reads are
+needed to list weeks. Reads remain paginated, user-scoped and authorized before querying.
 
 `readAdminQueue` uses the live user-scoped client. Small ordered/paginated cohort labels
 and the admin's own enrollment availability support the header. A requested UUID starts
@@ -516,7 +526,8 @@ URLs, credentials, or private submission payloads into club reporting.
 
 ## Error and loading boundaries
 
-- Add route-level loading UI for protected data views.
+- All route-level loading boundaries re-export the shared `RouteLoading` 180 logo screen
+  from `src/components/ui/route-loading.tsx`; use the design-system standard for new routes.
 - Use not-found behavior for unknown weeks/submissions without leaking private records.
 - Distinguish authentication failure, roster denial, validation failure, and transient
   backend failure.

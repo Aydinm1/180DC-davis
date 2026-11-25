@@ -794,3 +794,12 @@ Submission content, feedback and replacement history load when a review is opene
 Cohort changes load a fresh scoped snapshot; local filters do not fetch the full workspace.
 Provide an accessible loading status while the queue opens. Guided direction requests
 remain a separately streamed panel. No private-data cache or weaker access check is added.
+
+
+### Admin Weeks list loading
+
+The Weeks list shows the selected cohort's numbered weeks, titles, Published/Draft badges
+and assignment counts, including unpublished weeks. Load only this catalog and header
+metadata; editor content and participant work load when a week is opened. Preserve week
+URLs, cohort selection, editing and unsaved-change warnings. Use the shared 180 loading
+screen consistently with Review queue and other page loads.
